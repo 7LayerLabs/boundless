@@ -1,26 +1,328 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Binding Colors */
+  --binding-black: #1a1a1a;
+  --binding-brown: #6b4423;
+  --binding-dark-brown: #3d2314;
+  --binding-tan: #c4a574;
+  --binding-teal: #2d6a6a;
+  --binding-pink: #d4a5a5;
+  --binding-lavender: #9d8bb7;
+  --binding-white: #f5f5f5;
+  --binding-pastel-blue: #a8c5d9;
+  --binding-pastel-green: #a8d9c5;
+  --binding-pastel-yellow: #d9d5a8;
+
+  /* Active Theme (set dynamically via JS) */
+  --current-binding: var(--binding-brown);
+  --current-binding-shadow: rgba(107, 68, 35, 0.5);
+  --current-clasp: #d4af37;
+
+  /* Page Colors */
+  --page-white: #fefefe;
+  --page-cream: #f4ead5;
+  --current-page: var(--page-cream);
+
+  /* Page Lines */
+  --line-color: #c9d0dc;
+  --line-spacing: 28px;
+
+  /* Gold Foil */
+  --gold-foil: linear-gradient(
+    180deg,
+    #d4af37 0%,
+    #f5e6a3 25%,
+    #d4af37 50%,
+    #c5a028 75%,
+    #d4af37 100%
+  );
+
+  /* Shadows */
+  --book-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --page-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  --spine-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.3);
+
+  /* Background */
+  --background: #faf8f5;
+  --foreground: #1a1a1a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #faf8f5 0%, #f0ebe3 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* ========================================
+   FONT CLASSES - Organized by Category
+   ======================================== */
+
+/* --- Neat & Tidy --- */
+.font-caveat {
+  font-family: var(--font-caveat), cursive;
+}
+
+.font-patrick {
+  font-family: var(--font-patrick), cursive;
+}
+
+.font-kalam {
+  font-family: var(--font-kalam), cursive;
+}
+
+.font-comingsoon {
+  font-family: var(--font-comingsoon), cursive;
+}
+
+/* --- Messy & Quick --- */
+.font-shadows {
+  font-family: var(--font-shadows), cursive;
+}
+
+.font-reenie {
+  font-family: var(--font-reenie), cursive;
+}
+
+.font-justanotherhand {
+  font-family: var(--font-justanotherhand), cursive;
+}
+
+.font-indieflower {
+  font-family: var(--font-indieflower), cursive;
+}
+
+.font-coveredbyyourgrace {
+  font-family: var(--font-coveredbyyourgrace), cursive;
+}
+
+/* --- Elegant Script --- */
+.font-dancing {
+  font-family: var(--font-dancing), cursive;
+}
+
+.font-greatvibes {
+  font-family: var(--font-greatvibes), cursive;
+}
+
+.font-alexbrush {
+  font-family: var(--font-alexbrush), cursive;
+}
+
+.font-allura {
+  font-family: var(--font-allura), cursive;
+}
+
+.font-tangerine {
+  font-family: var(--font-tangerine), cursive;
+}
+
+/* --- Bold & Expressive --- */
+.font-marker {
+  font-family: var(--font-marker), cursive;
+}
+
+.font-architects {
+  font-family: var(--font-architects), cursive;
+}
+
+.font-amatic {
+  font-family: var(--font-amatic), cursive;
+}
+
+/* --- Childlike & Playful --- */
+.font-gloria {
+  font-family: var(--font-gloria), cursive;
+}
+
+.font-shortstack {
+  font-family: var(--font-shortstack), cursive;
+}
+
+.font-gochihand {
+  font-family: var(--font-gochihand), cursive;
+}
+
+.font-annie {
+  font-family: var(--font-annie), cursive;
+}
+
+/* --- Vintage & Classic --- */
+.font-homemadeapple {
+  font-family: var(--font-homemadeapple), cursive;
+}
+
+.font-nothingyoucoulddo {
+  font-family: var(--font-nothingyoucoulddo), cursive;
+}
+
+.font-satisfy {
+  font-family: var(--font-satisfy), cursive;
+}
+
+.font-marckscript {
+  font-family: var(--font-marckscript), cursive;
+}
+
+/* --- UI Fonts --- */
+.font-playfair {
+  font-family: var(--font-playfair), serif;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pageFlip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(-180deg); }
+}
+
+@keyframes pageShadow {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ========================================
+   PAGE STYLES
+   ======================================== */
+
+/* Page with lines */
+.page-lined {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    var(--line-color) 27px,
+    var(--line-color) 28px
+  );
+  background-position: 0 40px;
+}
+
+/* Leather texture pattern */
+.leather-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Paper texture */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* Engraved text effect */
+.engraved {
+  color: transparent;
+  text-shadow:
+    1px 1px 1px rgba(255, 255, 255, 0.15),
+    -1px -1px 1px rgba(0, 0, 0, 0.4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.1));
+}
+
+/* ========================================
+   3D BOOK EFFECTS
+   ======================================== */
+
+.book-perspective {
+  perspective: 1500px;
+  perspective-origin: center center;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.page-flip {
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+
+.page-turning {
+  animation: pageFlip 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+
+.journal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.journal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.journal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 115, 85, 0.4);
+  border-radius: 4px;
+}
+
+.journal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 115, 85, 0.6);
+}
+
+/* Selection colors */
+::selection {
+  background-color: rgba(212, 175, 55, 0.3);
+  color: inherit;
+}
+
+/* ========================================
+   TIPTAP EDITOR STYLES
+   ======================================== */
+
+.tiptap {
+  outline: none;
+  min-height: 100%;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(180, 140, 100, 0.4);
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap p {
+  margin: 0;
+  line-height: 32px;
+}
+
+.tiptap:focus {
+  outline: none;
+}
+
+/* Prose overrides for journal */
+.prose-amber {
+  --tw-prose-body: currentColor;
+  --tw-prose-headings: currentColor;
 }

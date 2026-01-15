@@ -1,0 +1,590 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format } from 'date-fns';
+import { ChevronLeft, ChevronRight, Calendar, Settings, LogOut, BarChart3, Plus, Lock, Unlock, MessageSquarePlus } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+import { db } from '@/lib/db/instant';
+import { useJournal } from '@/hooks/useJournal';
+import { useSettings } from '@/hooks/useSettings';
+import { bindingColors, pageColors, dateColors } from '@/constants/themes';
+import { fonts } from '@/constants/fonts';
+import { moods } from '@/constants/moods';
+import { RichTextEditor } from '../editor/RichTextEditor';
+import { MoodSelector } from '../editor/MoodSelector';
+import { AIReflection, type ReflectionQuestion } from '../editor/AIReflection';
+import { ThoughtBubble } from '../editor/ThoughtBubble';
+import { CalendarView } from '../navigation/CalendarView';
+import { SettingsPanel } from '../settings/SettingsPanel';
+import { MoodInsights } from '../navigation/MoodInsights';
+import type { Mood } from '@/types/journal';
+
+export function JournalBook() {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showMoodInsights, setShowMoodInsights] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
+
+  const [showUpdateInput, setShowUpdateInput] = useState(false);
+  const [updateText, setUpdateText] = useState('');
+
+  // Use InstantDB hooks
+  const {
+    currentDate,
+    setCurrentDate,
+    currentEntry,
+    dayEntries,
+    selectedEntryId,
+    setSelectedEntryId,
+    createEntry,
+    updateEntry,
+    lockEntry,
+    addEntryUpdate,
+  } = useJournal();
+
+  const {
+    bindingColor,
+    pageColor,
+    pageLines,
+    fontFamily,
+    showMoodSelector,
+    aiReflectionEnabled,
+    dateFormat,
+    dateColor,
+  } = useSettings();
+
+  const binding = bindingColors[bindingColor];
+  const currentFont = fonts[fontFamily] || fonts.caveat;
+  const pageBgColor = pageColors[pageColor];
+  const currentDateColor = dateColors[dateColor] || dateColors.brown;
+
+  // Format date based on user preference
+  const formatDate = (date: Date) => {
+    switch (dateFormat) {
+      case 'full':
+        return format(date, 'MMMM d, yyyy').toUpperCase();
+      case 'short':
+        return format(date, 'MMM d, yyyy');
+      case 'numeric':
+        return format(date, 'M/d/yyyy');
+      case 'dots':
+        return format(date, 'M.d.yy');
+      default:
+        return format(date, 'MMMM d, yyyy').toUpperCase();
+    }
+  };
+
+  const goToPreviousDay = () => {
+    const prevDay = new Date(currentDate);
+    prevDay.setDate(prevDay.getDate() - 1);
+    setCurrentDate(prevDay);
+  };
+
+  const goToNextDay = () => {
+    const nextDay = new Date(currentDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setCurrentDate(nextDay);
+  };
+
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const handleMoodSelect = async (mood: Mood | null) => {
+    if (currentEntry) {
+      await updateEntry(currentEntry.id, currentEntry.content, mood, currentEntry.tags || []);
+    } else {
+      await createEntry(currentDate, '', mood, []);
+    }
+  };
+
+  const handleNewEntry = async () => {
+    await createEntry(currentDate, '', null, []);
+  };
+
+  const handleLockEntry = async () => {
+    if (currentEntry) {
+      await lockEntry(currentEntry.id);
+    }
+  };
+
+  const handleAddUpdate = async () => {
+    if (currentEntry && updateText.trim()) {
+      await addEntryUpdate(currentEntry.id, updateText.trim());
+      setUpdateText('');
+      setShowUpdateInput(false);
+    }
+  };
+
+  const formatEntryTime = (timestamp: number) => {
+    return format(new Date(timestamp), 'h:mm a');
+  };
+
+  const handleLogout = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      db.auth.signOut();
+    }, 600);
+  };
+
+  return (
+    <div className="w-full flex items-center justify-center overflow-hidden py-4">
+      {/* The Open Journal */}
+      <div className="relative w-full max-w-[1400px] flex items-center justify-center px-4">
+        {/* Book shadow on desk */}
+        <div
+          className="absolute w-full h-[600px] md:h-[700px] rounded-3xl blur-3xl opacity-50"
+          style={{
+            backgroundColor: binding.shadowColor,
+            transform: 'translateY(40px)'
+          }}
+        />
+
+        {/* The Book Container */}
+        <motion.div
+          className="relative w-full h-[600px] md:h-[700px] flex"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{
+            scale: isClosing ? 0.85 : 1,
+            opacity: isClosing ? 0 : 1,
+            rotateY: isClosing ? 30 : 0,
+          }}
+          transition={{ duration: 0.6 }}
+          style={{ perspective: '1500px' }}
+        >
+          {/* Left Cover (Back of front cover visible) */}
+          <div
+            className="relative w-16 md:w-24 h-full rounded-l-2xl flex-shrink-0"
+            style={{
+              backgroundColor: binding.color,
+              boxShadow: `
+                inset -20px 0 40px rgba(0, 0, 0, 0.4),
+                inset 0 0 60px rgba(0, 0, 0, 0.3),
+                -8px 0 20px rgba(0, 0, 0, 0.2)
+              `,
+            }}
+          >
+            {/* Realistic leather texture */}
+            <svg className="absolute inset-0 w-full h-full rounded-l-2xl pointer-events-none" preserveAspectRatio="none">
+              <defs>
+                <filter id="leatherLeft" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="6" seed="20" result="noise"/>
+                  <feDiffuseLighting in="noise" lightingColor="#fff" surfaceScale="4" result="bump">
+                    <feDistantLight azimuth="135" elevation="45"/>
+                  </feDiffuseLighting>
+                </filter>
+                <filter id="grainLeft">
+                  <feTurbulence type="turbulence" baseFrequency="0.8" numOctaves="3"/>
+                  <feColorMatrix type="saturate" values="0"/>
+                </filter>
+              </defs>
+              <rect width="100%" height="100%" filter="url(#leatherLeft)" opacity="0.25"/>
+              <rect width="100%" height="100%" filter="url(#grainLeft)" opacity="0.08"/>
+            </svg>
+
+            {/* Spine binding */}
+            <div
+              className="absolute right-0 top-0 bottom-0 w-4"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 100%)',
+              }}
+            />
+          </div>
+
+          {/* Center Spine/Binding */}
+          <div
+            className="relative w-8 md:w-12 h-full flex-shrink-0"
+            style={{
+              background: `linear-gradient(90deg,
+                ${binding.color} 0%,
+                rgba(0,0,0,0.6) 20%,
+                rgba(0,0,0,0.8) 50%,
+                rgba(0,0,0,0.6) 80%,
+                ${binding.color} 100%
+              )`,
+              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)',
+            }}
+          >
+            {/* Ring binding holes */}
+            <div className="absolute inset-x-0 top-12 bottom-12 flex flex-col justify-around items-center">
+              {[...Array(7)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-4 h-4 md:w-5 md:h-5 rounded-full"
+                  style={{
+                    background: 'linear-gradient(135deg, #888 0%, #ccc 50%, #999 100%)',
+                    boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Right Page - The Writing Area */}
+          <div
+            className="relative flex-1 h-full rounded-r-2xl overflow-hidden"
+            style={{
+              backgroundColor: pageBgColor,
+              boxShadow: `
+                inset 20px 0 40px rgba(0, 0, 0, 0.08),
+                8px 0 30px rgba(0, 0, 0, 0.15)
+              `,
+            }}
+          >
+            {/* Paper texture */}
+            <div
+              className="absolute inset-0 opacity-50 pointer-events-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E")`,
+              }}
+            />
+
+            {/* Page lines */}
+            {pageLines && (
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(
+                    transparent,
+                    transparent 31px,
+                    rgba(180, 160, 140, 0.3) 31px,
+                    rgba(180, 160, 140, 0.3) 32px
+                  )`,
+                  backgroundPosition: '0 120px',
+                }}
+              />
+            )}
+
+            {/* Red margin line */}
+            <div
+              className="absolute top-0 bottom-0 w-px left-24 md:left-32 opacity-30"
+              style={{ backgroundColor: '#e57373' }}
+            />
+
+            {/* Page Content */}
+            <div className="relative h-full flex flex-col p-6 md:p-10 pl-28 md:pl-36 overflow-hidden">
+              {/* Date Header */}
+              <div className="flex items-center justify-between mb-6 md:mb-8">
+                <button
+                  onClick={goToPreviousDay}
+                  className="p-2 md:p-3 rounded-full hover:bg-amber-100/50 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-amber-800/60" />
+                </button>
+
+                <button onClick={goToToday} className="text-center group">
+                  <p
+                    className="text-sm md:text-base transition-colors tracking-wider"
+                    style={{ color: currentDateColor.dayColor }}
+                  >
+                    — {format(currentDate, 'EEEE')} —
+                  </p>
+                  <p
+                    className="text-xl md:text-2xl font-bold tracking-wide mt-1"
+                    style={{ color: currentDateColor.color }}
+                  >
+                    {formatDate(currentDate)}
+                  </p>
+                </button>
+
+                <button
+                  onClick={goToNextDay}
+                  className="p-2 md:p-3 rounded-full hover:bg-amber-100/50 transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-amber-800/60" />
+                </button>
+              </div>
+
+              {/* Mood Selector - conditionally rendered */}
+              {showMoodSelector && (
+                <div className="mb-4 md:mb-6">
+                  <MoodSelector
+                    selectedMood={(currentEntry?.mood as Mood) || null}
+                    onSelect={handleMoodSelect}
+                  />
+                </div>
+              )}
+
+              {/* Entry Tabs - show when multiple entries or to create new */}
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-amber-200/50">
+                <div className="flex-1 flex items-center gap-1 overflow-x-auto">
+                  {dayEntries.map((entry, index) => {
+                    const moodColor = entry.mood && moods[entry.mood as keyof typeof moods]?.color;
+                    const isSelected = selectedEntryId === entry.id;
+
+                    return (
+                      <button
+                        key={entry.id}
+                        onClick={() => setSelectedEntryId(entry.id)}
+                        className={cn(
+                          'px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1.5',
+                          isSelected
+                            ? 'text-white shadow-md'
+                            : 'hover:opacity-80'
+                        )}
+                        style={{
+                          backgroundColor: isSelected
+                            ? (moodColor || '#f59e0b')
+                            : moodColor
+                              ? `${moodColor}30`
+                              : '#fef3c7',
+                          color: isSelected
+                            ? 'white'
+                            : moodColor || '#b45309',
+                          borderLeft: moodColor && !isSelected ? `3px solid ${moodColor}` : undefined,
+                        }}
+                      >
+                        {entry.isLocked && <Lock className="w-3 h-3" />}
+                        Entry {dayEntries.length - index}
+                        <span className="text-xs opacity-70">
+                          {formatEntryTime(entry.createdAt)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                  {dayEntries.length === 0 && (
+                    <span className="text-sm text-amber-500 italic">No entries yet</span>
+                  )}
+                </div>
+                <button
+                  onClick={handleNewEntry}
+                  className="p-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 transition-all flex items-center gap-1"
+                  title="New Entry"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+                {currentEntry && !currentEntry.isLocked && (
+                  <button
+                    onClick={handleLockEntry}
+                    className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 transition-all"
+                    title="Lock Entry (prevents editing)"
+                  >
+                    <Unlock className="w-4 h-4" />
+                  </button>
+                )}
+                {currentEntry?.isLocked && (
+                  <div className="p-2 rounded-lg bg-gray-100 text-gray-500" title="Entry is locked">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                )}
+              </div>
+
+              {/* Journal Editor - The main writing area */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
+                {/* Pinned Thought Bubble */}
+                <AnimatePresence>
+                  {pinnedQuestion && (
+                    <ThoughtBubble
+                      question={pinnedQuestion}
+                      onDismiss={() => setPinnedQuestion(null)}
+                    />
+                  )}
+                </AnimatePresence>
+
+                <RichTextEditor
+                  entry={currentEntry}
+                  date={currentDate}
+                  isLocked={currentEntry?.isLocked || false}
+                />
+
+                {/* Updates Section for Locked Entries */}
+                {currentEntry?.isLocked && (
+                  <div className="mt-6 pt-4 border-t-2 border-dashed border-amber-300">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold text-amber-800 flex items-center gap-2">
+                        <MessageSquarePlus className="w-4 h-4" />
+                        Updates
+                      </h3>
+                      {!showUpdateInput && (
+                        <button
+                          onClick={() => setShowUpdateInput(true)}
+                          className="text-xs px-3 py-1 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700 transition-all"
+                        >
+                          + Add Update
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Existing Updates */}
+                    {currentEntry.updates && currentEntry.updates.length > 0 && (
+                      <div className="space-y-3 mb-4">
+                        {currentEntry.updates.map((update: { id: string; content: string; createdAt: number }) => (
+                          <div
+                            key={update.id}
+                            className="p-3 bg-amber-50 rounded-lg border border-amber-200"
+                          >
+                            <p className="text-xs text-amber-500 mb-1">
+                              {format(new Date(update.createdAt), 'MMM d, yyyy h:mm a')}
+                            </p>
+                            <p className={cn('text-amber-900', currentFont.className)}>
+                              {update.content}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* New Update Input */}
+                    {showUpdateInput && (
+                      <div className="p-3 bg-white rounded-lg border-2 border-amber-300">
+                        <textarea
+                          value={updateText}
+                          onChange={(e) => setUpdateText(e.target.value)}
+                          placeholder="Add an update to this entry..."
+                          className={cn(
+                            'w-full min-h-[80px] p-2 rounded border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none',
+                            currentFont.className
+                          )}
+                        />
+                        <div className="flex justify-end gap-2 mt-2">
+                          <button
+                            onClick={() => {
+                              setShowUpdateInput(false);
+                              setUpdateText('');
+                            }}
+                            className="px-3 py-1 text-sm text-amber-600 hover:text-amber-800"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleAddUpdate}
+                            disabled={!updateText.trim()}
+                            className="px-4 py-1 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Save Update
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {!currentEntry.updates?.length && !showUpdateInput && (
+                      <p className="text-sm text-amber-400 italic">
+                        No updates yet. Add one to note how things changed.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Page curl effect */}
+            <div
+              className="absolute bottom-0 right-0 w-20 h-20 pointer-events-none"
+              style={{
+                background: `linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.03) 50%)`,
+              }}
+            />
+
+            {/* Gold foil edge */}
+            <div
+              className="absolute right-0 top-4 bottom-4 w-1.5"
+              style={{
+                background: 'linear-gradient(180deg, #d4af37 0%, #f5e6a3 15%, #d4af37 30%, #c5a028 50%, #f5e6a3 70%, #d4af37 85%, #c5a028 100%)',
+              }}
+            />
+          </div>
+
+          {/* Right Cover Edge (visible part) */}
+          <div
+            className="relative w-4 md:w-6 h-full rounded-r-xl flex-shrink-0 overflow-hidden"
+            style={{
+              backgroundColor: binding.color,
+              boxShadow: `
+                inset 10px 0 20px rgba(0, 0, 0, 0.3),
+                8px 0 20px rgba(0, 0, 0, 0.2)
+              `,
+            }}
+          >
+            {/* Realistic leather texture */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+              <defs>
+                <filter id="leatherRight" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="6" seed="25" result="noise"/>
+                  <feDiffuseLighting in="noise" lightingColor="#fff" surfaceScale="4" result="bump">
+                    <feDistantLight azimuth="135" elevation="45"/>
+                  </feDiffuseLighting>
+                </filter>
+                <filter id="grainRight">
+                  <feTurbulence type="turbulence" baseFrequency="0.8" numOctaves="3"/>
+                  <feColorMatrix type="saturate" values="0"/>
+                </filter>
+              </defs>
+              <rect width="100%" height="100%" filter="url(#leatherRight)" opacity="0.25"/>
+              <rect width="100%" height="100%" filter="url(#grainRight)" opacity="0.08"/>
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* Floating Action Buttons */}
+        <div className="fixed top-6 right-6 flex items-center gap-3 z-50">
+          {/* AI Reflection - only show when enabled */}
+          {aiReflectionEnabled && (
+            <AIReflection
+              content={currentEntry?.content?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || ''}
+              onSelectQuestion={setPinnedQuestion}
+            />
+          )}
+          <button
+            onClick={() => setShowMoodInsights(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Mood Insights"
+          >
+            <BarChart3 className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowCalendar(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Calendar"
+          >
+            <Calendar className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowSettings(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Settings"
+          >
+            <Settings className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={handleLogout}
+            disabled={isClosing}
+            className="p-3 rounded-xl bg-amber-500 hover:bg-amber-600 shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+            title="Sign Out"
+          >
+            <LogOut className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </div>
+
+      {/* Calendar Modal */}
+      <AnimatePresence>
+        {showCalendar && (
+          <CalendarView
+            selectedDate={currentDate}
+            onSelectDate={(date) => {
+              setCurrentDate(date);
+              setShowCalendar(false);
+            }}
+            onClose={() => setShowCalendar(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Settings Panel */}
+      <AnimatePresence>
+        {showSettings && (
+          <SettingsPanel onClose={() => setShowSettings(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Mood Insights */}
+      <AnimatePresence>
+        {showMoodInsights && (
+          <MoodInsights onClose={() => setShowMoodInsights(false)} />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
