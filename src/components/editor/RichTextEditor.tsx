@@ -193,7 +193,7 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
     }
   };
 
-  const categories = ['neat', 'messy', 'elegant', 'bold', 'childlike', 'vintage'] as const;
+  const categories = ['neat', 'messy', 'bold', 'childlike', 'vintage'] as const;
 
   if (!editor) return null;
 
