@@ -57,6 +57,7 @@ const schema = i.schema({
       journalWhy: i.string().optional(), // User's personal "why" for journaling
       darkMode: i.boolean().optional(), // Dark mode toggle
       currentNotebookId: i.string().optional(), // Currently selected notebook
+      scene: i.string().optional(), // Background scene: desk, cafe, beach, library
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -128,6 +129,7 @@ export type UserSettings = {
   journalWhy?: string; // User's personal "why" for journaling
   darkMode?: boolean; // Dark mode toggle
   currentNotebookId?: string; // Currently selected notebook
+  scene?: string; // Background scene: desk, cafe, beach, library
   createdAt: number;
   updatedAt: number;
 };
