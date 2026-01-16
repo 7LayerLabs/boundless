@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, Calendar, Settings, LogOut, BarChart3, Plus, Lock, Unlock, MessageSquarePlus, Printer, BookHeart, Search, Tag, Bookmark, FileDown, Lightbulb, Moon, Sun, Book } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Lock, Unlock, MessageSquarePlus, Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { db } from '@/lib/db/instant';
 import { useJournal } from '@/hooks/useJournal';
@@ -23,8 +23,9 @@ import { TagsView } from '../navigation/TagsView';
 import { BookmarksView } from '../navigation/BookmarksView';
 import { PDFExport } from '../navigation/PDFExport';
 import { NotebooksView } from '../navigation/NotebooksView';
+import { Sidebar } from '../navigation/Sidebar';
 import { WhyPage } from './WhyPage';
-import { DailyPrompt } from '../editor/DailyPrompt';
+import { DailyPromptModal } from '../editor/DailyPromptModal';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
 
@@ -38,6 +39,7 @@ export function JournalBook() {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showPDFExport, setShowPDFExport] = useState(false);
   const [showNotebooks, setShowNotebooks] = useState(false);
+  const [showPromptModal, setShowPromptModal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
 
@@ -93,14 +95,24 @@ export function JournalBook() {
     setShowBookmarks(false);
   };
 
-  const handleUsePrompt = (prompt: string) => {
-    // The prompt will be used in the editor - we could pass it down
-    // For now, let's create a new entry with the prompt as a starting point
-    if (currentEntry) {
-      // If there's already content, don't override
-      return;
+  const handleUsePrompt = async (prompt: string) => {
+    const promptHtml = `<p><em>${prompt}</em></p><p></p>`;
+
+    if (!currentEntry) {
+      // No entry exists, create one with the prompt
+      await createEntry(currentDate, promptHtml, null, []);
+    } else {
+      // Entry exists - check if it's empty or has content
+      const plainText = currentEntry.content?.replace(/<[^>]*>/g, '').trim() || '';
+      if (!plainText) {
+        // Entry is empty, update it with the prompt
+        await updateEntry(currentEntry.id, promptHtml, currentEntry.mood as any, currentEntry.tags || []);
+      } else {
+        // Entry has content, append the prompt
+        const newContent = currentEntry.content + `<p></p><p><em>${prompt}</em></p><p></p>`;
+        await updateEntry(currentEntry.id, newContent, currentEntry.mood as any, currentEntry.tags || []);
+      }
     }
-    createEntry(currentDate, `<p><em>${prompt}</em></p><p></p>`, null, []);
   };
 
   const binding = bindingColors[bindingColor];
@@ -317,7 +329,7 @@ export function JournalBook() {
   };
 
   return (
-    <div className="w-full flex items-center justify-center overflow-hidden py-4">
+    <div className="w-full flex items-center justify-center overflow-hidden py-4 pl-20">
       {/* The Open Journal */}
       <div className="relative w-full max-w-[1400px] flex items-center justify-center px-4">
         {/* Book shadow on desk */}
@@ -718,112 +730,35 @@ export function JournalBook() {
           </div>
         </motion.div>
 
-        {/* Floating Action Buttons - Top Right */}
-        <div className="fixed top-6 right-6 flex items-center gap-2 z-50">
-          {/* AI Reflection - only show when enabled */}
-          {aiReflectionEnabled && (
+        {/* AI Reflection - only show when enabled */}
+        {aiReflectionEnabled && (
+          <div className="fixed top-6 right-6 z-50">
             <AIReflection
               content={currentEntry?.content?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || ''}
               onSelectQuestion={setPinnedQuestion}
             />
-          )}
-          {/* Daily Prompt */}
-          <DailyPrompt onUsePrompt={handleUsePrompt} />
-          <button
-            onClick={() => setShowSearch(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Search"
-          >
-            <Search className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowWhyPage(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="My Why"
-          >
-            <BookHeart className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowBookmarks(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Bookmarks"
-          >
-            <Bookmark className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowTags(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Tags"
-          >
-            <Tag className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowMoodInsights(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Mood Insights"
-          >
-            <BarChart3 className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowCalendar(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Calendar"
-          >
-            <Calendar className="w-5 h-5 text-amber-800" />
-          </button>
-        </div>
-
-        {/* Floating Action Buttons - Bottom Right */}
-        <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
-          <button
-            onClick={() => setShowNotebooks(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Notebooks"
-          >
-            <Book className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={() => setShowPDFExport(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Export PDF"
-          >
-            <FileDown className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={handlePrint}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Print Entry"
-          >
-            <Printer className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={handleToggleDarkMode}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title={darkMode ? 'Light Mode' : 'Dark Mode'}
-          >
-            {darkMode ? (
-              <Sun className="w-5 h-5 text-amber-800" />
-            ) : (
-              <Moon className="w-5 h-5 text-amber-800" />
-            )}
-          </button>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
-            title="Settings"
-          >
-            <Settings className="w-5 h-5 text-amber-800" />
-          </button>
-          <button
-            onClick={handleLogout}
-            disabled={isClosing}
-            className="p-3 rounded-xl bg-amber-500 hover:bg-amber-600 shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
-            title="Sign Out"
-          >
-            <LogOut className="w-5 h-5 text-white" />
-          </button>
-        </div>
+          </div>
+        )}
       </div>
+
+      {/* Left Sidebar */}
+      <Sidebar
+        darkMode={darkMode}
+        onToggleDarkMode={handleToggleDarkMode}
+        onShowSearch={() => setShowSearch(true)}
+        onShowWhyPage={() => setShowWhyPage(true)}
+        onShowBookmarks={() => setShowBookmarks(true)}
+        onShowTags={() => setShowTags(true)}
+        onShowMoodInsights={() => setShowMoodInsights(true)}
+        onShowCalendar={() => setShowCalendar(true)}
+        onShowNotebooks={() => setShowNotebooks(true)}
+        onShowPDFExport={() => setShowPDFExport(true)}
+        onPrint={handlePrint}
+        onShowSettings={() => setShowSettings(true)}
+        onLogout={handleLogout}
+        onShowPrompt={() => setShowPromptModal(true)}
+        isLoggingOut={isClosing}
+      />
 
       {/* Calendar Modal */}
       <AnimatePresence>
@@ -903,6 +838,16 @@ export function JournalBook() {
           <NotebooksView
             onClose={() => setShowNotebooks(false)}
             onSelectNotebook={() => setShowNotebooks(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Daily Prompt Modal */}
+      <AnimatePresence>
+        {showPromptModal && (
+          <DailyPromptModal
+            onClose={() => setShowPromptModal(false)}
+            onUsePrompt={handleUsePrompt}
           />
         )}
       </AnimatePresence>

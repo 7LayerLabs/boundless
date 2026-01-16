@@ -114,8 +114,8 @@ export function DeskScene({ children }: DeskSceneProps) {
         {children}
       </div>
 
-      {/* Branding - bottom left */}
-      <div className="absolute bottom-6 left-8 z-20">
+      {/* Branding - bottom center */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-center">
         <h1
           className="text-2xl font-serif tracking-wide"
           style={{
