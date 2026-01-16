@@ -187,7 +187,7 @@ export default function Home() {
                   className="text-sm font-bold mb-2"
                   style={{
                     color: '#78350f',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                    fontFamily: 'Caveat, cursive',
                   }}
                 >
                   What is Boundless?
@@ -196,7 +196,7 @@ export default function Home() {
                   className="text-xs leading-relaxed mb-2"
                   style={{
                     color: '#92400e',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                    fontFamily: 'Caveat, cursive',
                   }}
                 >
                   A private space to write honestly with two-layer security.
@@ -205,7 +205,7 @@ export default function Home() {
                   className="text-xs space-y-1"
                   style={{
                     color: '#a16207',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                    fontFamily: 'Caveat, cursive',
                   }}
                 >
                   <li>• Daily prompts</li>
