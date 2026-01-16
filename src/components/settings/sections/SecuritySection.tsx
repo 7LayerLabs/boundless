@@ -15,7 +15,7 @@ async function hashPin(pin: string): Promise<string> {
 
 interface SecuritySectionProps {
   pinHash: string | undefined;
-  updateSetting: (key: string, value: any) => void;
+  updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
 export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps) {

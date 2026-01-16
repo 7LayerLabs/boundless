@@ -16,7 +16,7 @@ interface FeaturesSectionProps {
   showMoodSelector: boolean;
   aiReflectionEnabled: boolean;
   aiTone: AITone;
-  updateSetting: (key: string, value: any) => void;
+  updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
 export function FeaturesSection({

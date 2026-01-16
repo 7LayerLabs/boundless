@@ -84,10 +84,21 @@ export function MoodInsights({ onClose }: MoodInsightsProps) {
       calm: 4,
       creative: 4,
       energetic: 4,
+      hopeful: 4,
+      proud: 4,
+      loved: 5,
+      content: 4,
       thoughtful: 3,
+      confused: 2,
       tired: 2,
+      numb: 2,
+      lonely: 2,
       anxious: 1,
       sad: 1,
+      angry: 1,
+      frustrated: 1,
+      defeated: 1,
+      stressed: 1,
     };
 
     let totalScore = 0;

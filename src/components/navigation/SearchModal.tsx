@@ -129,7 +129,7 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
                           className="text-xs px-2 py-0.5 rounded-full"
                           style={{ backgroundColor: `${moodData.color}20`, color: moodData.color }}
                         >
-                          {moodData.label}
+                          {moodData.name}
                         </span>
                       )}
                       {entry.isBookmarked && (

@@ -14,7 +14,7 @@ interface AppearanceSectionProps {
   fontFamily: FontFamily;
   fontSize: FontSize;
   inkColor: InkColor;
-  updateSetting: (key: string, value: any) => void;
+  updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
 export function AppearanceSection({

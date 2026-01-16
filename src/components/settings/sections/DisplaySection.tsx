@@ -14,7 +14,7 @@ const dateFormats: Record<DateFormat, { label: string; example: string }> = {
 interface DisplaySectionProps {
   dateFormat: DateFormat;
   dateColor: DateColor;
-  updateSetting: (key: string, value: any) => void;
+  updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
 export function DisplaySection({

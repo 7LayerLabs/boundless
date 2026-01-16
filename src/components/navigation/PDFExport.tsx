@@ -126,7 +126,7 @@ export function PDFExport({ onClose }: PDFExportProps) {
           if (moodData) {
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
-            doc.text(`Mood: ${moodData.label}`, pageWidth / 2, y + 0.25, { align: 'center' });
+            doc.text(`Mood: ${moodData.name}`, pageWidth / 2, y + 0.25, { align: 'center' });
             y += 0.25;
           }
         }

@@ -65,6 +65,8 @@ export const useJournalStore = create<JournalState>((set, get) => ({
       createdAt: new Date(),
       updatedAt: new Date(),
       wordCount: countWords(plainText),
+      isLocked: false,
+      updates: [],
     };
 
     await db.entries.add(entry);
