@@ -151,6 +151,73 @@ export default function Home() {
         {showAuthModal && !isLoading && <AuthModal />}
       </AnimatePresence>
 
+      {/* Sticky note - only on welcome page */}
+      <AnimatePresence>
+        {showAuthModal && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, rotate: -5 }}
+            animate={{ opacity: 1, y: 0, rotate: -3 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+            className="absolute top-6 right-6 w-52 z-50"
+          >
+            <div
+              className="relative p-4 shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+                boxShadow: `
+                  0 4px 6px rgba(0, 0, 0, 0.25),
+                  0 10px 20px rgba(0, 0, 0, 0.15),
+                  inset 0 -2px 4px rgba(0, 0, 0, 0.05)
+                `,
+              }}
+            >
+              {/* Tape effect at top */}
+              <div
+                className="absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-4 rounded-sm"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%)',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative">
+                <h3
+                  className="text-sm font-bold mb-2"
+                  style={{
+                    color: '#78350f',
+                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                  }}
+                >
+                  What is Boundless?
+                </h3>
+                <p
+                  className="text-xs leading-relaxed mb-2"
+                  style={{
+                    color: '#92400e',
+                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                  }}
+                >
+                  A private space to write honestly with two-layer security.
+                </p>
+                <ul
+                  className="text-xs space-y-1"
+                  style={{
+                    color: '#a16207',
+                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                  }}
+                >
+                  <li>• Daily prompts</li>
+                  <li>• Mood tracking</li>
+                  <li>• Distraction-free</li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* PIN Modal */}
       <AnimatePresence>
         {showPinModal && !isLoading && (
