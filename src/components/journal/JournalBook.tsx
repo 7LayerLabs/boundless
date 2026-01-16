@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, startOfDay, isAfter } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Lock, Unlock, MessageSquarePlus, Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { db } from '@/lib/db/instant';
@@ -96,6 +96,14 @@ export function JournalBook() {
     darkMode,
     updateSetting,
   } = useSettings();
+
+  // Check if current date is a past day (not today)
+  // Past days are locked - users can only view and add updates, not create new entries or edit
+  const isPastDay = useMemo(() => {
+    const today = startOfDay(new Date());
+    const current = startOfDay(currentDate);
+    return isAfter(today, current);
+  }, [currentDate]);
 
   // Handle dark mode
   useEffect(() => {
@@ -552,6 +560,7 @@ export function JournalBook() {
                   <MoodSelector
                     selectedMood={(currentEntry?.mood as Mood) || null}
                     onSelect={handleMoodSelect}
+                    disabled={isPastDay}
                   />
                 </div>
               )}
@@ -603,18 +612,20 @@ export function JournalBook() {
                     )}>No entries yet</span>
                   )}
                 </div>
-                <button
-                  onClick={handleNewEntry}
-                  className={cn(
-                    'p-2 rounded-lg transition-all flex items-center gap-1',
-                    darkMode
-                      ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300'
-                      : 'bg-amber-100 hover:bg-amber-200 text-amber-700'
-                  )}
-                  title="New Entry"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
+                {!isPastDay && (
+                  <button
+                    onClick={handleNewEntry}
+                    className={cn(
+                      'p-2 rounded-lg transition-all flex items-center gap-1',
+                      darkMode
+                        ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300'
+                        : 'bg-amber-100 hover:bg-amber-200 text-amber-700'
+                    )}
+                    title="New Entry"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                )}
                 {currentEntry && (
                   <button
                     onClick={() => toggleBookmark(currentEntry.id)}
@@ -631,7 +642,7 @@ export function JournalBook() {
                     <Bookmark className={cn('w-4 h-4', currentEntry.isBookmarked && 'fill-current')} />
                   </button>
                 )}
-                {currentEntry && !currentEntry.isLocked && (
+                {currentEntry && !currentEntry.isLocked && !isPastDay && (
                   <button
                     onClick={handleLockEntry}
                     className={cn(
@@ -645,11 +656,14 @@ export function JournalBook() {
                     <Unlock className="w-4 h-4" />
                   </button>
                 )}
-                {currentEntry?.isLocked && (
-                  <div className={cn(
-                    'p-2 rounded-lg',
-                    darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
-                  )} title="Entry is locked">
+                {(currentEntry?.isLocked || isPastDay) && currentEntry && (
+                  <div
+                    className={cn(
+                      'p-2 rounded-lg',
+                      darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                    )}
+                    title={isPastDay ? "Past entries are read-only" : "Entry is locked"}
+                  >
                     <Lock className="w-4 h-4" />
                   </div>
                 )}
@@ -665,7 +679,7 @@ export function JournalBook() {
                     tags={currentEntry.tags || []}
                     onTagsChange={handleTagsChange}
                     allTags={allTags}
-                    disabled={currentEntry.isLocked}
+                    disabled={isPastDay || currentEntry.isLocked}
                     darkMode={darkMode}
                   />
                 </div>
@@ -686,11 +700,11 @@ export function JournalBook() {
                 <RichTextEditor
                   entry={currentEntry}
                   date={currentDate}
-                  isLocked={currentEntry?.isLocked || false}
+                  isLocked={isPastDay || currentEntry?.isLocked || false}
                 />
 
-                {/* Updates Section for Locked Entries */}
-                {currentEntry?.isLocked && (
+                {/* Updates Section for Locked/Past Entries */}
+                {(isPastDay || currentEntry?.isLocked) && currentEntry && (
                   <div className="mt-6 pt-4 border-t-2 border-dashed border-amber-300">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-sm font-semibold text-amber-800 flex items-center gap-2">

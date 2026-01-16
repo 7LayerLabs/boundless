@@ -10,9 +10,10 @@ import type { Mood } from '@/types/journal';
 interface MoodSelectorProps {
   selectedMood: Mood | null;
   onSelect: (mood: Mood | null) => void;
+  disabled?: boolean;
 }
 
-export function MoodSelector({ selectedMood, onSelect }: MoodSelectorProps) {
+export function MoodSelector({ selectedMood, onSelect, disabled = false }: MoodSelectorProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const selectedMoodData = selectedMood
@@ -23,22 +24,24 @@ export function MoodSelector({ selectedMood, onSelect }: MoodSelectorProps) {
     <div className="relative">
       {/* Current mood / expand button */}
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => !disabled && setIsExpanded(!isExpanded)}
+        disabled={disabled}
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 rounded-full',
           'text-sm transition-all',
+          disabled && 'cursor-default opacity-70',
           selectedMood
-            ? 'bg-amber-100 hover:bg-amber-200'
-            : 'bg-amber-50 hover:bg-amber-100 text-amber-600'
+            ? disabled ? 'bg-amber-100' : 'bg-amber-100 hover:bg-amber-200'
+            : disabled ? 'bg-amber-50 text-amber-400' : 'bg-amber-50 hover:bg-amber-100 text-amber-600'
         )}
       >
         {selectedMoodData ? (
           <>
             <span className="text-lg">{selectedMoodData.emoji}</span>
-            <span className="text-amber-800">{selectedMoodData.name}</span>
+            <span className={cn('text-amber-800', disabled && 'opacity-70')}>{selectedMoodData.name}</span>
           </>
         ) : (
-          <span>How are you feeling?</span>
+          <span>{disabled ? 'No mood recorded' : 'How are you feeling?'}</span>
         )}
       </button>
 
