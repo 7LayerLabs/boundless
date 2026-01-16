@@ -4,10 +4,7 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { DeskScene } from '@/components/scene/DeskScene';
-import { CafeScene } from '@/components/scene/CafeScene';
-import { BeachScene } from '@/components/scene/BeachScene';
-import { LibraryScene } from '@/components/scene/LibraryScene';
-import type { SceneType } from '@/types/settings';
+// Note: Additional scenes (CafeScene, BeachScene, LibraryScene) saved for v2
 import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { PinModal } from '@/components/lock/PinModal';
@@ -30,13 +27,6 @@ const DEFAULT_SETTINGS = {
   scene: 'desk',
 };
 
-// Scene components map
-const sceneComponents: Record<SceneType, React.ComponentType<{ children: React.ReactNode }>> = {
-  desk: DeskScene,
-  cafe: CafeScene,
-  beach: BeachScene,
-  library: LibraryScene,
-};
 
 export default function Home() {
   const { isLoading: authLoading, user, error: authError } = db.useAuth();
@@ -101,13 +91,9 @@ export default function Home() {
   const showPinModal = user && !isPinVerified;
   const showOpenJournal = user && isPinVerified && isJournalOpen;
 
-  // Get the current scene - default to desk if not set
-  const currentScene = (userSettings?.scene as SceneType) || 'desk';
-  const Scene = sceneComponents[currentScene];
-
   if (authError) {
     return (
-      <Scene>
+      <DeskScene>
         <div className="text-center p-8 bg-amber-50/90 rounded-2xl shadow-xl">
           <p className="text-red-600 mb-4">Connection error</p>
           <button
@@ -117,12 +103,12 @@ export default function Home() {
             Retry
           </button>
         </div>
-      </Scene>
+      </DeskScene>
     );
   }
 
   return (
-    <Scene>
+    <DeskScene>
       {/* Loading spinner */}
       {isLoading && (
         <motion.div
@@ -261,6 +247,6 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
-    </Scene>
+    </DeskScene>
   );
 }

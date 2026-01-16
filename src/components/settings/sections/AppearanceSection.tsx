@@ -1,17 +1,13 @@
 'use client';
 
-import { PenTool, Type, Sparkles, Monitor, Coffee, Umbrella, BookOpen } from 'lucide-react';
+import { PenTool, Type, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { bindingColors, claspStyles, pageColors, inkColors } from '@/constants/themes';
 import { fonts, fontsByCategory, fontCategories } from '@/constants/fonts';
-import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor, SceneType } from '@/types/settings';
+import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor } from '@/types/settings';
 
-const scenes: { id: SceneType; name: string; description: string; icon: React.ReactNode; preview: string }[] = [
-  { id: 'desk', name: 'Cozy Desk', description: 'Warm lamp, dark wood', icon: <Monitor className="w-5 h-5" />, preview: '#1a1714' },
-  { id: 'cafe', name: 'Coffee Shop', description: 'Afternoon cafe vibes', icon: <Coffee className="w-5 h-5" />, preview: '#2d2520' },
-  { id: 'beach', name: 'Beach Sunset', description: 'Golden hour by the ocean', icon: <Umbrella className="w-5 h-5" />, preview: '#c49a6c' },
-  { id: 'library', name: 'Classic Library', description: 'Green lamp, bookshelves', icon: <BookOpen className="w-5 h-5" />, preview: '#1e1a18' },
-];
+// Note: Scene/Environment feature saved for v2
+// Scene components exist in src/components/scene/ (DeskScene, CafeScene, BeachScene, LibraryScene)
 
 interface AppearanceSectionProps {
   bindingColor: BindingColor;
@@ -21,7 +17,6 @@ interface AppearanceSectionProps {
   fontFamily: FontFamily;
   fontSize: FontSize;
   inkColor: InkColor;
-  scene: SceneType;
   updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
@@ -33,44 +28,12 @@ export function AppearanceSection({
   fontFamily,
   fontSize,
   inkColor,
-  scene,
   updateSetting,
 }: AppearanceSectionProps) {
   const categories = ['neat', 'messy', 'bold', 'childlike', 'vintage'] as const;
 
   return (
     <>
-      {/* Scene/Environment */}
-      <section className="pb-6 border-b border-amber-100">
-        <div className="flex items-center gap-2 mb-3">
-          <Monitor className="w-4 h-4 text-amber-700" />
-          <h3 className="text-sm font-medium text-amber-800">Environment</h3>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          {scenes.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => updateSetting('scene', s.id)}
-              className={cn(
-                'relative p-4 rounded-lg border-2 transition-all text-left',
-                scene === s.id
-                  ? 'border-amber-500 bg-amber-50'
-                  : 'border-amber-100 hover:border-amber-300 bg-white'
-              )}
-            >
-              <div
-                className="w-full h-16 rounded-md mb-3 flex items-center justify-center"
-                style={{ backgroundColor: s.preview }}
-              >
-                <span className="text-white/70">{s.icon}</span>
-              </div>
-              <p className="text-sm font-medium text-amber-800">{s.name}</p>
-              <p className="text-xs text-amber-500">{s.description}</p>
-            </button>
-          ))}
-        </div>
-      </section>
-
       {/* Ink Color */}
       <section className="pb-6 border-b border-amber-100">
         <div className="flex items-center gap-2 mb-3">

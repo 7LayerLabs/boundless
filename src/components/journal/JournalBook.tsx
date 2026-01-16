@@ -13,6 +13,7 @@ import { fonts } from '@/constants/fonts';
 import { moods } from '@/constants/moods';
 import { RichTextEditor } from '../editor/RichTextEditor';
 import { MoodSelector } from '../editor/MoodSelector';
+import { TagInput } from '../editor/TagInput';
 import { AIReflection, type ReflectionQuestion } from '../editor/AIReflection';
 import { ThoughtBubble } from '../editor/ThoughtBubble';
 import { CalendarView } from '../navigation/CalendarView';
@@ -62,6 +63,7 @@ export function JournalBook() {
     toggleBookmark,
     deleteEntry,
     allEntries,
+    allTags,
   } = useJournal();
 
   // Temporary: Expose delete function to window for admin use
@@ -185,6 +187,12 @@ export function JournalBook() {
       await updateEntry(currentEntry.id, currentEntry.content, mood, currentEntry.tags || []);
     } else {
       await createEntry(currentDate, '', mood, []);
+    }
+  };
+
+  const handleTagsChange = async (tags: string[]) => {
+    if (currentEntry) {
+      await updateEntry(currentEntry.id, currentEntry.content, currentEntry.mood as Mood | null, tags);
     }
   };
 
@@ -646,6 +654,22 @@ export function JournalBook() {
                   </div>
                 )}
               </div>
+
+              {/* Tag Input */}
+              {currentEntry && (
+                <div className={cn(
+                  'mb-4 pb-3 border-b',
+                  darkMode ? 'border-amber-500/20' : 'border-amber-200/50'
+                )}>
+                  <TagInput
+                    tags={currentEntry.tags || []}
+                    onTagsChange={handleTagsChange}
+                    allTags={allTags}
+                    disabled={currentEntry.isLocked}
+                    darkMode={darkMode}
+                  />
+                </div>
+              )}
 
               {/* Journal Editor - The main writing area */}
               <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
