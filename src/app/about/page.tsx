@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowLeft, Lock, Shield, Sparkles, BookOpen, Heart, Calendar, Search, Tag, Monitor } from 'lucide-react';
+import { ArrowLeft, Lock, Shield, Sparkles, BookOpen, Heart, Calendar, Search, Tag, Monitor, LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -50,6 +50,11 @@ export default function AboutPage() {
       icon: <Monitor className="w-6 h-6" />,
       title: 'Sync Across Devices',
       description: 'Use Boundless on your computer, phone, or tablet. Your journal syncs automatically so your entries are always with you.',
+    },
+    {
+      icon: <LockKeyhole className="w-6 h-6" />,
+      title: 'Accountability Mode',
+      description: 'Lock in your entries so they can\'t be erased. Add updates, but never lose your original thoughts. Your emotions matter — this helps you honor them instead of hiding from them.',
     },
   ];
 
