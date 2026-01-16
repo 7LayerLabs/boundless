@@ -159,7 +159,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, rotate: -3 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="absolute top-6 right-6 w-52 z-50"
+            className="absolute top-6 right-6 w-52 z-[60]"
           >
             <div
               className="relative p-4 shadow-lg"
