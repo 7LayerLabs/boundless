@@ -53,8 +53,8 @@ export default function AboutPage() {
     },
     {
       icon: <LockKeyhole className="w-6 h-6" />,
-      title: 'Accountability Mode',
-      description: 'Lock in your entries so they can\'t be erased. Add updates, but never lose your original thoughts. Your emotions matter — this helps you honor them instead of hiding from them.',
+      title: 'Built-In Accountability',
+      description: 'Your entries are permanently saved once written. Add updates anytime, but your original thoughts stay intact. Your emotions matter — Boundless helps you honor them instead of hiding from them.',
     },
   ];
 

@@ -225,10 +225,21 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: 'Boundless - Digital Leather-Bound Journal',
-  description: 'A premium digital journal that looks and feels like a real leather-bound book.',
+  description: 'A private digital journal for people who want to write honestly. Your thoughts deserve a space that\'s secure, personal, and distraction-free.',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',
+    apple: '/icons/icon-192x192.png',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Boundless',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: '#1a1714',
 };
 
 export default function RootLayout({
