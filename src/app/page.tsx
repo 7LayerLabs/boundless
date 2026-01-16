@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
 import { DeskScene } from '@/components/scene/DeskScene';
 import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
@@ -212,6 +213,20 @@ export default function Home() {
                   <li>• Mood tracking</li>
                   <li>• Distraction-free</li>
                 </ul>
+
+                {/* More info link */}
+                <Link href="/about">
+                  <div
+                    className="mt-3 pt-2 text-xs text-center cursor-pointer hover:underline"
+                    style={{
+                      color: '#1d4ed8',
+                      fontFamily: 'Comic Sans MS, cursive, sans-serif',
+                      borderTop: '1px dashed rgba(120, 53, 15, 0.2)',
+                    }}
+                  >
+                    More info & features →
+                  </div>
+                </Link>
               </div>
             </div>
           </motion.div>
