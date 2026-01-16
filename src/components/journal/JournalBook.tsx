@@ -220,7 +220,7 @@ export function JournalBook() {
     if (!printWindow) return;
 
     const entryContent = currentEntry?.content || '';
-    const entryMood = currentEntry?.mood ? moods[currentEntry.mood as keyof typeof moods]?.label : '';
+    const entryMood = currentEntry?.mood ? moods[currentEntry.mood as keyof typeof moods]?.name : '';
     const updates = currentEntry?.updates || [];
 
     printWindow.document.write(`
