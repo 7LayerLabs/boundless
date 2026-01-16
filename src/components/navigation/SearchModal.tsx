@@ -9,6 +9,7 @@ import { useJournal } from '@/hooks/useJournal';
 import { useSettings } from '@/hooks/useSettings';
 import { fonts } from '@/constants/fonts';
 import { moods } from '@/constants/moods';
+import { analytics } from '@/components/providers/PostHogProvider';
 import type { JournalEntry } from '@/lib/db/instant';
 
 interface SearchModalProps {
@@ -32,6 +33,7 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
     if (query.trim()) {
       const searchResults = searchEntries(query);
       setResults(searchResults);
+      analytics.searchPerformed(searchResults.length);
     } else {
       setResults([]);
     }

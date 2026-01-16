@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PostHogProvider } from '@/components/providers/PostHogProvider';
 import {
   // Neat & Tidy
   Caveat,
@@ -268,7 +269,9 @@ export default function RootLayout({
           antialiased
         `}
       >
-        {children}
+        <PostHogProvider>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );

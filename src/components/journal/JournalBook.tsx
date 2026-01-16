@@ -26,6 +26,7 @@ import { NotebooksView } from '../navigation/NotebooksView';
 import { Sidebar } from '../navigation/Sidebar';
 import { WhyPage } from './WhyPage';
 import { DailyPromptModal } from '../editor/DailyPromptModal';
+import { analytics } from '@/components/providers/PostHogProvider';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
 
@@ -104,7 +105,9 @@ export function JournalBook() {
   }, [darkMode]);
 
   const handleToggleDarkMode = () => {
-    updateSetting('darkMode', !darkMode);
+    const newMode = !darkMode;
+    updateSetting('darkMode', newMode);
+    analytics.themeChanged(newMode ? 'dark' : 'light');
   };
 
   const handleSelectEntry = (entry: JournalEntry) => {
@@ -209,6 +212,7 @@ export function JournalBook() {
 
   const handleLogout = () => {
     setIsClosing(true);
+    analytics.userLoggedOut();
     setTimeout(() => {
       db.auth.signOut();
     }, 600);
@@ -350,6 +354,7 @@ export function JournalBook() {
     // Wait for fonts to load then print
     setTimeout(() => {
       printWindow.print();
+      analytics.entryPrinted();
     }, 500);
   };
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { db, type JournalEntry } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
 import type { Mood } from '@/types/journal';
+import { analytics } from '@/components/providers/PostHogProvider';
 
 export function useJournal() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -83,6 +84,8 @@ export function useJournal() {
     const entryId = id();
     const now = Date.now();
 
+    const wordCount = content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+
     await db.transact([
       tx.entries[entryId].update({
         userId: user.id,
@@ -90,7 +93,7 @@ export function useJournal() {
         content,
         mood,
         tags,
-        wordCount: content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length,
+        wordCount,
         isLocked: false,
         updates: [],
         createdAt: now,
@@ -98,6 +101,7 @@ export function useJournal() {
       }),
     ]);
 
+    analytics.entryCreated(wordCount, !!mood);
     setSelectedEntryId(entryId);
     return entryId;
   };
@@ -114,15 +118,19 @@ export function useJournal() {
     const entry = entries.find((e) => e.id === entryId);
     if (entry?.isLocked) return; // Don't allow editing locked entries
 
+    const wordCount = content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+
     await db.transact([
       tx.entries[entryId].update({
         content,
         mood,
         tags,
-        wordCount: content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length,
+        wordCount,
         updatedAt: Date.now(),
       }),
     ]);
+
+    analytics.entryUpdated(wordCount);
   };
 
   // Lock an entry (prevents further edits to original content)
@@ -135,6 +143,8 @@ export function useJournal() {
         updatedAt: Date.now(),
       }),
     ]);
+
+    analytics.entryLocked();
   };
 
   // Add an update to a locked entry
@@ -179,12 +189,18 @@ export function useJournal() {
     const entry = entries.find((e) => e.id === entryId);
     if (!entry) return;
 
+    const wasBookmarked = entry.isBookmarked;
+
     await db.transact([
       tx.entries[entryId].update({
         isBookmarked: !entry.isBookmarked,
         updatedAt: Date.now(),
       }),
     ]);
+
+    if (!wasBookmarked) {
+      analytics.entryBookmarked();
+    }
   };
 
   // Get bookmarked entries

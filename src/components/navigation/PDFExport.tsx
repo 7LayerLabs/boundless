@@ -10,6 +10,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { fonts } from '@/constants/fonts';
 import { moods } from '@/constants/moods';
 import { dateColors } from '@/constants/themes';
+import { analytics } from '@/components/providers/PostHogProvider';
 
 interface PDFExportProps {
   onClose: () => void;
@@ -203,6 +204,7 @@ export function PDFExport({ onClose }: PDFExportProps) {
       // Save
       const filename = `journal_${format(new Date(), 'yyyy-MM-dd')}.pdf`;
       doc.save(filename);
+      analytics.pdfExported(entries.length);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Error generating PDF. Please try again.');

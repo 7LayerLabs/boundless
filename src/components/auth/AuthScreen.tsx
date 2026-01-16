@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, Loader2, BookOpen, Sparkles } from 'lucide-react';
 import { db } from '@/lib/db/instant';
 import { cn } from '@/lib/utils/cn';
+import { analytics } from '@/components/providers/PostHogProvider';
 
 export function AuthScreen() {
   const [email, setEmail] = useState('');
@@ -38,6 +39,7 @@ export function AuthScreen() {
 
     try {
       await db.auth.signInWithMagicCode({ email: sentTo, code });
+      analytics.userLoggedIn('magic_code');
     } catch (err: any) {
       console.error('Verification error:', err);
       setError(err.message || 'Invalid code. Please try again.');

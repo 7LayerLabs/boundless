@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
 import { moodList } from '@/constants/moods';
+import { analytics } from '@/components/providers/PostHogProvider';
 import type { Mood } from '@/types/journal';
 
 interface MoodSelectorProps {
@@ -72,7 +73,11 @@ export function MoodSelector({ selectedMood, onSelect }: MoodSelectorProps) {
                   <button
                     key={mood.id}
                     onClick={() => {
-                      onSelect(mood.id === selectedMood ? null : mood.id);
+                      const newMood = mood.id === selectedMood ? null : mood.id;
+                      if (newMood) {
+                        analytics.moodSelected(newMood);
+                      }
+                      onSelect(newMood);
                       setIsExpanded(false);
                     }}
                     className={cn(

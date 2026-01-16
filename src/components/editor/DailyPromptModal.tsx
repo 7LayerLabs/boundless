@@ -6,6 +6,7 @@ import { Lightbulb, RefreshCw, X, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useSettings } from '@/hooks/useSettings';
 import { fonts } from '@/constants/fonts';
+import { analytics } from '@/components/providers/PostHogProvider';
 
 // Default prompts organized by category
 const defaultPrompts = {
@@ -79,6 +80,7 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
   };
 
   const handleUsePrompt = () => {
+    analytics.promptUsed(currentCategory);
     onUsePrompt(currentPrompt);
     onClose();
   };

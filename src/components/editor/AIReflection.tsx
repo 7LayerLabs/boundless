@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, X, Loader2, Sparkles, MessageCircle, Key, RefreshCw, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useSettings } from '@/hooks/useSettings';
+import { analytics } from '@/components/providers/PostHogProvider';
 import type { AITone } from '@/types/settings';
 
 const tonePrompts: Record<AITone, string> = {
@@ -164,6 +165,7 @@ Each question should be distinct and match your assigned tone.`
       const responseContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (responseContent) {
+        analytics.aiReflectionUsed(tone);
         try {
           // Extract JSON from the response - handle markdown blocks and preamble text
           let jsonStr = responseContent.trim();
