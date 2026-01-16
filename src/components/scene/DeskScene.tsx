@@ -119,7 +119,7 @@ export function DeskScene({ children }: DeskSceneProps) {
         <h1
           className="text-2xl font-serif tracking-wide"
           style={{
-            color: 'rgba(180, 160, 140, 0.4)',
+            color: 'rgba(200, 180, 160, 0.65)',
             textShadow: '0 1px 2px rgba(0,0,0,0.5)',
           }}
         >
@@ -128,7 +128,7 @@ export function DeskScene({ children }: DeskSceneProps) {
         <p
           className="text-xs tracking-[0.2em] uppercase mt-0.5"
           style={{
-            color: 'rgba(160, 140, 120, 0.3)',
+            color: 'rgba(180, 160, 140, 0.55)',
           }}
         >
           Write without limits
