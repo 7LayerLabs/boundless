@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowLeft, Lock, Shield, Sparkles, BookOpen, Heart, Calendar, Search, Tag } from 'lucide-react';
+import { ArrowLeft, Lock, Shield, Sparkles, BookOpen, Heart, Calendar, Search, Tag, Monitor } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -45,6 +45,11 @@ export default function AboutPage() {
       icon: <Tag className="w-6 h-6" />,
       title: 'Tags & Organization',
       description: 'Organize entries with tags. Group related thoughts and find them easily later.',
+    },
+    {
+      icon: <Monitor className="w-6 h-6" />,
+      title: 'Sync Across Devices',
+      description: 'Use Boundless on your computer, phone, or tablet. Your journal syncs automatically so your entries are always with you.',
     },
   ];
 
