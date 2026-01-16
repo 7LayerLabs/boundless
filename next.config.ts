@@ -14,7 +14,8 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Turbopack config - empty to silence warning since PWA uses webpack */
+  turbopack: {},
 };
 
 export default withPWA(nextConfig);
