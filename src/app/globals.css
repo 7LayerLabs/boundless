@@ -60,20 +60,27 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Dark Mode */
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+
 body.dark-mode {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   color: #e5e5e5;
 }
 
+/* Background colors */
 body.dark-mode .bg-white {
-  background-color: #2d2d2d !important;
+  background-color: #1e1e1e !important;
 }
 
-body.dark-mode .bg-white\/90 {
-  background-color: rgba(45, 45, 45, 0.9) !important;
+body.dark-mode .bg-white\/90,
+body.dark-mode .bg-white\/95 {
+  background-color: rgba(30, 30, 30, 0.95) !important;
 }
 
+/* Text colors - grays */
+body.dark-mode .text-gray-900,
 body.dark-mode .text-gray-800,
 body.dark-mode .text-gray-700,
 body.dark-mode .text-gray-600 {
@@ -85,26 +92,56 @@ body.dark-mode .text-gray-400 {
   color: #a0a0a0 !important;
 }
 
+/* Border colors */
 body.dark-mode .border-gray-100,
-body.dark-mode .border-gray-200 {
-  border-color: #404040 !important;
+body.dark-mode .border-gray-200,
+body.dark-mode .border-gray-300 {
+  border-color: #3a3a3a !important;
 }
 
+/* Background - grays */
 body.dark-mode .bg-gray-50,
 body.dark-mode .bg-gray-100 {
-  background-color: #353535 !important;
+  background-color: #2a2a2a !important;
 }
 
-body.dark-mode .hover\:bg-gray-100:hover {
-  background-color: #404040 !important;
+body.dark-mode .bg-gray-200 {
+  background-color: #333333 !important;
 }
 
+body.dark-mode .hover\:bg-gray-100:hover,
+body.dark-mode .hover\:bg-gray-200:hover {
+  background-color: #3a3a3a !important;
+}
+
+/* Amber colors - dark mode versions */
 body.dark-mode .bg-amber-50 {
-  background-color: rgba(251, 191, 36, 0.1) !important;
+  background-color: rgba(251, 191, 36, 0.08) !important;
 }
 
 body.dark-mode .bg-amber-100 {
+  background-color: rgba(251, 191, 36, 0.12) !important;
+}
+
+body.dark-mode .bg-amber-100\/80,
+body.dark-mode .hover\:bg-amber-100\/80:hover {
   background-color: rgba(251, 191, 36, 0.15) !important;
+}
+
+body.dark-mode .hover\:bg-amber-100:hover {
+  background-color: rgba(251, 191, 36, 0.18) !important;
+}
+
+body.dark-mode .hover\:bg-amber-200:hover {
+  background-color: rgba(251, 191, 36, 0.25) !important;
+}
+
+body.dark-mode .bg-amber-200 {
+  background-color: rgba(251, 191, 36, 0.2) !important;
+}
+
+body.dark-mode .text-amber-900 {
+  color: #fcd34d !important;
 }
 
 body.dark-mode .text-amber-800 {
@@ -115,16 +152,148 @@ body.dark-mode .text-amber-700 {
   color: #f59e0b !important;
 }
 
+body.dark-mode .text-amber-600 {
+  color: #d97706 !important;
+}
+
+body.dark-mode .text-amber-500 {
+  color: #f59e0b !important;
+}
+
+body.dark-mode .text-amber-400 {
+  color: #fbbf24 !important;
+}
+
+body.dark-mode .text-amber-600\/70 {
+  color: rgba(217, 119, 6, 0.8) !important;
+}
+
+body.dark-mode .border-amber-100,
+body.dark-mode .border-amber-200 {
+  border-color: rgba(251, 191, 36, 0.2) !important;
+}
+
+body.dark-mode .border-amber-200\/50 {
+  border-color: rgba(251, 191, 36, 0.15) !important;
+}
+
+/* Sidebar specific */
+body.dark-mode [class*="shadow-xl"] {
+  --tw-shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .border-r.border-amber-100 {
+  border-color: rgba(251, 191, 36, 0.15) !important;
+}
+
+/* Form elements */
 body.dark-mode input,
-body.dark-mode textarea {
-  background-color: #353535 !important;
-  border-color: #505050 !important;
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #2a2a2a !important;
+  border-color: #404040 !important;
   color: #e5e5e5 !important;
 }
 
 body.dark-mode input::placeholder,
 body.dark-mode textarea::placeholder {
-  color: #808080 !important;
+  color: #707070 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+  border-color: #f59e0b !important;
+}
+
+/* Modals */
+body.dark-mode .bg-black\/60 {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+body.dark-mode .rounded-2xl.shadow-2xl,
+body.dark-mode .rounded-xl.shadow-2xl {
+  background-color: #1e1e1e !important;
+}
+
+/* Gradient backgrounds in dark mode */
+body.dark-mode .bg-gradient-to-r.from-amber-50.to-amber-100 {
+  background: linear-gradient(to right, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.15)) !important;
+}
+
+body.dark-mode .bg-gradient-to-br.from-amber-50.to-orange-50 {
+  background: linear-gradient(to bottom right, rgba(251, 191, 36, 0.1), rgba(249, 115, 22, 0.1)) !important;
+}
+
+/* Buttons */
+body.dark-mode .bg-amber-500 {
+  background-color: #d97706 !important;
+}
+
+body.dark-mode .hover\:bg-amber-600:hover {
+  background-color: #b45309 !important;
+}
+
+/* Red/danger colors */
+body.dark-mode .bg-red-100 {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+body.dark-mode .hover\:bg-red-200:hover {
+  background-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+body.dark-mode .text-red-700 {
+  color: #f87171 !important;
+}
+
+/* Scrollbar dark mode */
+body.dark-mode .journal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .journal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(251, 191, 36, 0.3);
+}
+
+body.dark-mode .journal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(251, 191, 36, 0.5);
+}
+
+/* TipTap editor placeholder in dark mode */
+body.dark-mode .tiptap p.is-editor-empty:first-child::before {
+  color: rgba(251, 191, 36, 0.3);
+}
+
+/* Journal page background in dark mode */
+body.dark-mode [style*="background-color: rgb(254, 254, 254)"],
+body.dark-mode [style*="background-color: #fefefe"],
+body.dark-mode [style*="backgroundColor: #fefefe"] {
+  background-color: #2a2520 !important;
+}
+
+body.dark-mode [style*="background-color: rgb(244, 234, 213)"],
+body.dark-mode [style*="background-color: #f4ead5"],
+body.dark-mode [style*="backgroundColor: #f4ead5"] {
+  background-color: #2a2520 !important;
+}
+
+/* Page lines in dark mode */
+body.dark-mode .page-lined {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(180, 160, 140, 0.15) 27px,
+    rgba(180, 160, 140, 0.15) 28px
+  ) !important;
+}
+
+/* Entry tabs in dark mode */
+body.dark-mode .bg-\[\#fef3c7\] {
+  background-color: rgba(251, 191, 36, 0.15) !important;
+}
+
+body.dark-mode .text-\[\#b45309\] {
+  color: #fbbf24 !important;
 }
 
 /* ========================================

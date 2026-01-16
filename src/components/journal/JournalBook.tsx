@@ -117,8 +117,13 @@ export function JournalBook() {
 
   const binding = bindingColors[bindingColor];
   const currentFont = fonts[fontFamily] || fonts.caveat;
-  const pageBgColor = pageColors[pageColor];
+  const pageBgColor = darkMode ? '#2a2520' : pageColors[pageColor];
   const currentDateColor = dateColors[dateColor] || dateColors.brown;
+
+  // Dark mode adjusted colors
+  const darkModeTextColor = darkMode ? '#e5c89b' : undefined;
+  const darkModeDateColor = darkMode ? '#d4a76a' : currentDateColor.color;
+  const darkModeDayColor = darkMode ? '#b89860' : currentDateColor.dayColor;
 
   // Format date based on user preference
   const formatDate = (date: Date) => {
@@ -448,8 +453,8 @@ export function JournalBook() {
                   backgroundImage: `repeating-linear-gradient(
                     transparent,
                     transparent 31px,
-                    rgba(180, 160, 140, 0.3) 31px,
-                    rgba(180, 160, 140, 0.3) 32px
+                    ${darkMode ? 'rgba(180, 160, 140, 0.15)' : 'rgba(180, 160, 140, 0.3)'} 31px,
+                    ${darkMode ? 'rgba(180, 160, 140, 0.15)' : 'rgba(180, 160, 140, 0.3)'} 32px
                   )`,
                   backgroundPosition: '0 120px',
                 }}
@@ -468,21 +473,27 @@ export function JournalBook() {
               <div className="flex items-center justify-between mb-6 md:mb-8">
                 <button
                   onClick={goToPreviousDay}
-                  className="p-2 md:p-3 rounded-full hover:bg-amber-100/50 transition-colors"
+                  className={cn(
+                    'p-2 md:p-3 rounded-full transition-colors',
+                    darkMode ? 'hover:bg-amber-500/20' : 'hover:bg-amber-100/50'
+                  )}
                 >
-                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-amber-800/60" />
+                  <ChevronLeft className={cn(
+                    'w-6 h-6 md:w-8 md:h-8',
+                    darkMode ? 'text-amber-400/60' : 'text-amber-800/60'
+                  )} />
                 </button>
 
                 <button onClick={goToToday} className="text-center group">
                   <p
                     className="text-sm md:text-base transition-colors tracking-wider"
-                    style={{ color: currentDateColor.dayColor }}
+                    style={{ color: darkModeDayColor }}
                   >
                     — {format(currentDate, 'EEEE')} —
                   </p>
                   <p
                     className="text-xl md:text-2xl font-bold tracking-wide mt-1"
-                    style={{ color: currentDateColor.color }}
+                    style={{ color: darkModeDateColor }}
                   >
                     {formatDate(currentDate)}
                   </p>
@@ -490,9 +501,15 @@ export function JournalBook() {
 
                 <button
                   onClick={goToNextDay}
-                  className="p-2 md:p-3 rounded-full hover:bg-amber-100/50 transition-colors"
+                  className={cn(
+                    'p-2 md:p-3 rounded-full transition-colors',
+                    darkMode ? 'hover:bg-amber-500/20' : 'hover:bg-amber-100/50'
+                  )}
                 >
-                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-amber-800/60" />
+                  <ChevronRight className={cn(
+                    'w-6 h-6 md:w-8 md:h-8',
+                    darkMode ? 'text-amber-400/60' : 'text-amber-800/60'
+                  )} />
                 </button>
               </div>
 
@@ -507,7 +524,10 @@ export function JournalBook() {
               )}
 
               {/* Entry Tabs - show when multiple entries or to create new */}
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-amber-200/50">
+              <div className={cn(
+                'flex items-center gap-2 mb-4 pb-3 border-b',
+                darkMode ? 'border-amber-500/20' : 'border-amber-200/50'
+              )}>
                 <div className="flex-1 flex items-center gap-1 overflow-x-auto">
                   {dayEntries.map((entry, index) => {
                     const moodColor = entry.mood && moods[entry.mood as keyof typeof moods]?.color;
@@ -544,12 +564,20 @@ export function JournalBook() {
                     );
                   })}
                   {dayEntries.length === 0 && (
-                    <span className="text-sm text-amber-500 italic">No entries yet</span>
+                    <span className={cn(
+                      'text-sm italic',
+                      darkMode ? 'text-amber-400/70' : 'text-amber-500'
+                    )}>No entries yet</span>
                   )}
                 </div>
                 <button
                   onClick={handleNewEntry}
-                  className="p-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-700 transition-all flex items-center gap-1"
+                  className={cn(
+                    'p-2 rounded-lg transition-all flex items-center gap-1',
+                    darkMode
+                      ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300'
+                      : 'bg-amber-100 hover:bg-amber-200 text-amber-700'
+                  )}
                   title="New Entry"
                 >
                   <Plus className="w-4 h-4" />
@@ -560,8 +588,10 @@ export function JournalBook() {
                     className={cn(
                       'p-2 rounded-lg transition-all',
                       currentEntry.isBookmarked
-                        ? 'bg-amber-100 text-amber-600'
-                        : 'bg-gray-100 hover:bg-amber-50 text-gray-400 hover:text-amber-500'
+                        ? darkMode ? 'bg-amber-500/30 text-amber-400' : 'bg-amber-100 text-amber-600'
+                        : darkMode
+                          ? 'bg-gray-700 hover:bg-amber-500/20 text-gray-400 hover:text-amber-400'
+                          : 'bg-gray-100 hover:bg-amber-50 text-gray-400 hover:text-amber-500'
                     )}
                     title={currentEntry.isBookmarked ? 'Remove Bookmark' : 'Bookmark Entry'}
                   >
@@ -571,14 +601,22 @@ export function JournalBook() {
                 {currentEntry && !currentEntry.isLocked && (
                   <button
                     onClick={handleLockEntry}
-                    className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 transition-all"
+                    className={cn(
+                      'p-2 rounded-lg transition-all',
+                      darkMode
+                        ? 'bg-red-500/20 hover:bg-red-500/30 text-red-400'
+                        : 'bg-red-100 hover:bg-red-200 text-red-700'
+                    )}
                     title="Lock Entry (prevents editing)"
                   >
                     <Unlock className="w-4 h-4" />
                   </button>
                 )}
                 {currentEntry?.isLocked && (
-                  <div className="p-2 rounded-lg bg-gray-100 text-gray-500" title="Entry is locked">
+                  <div className={cn(
+                    'p-2 rounded-lg',
+                    darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                  )} title="Entry is locked">
                     <Lock className="w-4 h-4" />
                   </div>
                 )}

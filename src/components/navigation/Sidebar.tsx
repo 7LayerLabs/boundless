@@ -164,7 +164,9 @@ export function Sidebar({
       onClick={item.onClick}
       className={cn(
         'w-full flex items-center gap-3 p-3 rounded-xl transition-all group',
-        'hover:bg-amber-100/80 text-amber-800',
+        darkMode
+          ? 'hover:bg-amber-500/20 text-amber-300'
+          : 'hover:bg-amber-100/80 text-amber-800',
         !isExpanded && 'justify-center'
       )}
       title={!isExpanded ? item.label : undefined}
@@ -177,7 +179,10 @@ export function Sidebar({
           className="flex-1 text-left overflow-hidden"
         >
           <p className="font-medium text-sm truncate">{item.label}</p>
-          <p className="text-xs text-amber-600/70 truncate">{item.description}</p>
+          <p className={cn(
+            'text-xs truncate',
+            darkMode ? 'text-amber-400/70' : 'text-amber-600/70'
+          )}>{item.description}</p>
         </motion.div>
       )}
     </button>
@@ -188,15 +193,26 @@ export function Sidebar({
       initial={false}
       animate={{ width: isExpanded ? 240 : 72 }}
       transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-      className="fixed left-0 top-0 bottom-0 z-50 flex flex-col bg-white/95 backdrop-blur-sm shadow-xl border-r border-amber-100"
+      className={cn(
+        'fixed left-0 top-0 bottom-0 z-50 flex flex-col backdrop-blur-sm shadow-xl border-r',
+        darkMode
+          ? 'bg-gray-900/95 border-gray-700'
+          : 'bg-white/95 border-amber-100'
+      )}
     >
       {/* Logo */}
       <div className={cn(
-        'p-4 border-b border-amber-100 flex items-center',
+        'p-4 border-b flex items-center',
+        darkMode ? 'border-gray-700' : 'border-amber-100',
         isExpanded ? 'justify-between' : 'justify-center'
       )}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md">
+          <div className={cn(
+            'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
+            darkMode
+              ? 'bg-gradient-to-br from-amber-500 to-amber-700'
+              : 'bg-gradient-to-br from-amber-400 to-amber-600'
+          )}>
             <span className="text-white font-bold text-lg">B</span>
           </div>
           {isExpanded && (
@@ -204,8 +220,14 @@ export function Sidebar({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <p className="font-bold text-amber-900">Boundless</p>
-              <p className="text-xs text-amber-600">Write Without Limits</p>
+              <p className={cn(
+                'font-bold',
+                darkMode ? 'text-amber-300' : 'text-amber-900'
+              )}>Boundless</p>
+              <p className={cn(
+                'text-xs',
+                darkMode ? 'text-amber-400/70' : 'text-amber-600'
+              )}>Write Without Limits</p>
             </motion.div>
           )}
         </div>
@@ -214,7 +236,12 @@ export function Sidebar({
       {/* Toggle Button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="absolute -right-3 top-20 w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-amber-600 transition-colors"
+        className={cn(
+          'absolute -right-3 top-20 w-6 h-6 text-white rounded-full flex items-center justify-center shadow-md transition-colors',
+          darkMode
+            ? 'bg-amber-600 hover:bg-amber-500'
+            : 'bg-amber-500 hover:bg-amber-600'
+        )}
       >
         {isExpanded ? (
           <ChevronLeft className="w-4 h-4" />
@@ -226,16 +253,25 @@ export function Sidebar({
       {/* Main Navigation */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {isExpanded && (
-          <p className="px-3 py-2 text-xs font-semibold text-amber-400 uppercase tracking-wider">
+          <p className={cn(
+            'px-3 py-2 text-xs font-semibold uppercase tracking-wider',
+            darkMode ? 'text-amber-500/70' : 'text-amber-400'
+          )}>
             Navigate
           </p>
         )}
         {mainItems.map(renderItem)}
 
-        <div className="my-3 border-t border-amber-100" />
+        <div className={cn(
+          'my-3 border-t',
+          darkMode ? 'border-gray-700' : 'border-amber-100'
+        )} />
 
         {isExpanded && (
-          <p className="px-3 py-2 text-xs font-semibold text-amber-400 uppercase tracking-wider">
+          <p className={cn(
+            'px-3 py-2 text-xs font-semibold uppercase tracking-wider',
+            darkMode ? 'text-amber-500/70' : 'text-amber-400'
+          )}>
             Tools
           </p>
         )}
@@ -243,13 +279,18 @@ export function Sidebar({
       </div>
 
       {/* Logout */}
-      <div className="p-2 border-t border-amber-100">
+      <div className={cn(
+        'p-2 border-t',
+        darkMode ? 'border-gray-700' : 'border-amber-100'
+      )}>
         <button
           onClick={onLogout}
           disabled={isLoggingOut}
           className={cn(
-            'w-full flex items-center gap-3 p-3 rounded-xl transition-all',
-            'bg-amber-500 hover:bg-amber-600 text-white disabled:opacity-50',
+            'w-full flex items-center gap-3 p-3 rounded-xl transition-all text-white disabled:opacity-50',
+            darkMode
+              ? 'bg-amber-600 hover:bg-amber-500'
+              : 'bg-amber-500 hover:bg-amber-600',
             !isExpanded && 'justify-center'
           )}
           title={!isExpanded ? 'Sign Out' : undefined}
