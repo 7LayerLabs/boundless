@@ -98,7 +98,7 @@ export function AIReflection({ content, onClose, onSelectQuestion }: AIReflectio
   const [showTonePicker, setShowTonePicker] = useState(true);
   const [selectedTone, setSelectedTone] = useState<AITone>('comforting');
 
-  const { aiApiKey, aiTone } = useSettings();
+  const { aiApiKey, aiTone, updateSetting } = useSettings();
 
   const generateQuestions = async (tone: AITone) => {
     if (!content || content.trim().length < 20) {
@@ -199,8 +199,6 @@ Each question should be distinct and match your assigned tone.`
 
   const handleSaveApiKey = () => {
     if (tempApiKey.trim()) {
-      // Save to localStorage directly since we removed updateSetting for aiApiKey here
-      const { updateSetting } = useSettings.getState();
       updateSetting('aiApiKey', tempApiKey.trim());
       setShowApiKeyInput(false);
       setTempApiKey('');

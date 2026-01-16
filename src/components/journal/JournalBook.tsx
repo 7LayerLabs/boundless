@@ -59,7 +59,27 @@ export function JournalBook() {
     lockEntry,
     addEntryUpdate,
     toggleBookmark,
+    deleteEntry,
+    allEntries,
   } = useJournal();
+
+  // Temporary: Expose delete function to window for admin use
+  useEffect(() => {
+    (window as any).__boundless = {
+      entries: allEntries,
+      deleteEntry,
+      deleteMultiple: async (ids: string[]) => {
+        for (const id of ids) {
+          await deleteEntry(id);
+          console.log('Deleted entry:', id);
+        }
+        console.log('Done deleting', ids.length, 'entries');
+      }
+    };
+    return () => {
+      delete (window as any).__boundless;
+    };
+  }, [allEntries, deleteEntry]);
 
   const {
     bindingColor,
