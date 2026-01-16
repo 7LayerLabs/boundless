@@ -16,6 +16,7 @@ export const DEFAULT_SETTINGS: Omit<UserSettings, 'id' | 'createdAt' | 'updatedA
   aiTone: 'comforting',  // Default tone for AI reflections
   dateFormat: 'full',  // Default date format: JANUARY 16, 2026
   dateColor: 'brown',  // Default date text color
+  scene: 'desk',  // Default scene/environment
 };
 
 export const SETTINGS_ID = 'user-settings';

@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { DeskScene } from '@/components/scene/DeskScene';
+import { CafeScene } from '@/components/scene/CafeScene';
+import { BeachScene } from '@/components/scene/BeachScene';
+import { LibraryScene } from '@/components/scene/LibraryScene';
+import type { SceneType } from '@/types/settings';
 import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { PinModal } from '@/components/lock/PinModal';
@@ -23,6 +27,15 @@ const DEFAULT_SETTINGS = {
   showMoodSelector: true,
   aiReflectionEnabled: false,
   aiApiKey: '',
+  scene: 'desk',
+};
+
+// Scene components map
+const sceneComponents: Record<SceneType, React.ComponentType<{ children: React.ReactNode }>> = {
+  desk: DeskScene,
+  cafe: CafeScene,
+  beach: BeachScene,
+  library: LibraryScene,
 };
 
 export default function Home() {
@@ -88,9 +101,13 @@ export default function Home() {
   const showPinModal = user && !isPinVerified;
   const showOpenJournal = user && isPinVerified && isJournalOpen;
 
+  // Get the current scene - default to desk if not set
+  const currentScene = (userSettings?.scene as SceneType) || 'desk';
+  const Scene = sceneComponents[currentScene];
+
   if (authError) {
     return (
-      <DeskScene>
+      <Scene>
         <div className="text-center p-8 bg-amber-50/90 rounded-2xl shadow-xl">
           <p className="text-red-600 mb-4">Connection error</p>
           <button
@@ -100,12 +117,12 @@ export default function Home() {
             Retry
           </button>
         </div>
-      </DeskScene>
+      </Scene>
     );
   }
 
   return (
-    <DeskScene>
+    <Scene>
       {/* Loading spinner */}
       {isLoading && (
         <motion.div
@@ -244,6 +261,6 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
-    </DeskScene>
+    </Scene>
   );
 }

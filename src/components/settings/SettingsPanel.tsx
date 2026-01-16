@@ -39,6 +39,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     aiTone,
     dateFormat,
     dateColor,
+    scene,
     pinHash,
     updateSetting,
   } = useSettings();
@@ -128,6 +129,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
               fontFamily={fontFamily}
               fontSize={fontSize}
               inkColor={inkColor}
+              scene={scene}
               updateSetting={updateSetting}
             />
           )}

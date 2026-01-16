@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { db, type UserSettings } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
-import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor, AITone, DateFormat, DateColor } from '@/types/settings';
+import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor, AITone, DateFormat, DateColor, SceneType } from '@/types/settings';
 
 const DEFAULT_SETTINGS = {
   bindingColor: 'brown' as BindingColor,
@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS = {
   aiTone: 'comforting' as AITone,
   dateFormat: 'full' as DateFormat,
   dateColor: 'brown' as DateColor,
+  scene: 'desk' as SceneType,
   pinHash: '' as string | undefined, // Privacy PIN hash
   journalWhy: '' as string, // User's personal "why" for journaling
   darkMode: false as boolean, // Dark mode toggle
@@ -77,6 +78,7 @@ export function useSettings() {
     aiTone: (userSettings?.aiTone as AITone) || DEFAULT_SETTINGS.aiTone,
     dateFormat: (userSettings?.dateFormat as DateFormat) || DEFAULT_SETTINGS.dateFormat,
     dateColor: (userSettings?.dateColor as DateColor) || DEFAULT_SETTINGS.dateColor,
+    scene: (userSettings?.scene as SceneType) || DEFAULT_SETTINGS.scene,
     pinHash: userSettings?.pinHash || undefined,
     journalWhy: userSettings?.journalWhy || DEFAULT_SETTINGS.journalWhy,
     darkMode: userSettings?.darkMode ?? DEFAULT_SETTINGS.darkMode,

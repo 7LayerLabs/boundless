@@ -48,6 +48,8 @@ export type DateFormat = 'full' | 'short' | 'numeric' | 'dots';
 
 export type DateColor = 'brown' | 'black' | 'navy' | 'forest' | 'burgundy' | 'slate';
 
+export type SceneType = 'desk' | 'cafe' | 'beach' | 'library';
+
 export interface UserSettings {
   id: string;
   bindingColor: BindingColor;
@@ -65,6 +67,7 @@ export interface UserSettings {
   aiTone: AITone;
   dateFormat: DateFormat;
   dateColor: DateColor;
+  scene: SceneType;
   createdAt: Date;
   updatedAt: Date;
 }
