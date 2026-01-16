@@ -172,6 +172,91 @@ export function useJournal() {
     }
   };
 
+  // Toggle bookmark on an entry
+  const toggleBookmark = async (entryId: string) => {
+    if (!user) return;
+
+    const entry = entries.find((e) => e.id === entryId);
+    if (!entry) return;
+
+    await db.transact([
+      tx.entries[entryId].update({
+        isBookmarked: !entry.isBookmarked,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
+  // Get bookmarked entries
+  const bookmarkedEntries = useMemo(() => {
+    return entries.filter((e) => e.isBookmarked).sort((a, b) => b.createdAt - a.createdAt);
+  }, [entries]);
+
+  // Get all unique tags
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    entries.forEach((entry) => {
+      (entry.tags || []).forEach((tag) => tagSet.add(tag));
+    });
+    return Array.from(tagSet).sort();
+  }, [entries]);
+
+  // Get entries by tag
+  const getEntriesByTag = (tag: string) => {
+    return entries.filter((e) => (e.tags || []).includes(tag)).sort((a, b) => b.createdAt - a.createdAt);
+  };
+
+  // Search entries
+  const searchEntries = (query: string) => {
+    if (!query.trim()) return [];
+    const lowerQuery = query.toLowerCase();
+    return entries
+      .filter((e) => {
+        const plainText = e.content.replace(/<[^>]*>/g, ' ').toLowerCase();
+        return plainText.includes(lowerQuery);
+      })
+      .sort((a, b) => b.createdAt - a.createdAt);
+  };
+
+  // Add image to entry
+  const addImage = async (entryId: string, url: string, caption?: string) => {
+    if (!user) return;
+
+    const entry = entries.find((e) => e.id === entryId);
+    if (!entry) return;
+
+    const existingImages = entry.images || [];
+    const newImage = {
+      id: id(),
+      url,
+      caption,
+    };
+
+    await db.transact([
+      tx.entries[entryId].update({
+        images: [...existingImages, newImage],
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
+  // Remove image from entry
+  const removeImage = async (entryId: string, imageId: string) => {
+    if (!user) return;
+
+    const entry = entries.find((e) => e.id === entryId);
+    if (!entry) return;
+
+    const updatedImages = (entry.images || []).filter((img) => img.id !== imageId);
+
+    await db.transact([
+      tx.entries[entryId].update({
+        images: updatedImages,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
   return {
     currentDate,
     setCurrentDate,
@@ -180,6 +265,8 @@ export function useJournal() {
     selectedEntryId,
     setSelectedEntryId,
     allEntries,
+    bookmarkedEntries,
+    allTags,
     isLoading,
     error,
     createEntry,
@@ -187,5 +274,10 @@ export function useJournal() {
     lockEntry,
     addEntryUpdate,
     deleteEntry,
+    toggleBookmark,
+    getEntriesByTag,
+    searchEntries,
+    addImage,
+    removeImage,
   };
 }

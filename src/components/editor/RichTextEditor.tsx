@@ -24,6 +24,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { useJournal } from '@/hooks/useJournal';
 import { fonts, fontCategories, fontsByCategory } from '@/constants/fonts';
 import { inkColors } from '@/constants/themes';
+import { ImageAttachment } from './ImageAttachment';
 import type { FontFamily as FontFamilyType, InkColor } from '@/types/settings';
 
 interface RichTextEditorProps {
@@ -32,6 +33,7 @@ interface RichTextEditorProps {
     content: string;
     mood: string | null;
     tags: string[];
+    images?: { id: string; url: string; caption?: string }[];
   };
   date: Date;
   isLocked?: boolean;
@@ -56,7 +58,7 @@ const FontSize = TextStyle.extend({
 
 export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditorProps) {
   const { fontFamily: defaultFont, inkColor: defaultInk, fontSize: defaultSize } = useSettings();
-  const { createEntry, updateEntry } = useJournal();
+  const { createEntry, updateEntry, addImage, removeImage } = useJournal();
 
   const defaultFontConfig = fonts[defaultFont] || fonts.caveat;
   const defaultInkConfig = inkColors[defaultInk] || inkColors.black;
@@ -403,6 +405,16 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
           editor={editor}
           className="min-h-full prose prose-amber max-w-none"
         />
+
+        {/* Image Attachments */}
+        {entry && (
+          <ImageAttachment
+            images={entry.images || []}
+            onAddImage={(url, caption) => addImage(entry.id, url, caption)}
+            onRemoveImage={(imageId) => removeImage(entry.id, imageId)}
+            isLocked={isLocked}
+          />
+        )}
       </div>
     </div>
   );

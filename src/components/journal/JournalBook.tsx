@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, Calendar, Settings, LogOut, BarChart3, Plus, Lock, Unlock, MessageSquarePlus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Settings, LogOut, BarChart3, Plus, Lock, Unlock, MessageSquarePlus, Printer, BookHeart, Search, Tag, Bookmark, FileDown, Lightbulb, Moon, Sun, Book } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { db } from '@/lib/db/instant';
 import { useJournal } from '@/hooks/useJournal';
@@ -18,12 +18,26 @@ import { ThoughtBubble } from '../editor/ThoughtBubble';
 import { CalendarView } from '../navigation/CalendarView';
 import { SettingsPanel } from '../settings/SettingsPanel';
 import { MoodInsights } from '../navigation/MoodInsights';
+import { SearchModal } from '../navigation/SearchModal';
+import { TagsView } from '../navigation/TagsView';
+import { BookmarksView } from '../navigation/BookmarksView';
+import { PDFExport } from '../navigation/PDFExport';
+import { NotebooksView } from '../navigation/NotebooksView';
+import { WhyPage } from './WhyPage';
+import { DailyPrompt } from '../editor/DailyPrompt';
 import type { Mood } from '@/types/journal';
+import type { JournalEntry } from '@/lib/db/instant';
 
 export function JournalBook() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showMoodInsights, setShowMoodInsights] = useState(false);
+  const [showWhyPage, setShowWhyPage] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showTags, setShowTags] = useState(false);
+  const [showBookmarks, setShowBookmarks] = useState(false);
+  const [showPDFExport, setShowPDFExport] = useState(false);
+  const [showNotebooks, setShowNotebooks] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
 
@@ -42,6 +56,7 @@ export function JournalBook() {
     updateEntry,
     lockEntry,
     addEntryUpdate,
+    toggleBookmark,
   } = useJournal();
 
   const {
@@ -53,7 +68,40 @@ export function JournalBook() {
     aiReflectionEnabled,
     dateFormat,
     dateColor,
+    darkMode,
+    updateSetting,
   } = useSettings();
+
+  // Handle dark mode
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
+  const handleToggleDarkMode = () => {
+    updateSetting('darkMode', !darkMode);
+  };
+
+  const handleSelectEntry = (entry: JournalEntry) => {
+    setCurrentDate(new Date(entry.date));
+    setSelectedEntryId(entry.id);
+    setShowSearch(false);
+    setShowTags(false);
+    setShowBookmarks(false);
+  };
+
+  const handleUsePrompt = (prompt: string) => {
+    // The prompt will be used in the editor - we could pass it down
+    // For now, let's create a new entry with the prompt as a starting point
+    if (currentEntry) {
+      // If there's already content, don't override
+      return;
+    }
+    createEntry(currentDate, `<p><em>${prompt}</em></p><p></p>`, null, []);
+  };
 
   const binding = bindingColors[bindingColor];
   const currentFont = fonts[fontFamily] || fonts.caveat;
@@ -127,6 +175,145 @@ export function JournalBook() {
     setTimeout(() => {
       db.auth.signOut();
     }, 600);
+  };
+
+  const handlePrint = () => {
+    // Create a print-friendly version
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const entryContent = currentEntry?.content || '';
+    const entryMood = currentEntry?.mood ? moods[currentEntry.mood as keyof typeof moods]?.label : '';
+    const updates = currentEntry?.updates || [];
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Journal Entry - ${formatDate(currentDate)}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Kalam:wght@300;400;700&family=Dancing+Script:wght@400;500;600;700&family=Shadows+Into+Light&family=Indie+Flower&family=Permanent+Marker&family=Gloria+Hallelujah&family=Homemade+Apple&family=Satisfy&family=Great+Vibes&family=Alex+Brush&family=Allura&family=Tangerine:wght@400;700&family=Architects+Daughter&family=Amatic+SC:wght@400;700&family=Short+Stack&family=Gochi+Hand&family=Annie+Use+Your+Telescope&family=Nothing+You+Could+Do&family=Marck+Script&family=Reenie+Beanie&family=Just+Another+Hand&family=Coming+Soon&family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
+        <style>
+          @page {
+            size: 8.5in 11in;
+            margin: 1in;
+          }
+
+          * {
+            box-sizing: border-box;
+          }
+
+          body {
+            font-family: '${currentFont.displayName}', cursive;
+            color: #1a1a1a;
+            background: white;
+            padding: 0;
+            margin: 0;
+            line-height: 1.8;
+          }
+
+          .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e5e5;
+          }
+
+          .day {
+            font-size: 0.875rem;
+            color: ${currentDateColor.dayColor};
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+          }
+
+          .date {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: ${currentDateColor.color};
+          }
+
+          .mood {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.5rem;
+          }
+
+          .content {
+            font-size: inherit;
+          }
+
+          .content p {
+            margin: 0 0 1em 0;
+            line-height: 1.8;
+          }
+
+          .updates {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #ccc;
+          }
+
+          .updates-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 1rem;
+          }
+
+          .update {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+          }
+
+          .update-date {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 0.25rem;
+          }
+
+          @media print {
+            body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="day">— ${format(currentDate, 'EEEE')} —</div>
+          <div class="date">${formatDate(currentDate)}</div>
+          ${entryMood ? `<div class="mood">Mood: ${entryMood}</div>` : ''}
+        </div>
+
+        <div class="content">
+          ${entryContent}
+        </div>
+
+        ${updates.length > 0 ? `
+          <div class="updates">
+            <div class="updates-title">Updates</div>
+            ${updates.map((update: { id: string; content: string; createdAt: number }) => `
+              <div class="update">
+                <div class="update-date">${format(new Date(update.createdAt), 'MMM d, yyyy h:mm a')}</div>
+                <div>${update.content}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+
+    // Wait for fonts to load then print
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
   };
 
   return (
@@ -355,6 +542,20 @@ export function JournalBook() {
                 >
                   <Plus className="w-4 h-4" />
                 </button>
+                {currentEntry && (
+                  <button
+                    onClick={() => toggleBookmark(currentEntry.id)}
+                    className={cn(
+                      'p-2 rounded-lg transition-all',
+                      currentEntry.isBookmarked
+                        ? 'bg-amber-100 text-amber-600'
+                        : 'bg-gray-100 hover:bg-amber-50 text-gray-400 hover:text-amber-500'
+                    )}
+                    title={currentEntry.isBookmarked ? 'Remove Bookmark' : 'Bookmark Entry'}
+                  >
+                    <Bookmark className={cn('w-4 h-4', currentEntry.isBookmarked && 'fill-current')} />
+                  </button>
+                )}
                 {currentEntry && !currentEntry.isLocked && (
                   <button
                     onClick={handleLockEntry}
@@ -517,8 +718,8 @@ export function JournalBook() {
           </div>
         </motion.div>
 
-        {/* Floating Action Buttons */}
-        <div className="fixed top-6 right-6 flex items-center gap-3 z-50">
+        {/* Floating Action Buttons - Top Right */}
+        <div className="fixed top-6 right-6 flex items-center gap-2 z-50">
           {/* AI Reflection - only show when enabled */}
           {aiReflectionEnabled && (
             <AIReflection
@@ -526,6 +727,36 @@ export function JournalBook() {
               onSelectQuestion={setPinnedQuestion}
             />
           )}
+          {/* Daily Prompt */}
+          <DailyPrompt onUsePrompt={handleUsePrompt} />
+          <button
+            onClick={() => setShowSearch(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Search"
+          >
+            <Search className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowWhyPage(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="My Why"
+          >
+            <BookHeart className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowBookmarks(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Bookmarks"
+          >
+            <Bookmark className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowTags(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Tags"
+          >
+            <Tag className="w-5 h-5 text-amber-800" />
+          </button>
           <button
             onClick={() => setShowMoodInsights(true)}
             className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
@@ -539,6 +770,42 @@ export function JournalBook() {
             title="Calendar"
           >
             <Calendar className="w-5 h-5 text-amber-800" />
+          </button>
+        </div>
+
+        {/* Floating Action Buttons - Bottom Right */}
+        <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
+          <button
+            onClick={() => setShowNotebooks(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Notebooks"
+          >
+            <Book className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={() => setShowPDFExport(true)}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Export PDF"
+          >
+            <FileDown className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={handlePrint}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title="Print Entry"
+          >
+            <Printer className="w-5 h-5 text-amber-800" />
+          </button>
+          <button
+            onClick={handleToggleDarkMode}
+            className="p-3 rounded-xl bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+            title={darkMode ? 'Light Mode' : 'Dark Mode'}
+          >
+            {darkMode ? (
+              <Sun className="w-5 h-5 text-amber-800" />
+            ) : (
+              <Moon className="w-5 h-5 text-amber-800" />
+            )}
           </button>
           <button
             onClick={() => setShowSettings(true)}
@@ -583,6 +850,60 @@ export function JournalBook() {
       <AnimatePresence>
         {showMoodInsights && (
           <MoodInsights onClose={() => setShowMoodInsights(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Why Page */}
+      <AnimatePresence>
+        {showWhyPage && (
+          <WhyPage onClose={() => setShowWhyPage(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Search Modal */}
+      <AnimatePresence>
+        {showSearch && (
+          <SearchModal
+            onClose={() => setShowSearch(false)}
+            onSelectEntry={handleSelectEntry}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Tags View */}
+      <AnimatePresence>
+        {showTags && (
+          <TagsView
+            onClose={() => setShowTags(false)}
+            onSelectEntry={handleSelectEntry}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Bookmarks View */}
+      <AnimatePresence>
+        {showBookmarks && (
+          <BookmarksView
+            onClose={() => setShowBookmarks(false)}
+            onSelectEntry={handleSelectEntry}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* PDF Export */}
+      <AnimatePresence>
+        {showPDFExport && (
+          <PDFExport onClose={() => setShowPDFExport(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Notebooks View */}
+      <AnimatePresence>
+        {showNotebooks && (
+          <NotebooksView
+            onClose={() => setShowNotebooks(false)}
+            onSelectNotebook={() => setShowNotebooks(false)}
+          />
         )}
       </AnimatePresence>
     </div>

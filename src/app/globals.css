@@ -57,6 +57,74 @@ body {
   background: linear-gradient(135deg, #faf8f5 0%, #f0ebe3 100%);
   color: var(--foreground);
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #e5e5e5;
+}
+
+body.dark-mode .bg-white {
+  background-color: #2d2d2d !important;
+}
+
+body.dark-mode .bg-white\/90 {
+  background-color: rgba(45, 45, 45, 0.9) !important;
+}
+
+body.dark-mode .text-gray-800,
+body.dark-mode .text-gray-700,
+body.dark-mode .text-gray-600 {
+  color: #e5e5e5 !important;
+}
+
+body.dark-mode .text-gray-500,
+body.dark-mode .text-gray-400 {
+  color: #a0a0a0 !important;
+}
+
+body.dark-mode .border-gray-100,
+body.dark-mode .border-gray-200 {
+  border-color: #404040 !important;
+}
+
+body.dark-mode .bg-gray-50,
+body.dark-mode .bg-gray-100 {
+  background-color: #353535 !important;
+}
+
+body.dark-mode .hover\:bg-gray-100:hover {
+  background-color: #404040 !important;
+}
+
+body.dark-mode .bg-amber-50 {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+}
+
+body.dark-mode .bg-amber-100 {
+  background-color: rgba(251, 191, 36, 0.15) !important;
+}
+
+body.dark-mode .text-amber-800 {
+  color: #fbbf24 !important;
+}
+
+body.dark-mode .text-amber-700 {
+  color: #f59e0b !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #353535 !important;
+  border-color: #505050 !important;
+  color: #e5e5e5 !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #808080 !important;
 }
 
 /* ========================================

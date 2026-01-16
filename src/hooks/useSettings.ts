@@ -20,6 +20,9 @@ const DEFAULT_SETTINGS = {
   dateFormat: 'full' as DateFormat,
   dateColor: 'brown' as DateColor,
   pinHash: '' as string | undefined, // Privacy PIN hash
+  journalWhy: '' as string, // User's personal "why" for journaling
+  darkMode: false as boolean, // Dark mode toggle
+  currentNotebookId: '' as string, // Currently selected notebook
 };
 
 export function useSettings() {
@@ -75,6 +78,9 @@ export function useSettings() {
     dateFormat: (userSettings?.dateFormat as DateFormat) || DEFAULT_SETTINGS.dateFormat,
     dateColor: (userSettings?.dateColor as DateColor) || DEFAULT_SETTINGS.dateColor,
     pinHash: userSettings?.pinHash || undefined,
+    journalWhy: userSettings?.journalWhy || DEFAULT_SETTINGS.journalWhy,
+    darkMode: userSettings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
+    currentNotebookId: userSettings?.currentNotebookId || DEFAULT_SETTINGS.currentNotebookId,
   };
 
   // Update a setting

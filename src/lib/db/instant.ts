@@ -14,9 +14,29 @@ const schema = i.schema({
       tags: i.json<string[]>(),
       wordCount: i.number(),
       isLocked: i.boolean().optional(), // Lock entry to prevent edits
+      isBookmarked: i.boolean().optional(), // Bookmark important entries
+      images: i.json<{ id: string; url: string; caption?: string }[]>().optional(), // Photo attachments
+      notebookId: i.string().optional(), // Which notebook this belongs to
       updates: i.json<{ id: string; content: string; createdAt: number }[]>().optional(), // Updates added after locking
       createdAt: i.number(),
       updatedAt: i.number(),
+    }),
+    notebooks: i.entity({
+      userId: i.string(),
+      name: i.string(),
+      color: i.string(), // Color theme for the notebook
+      icon: i.string().optional(), // Icon identifier
+      isDefault: i.boolean().optional(),
+      createdAt: i.number(),
+      updatedAt: i.number(),
+    }),
+    prompts: i.entity({
+      userId: i.string(),
+      text: i.string(),
+      category: i.string().optional(), // gratitude, reflection, goals, etc.
+      isCustom: i.boolean().optional(),
+      usedAt: i.number().optional(),
+      createdAt: i.number(),
     }),
     settings: i.entity({
       userId: i.string(),
@@ -34,6 +54,9 @@ const schema = i.schema({
       dateFormat: i.string().optional(), // Date format: full, short, numeric, dots
       dateColor: i.string().optional(), // Date text color
       pinHash: i.string().optional(), // SHA-256 hashed 4-digit PIN for privacy
+      journalWhy: i.string().optional(), // User's personal "why" for journaling
+      darkMode: i.boolean().optional(), // Dark mode toggle
+      currentNotebookId: i.string().optional(), // Currently selected notebook
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -56,9 +79,33 @@ export type JournalEntry = {
   tags: string[];
   wordCount: number;
   isLocked?: boolean;
+  isBookmarked?: boolean;
+  images?: { id: string; url: string; caption?: string }[];
+  notebookId?: string;
   updates?: { id: string; content: string; createdAt: number }[];
   createdAt: number;
   updatedAt: number;
+};
+
+export type Notebook = {
+  id: string;
+  userId: string;
+  name: string;
+  color: string;
+  icon?: string;
+  isDefault?: boolean;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type Prompt = {
+  id: string;
+  userId: string;
+  text: string;
+  category?: string;
+  isCustom?: boolean;
+  usedAt?: number;
+  createdAt: number;
 };
 
 export type UserSettings = {
@@ -78,6 +125,9 @@ export type UserSettings = {
   dateFormat?: string; // Date format
   dateColor?: string; // Date text color
   pinHash?: string; // SHA-256 hashed 4-digit PIN for privacy
+  journalWhy?: string; // User's personal "why" for journaling
+  darkMode?: boolean; // Dark mode toggle
+  currentNotebookId?: string; // Currently selected notebook
   createdAt: number;
   updatedAt: number;
 };
