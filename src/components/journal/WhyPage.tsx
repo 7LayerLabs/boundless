@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, Pen, Check } from 'lucide-react';
+import { X, Pen, Check, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useSettings } from '@/hooks/useSettings';
 import { fonts } from '@/constants/fonts';
@@ -12,10 +12,30 @@ interface WhyPageProps {
   onClose: () => void;
 }
 
+const writingIdeas = [
+  {
+    type: 'Dedication',
+    example: '"For my future self, who I hope will look back on these pages with kindness..."',
+  },
+  {
+    type: 'Prologue',
+    example: '"This journal begins in the middle of my story—not the beginning, not the end..."',
+  },
+  {
+    type: 'Letter to Self',
+    example: '"Dear me, I\'m starting this journal because I want to remember who I am right now..."',
+  },
+  {
+    type: 'Intention',
+    example: '"I write to understand. I write to heal. I write to remember what matters..."',
+  },
+];
+
 export function WhyPage({ onClose }: WhyPageProps) {
   const { journalWhy, fontFamily, pageColor, inkColor, updateSetting } = useSettings();
   const [isEditing, setIsEditing] = useState(false);
   const [whyText, setWhyText] = useState(journalWhy || '');
+  const [showIdeas, setShowIdeas] = useState(false);
 
   const currentFont = fonts[fontFamily] || fonts.caveat;
   const pageBgColor = pageColors[pageColor];
@@ -33,6 +53,13 @@ export function WhyPage({ onClose }: WhyPageProps) {
   const handleCancel = () => {
     setWhyText(journalWhy || '');
     setIsEditing(false);
+  };
+
+  const useIdea = (example: string) => {
+    // Remove the surrounding quotes from the example
+    const cleanExample = example.replace(/^"|"$/g, '');
+    setWhyText(cleanExample);
+    setShowIdeas(false);
   };
 
   return (
@@ -74,9 +101,9 @@ export function WhyPage({ onClose }: WhyPageProps) {
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-amber-100/50 transition-colors z-10"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-neutral-100 transition-colors z-10"
           >
-            <X className="w-5 h-5 text-amber-800/60" />
+            <X className="w-5 h-5 text-neutral-500" />
           </button>
 
           {/* Content */}
@@ -87,18 +114,18 @@ export function WhyPage({ onClose }: WhyPageProps) {
                 className={cn('text-3xl md:text-4xl font-bold mb-2', currentFont.className)}
                 style={{ color: currentInkColor.color }}
               >
-                My Why
+                My Purpose
               </h2>
-              <p className="text-amber-600/70 text-sm">
-                The reason I write in this journal
+              <p className="text-neutral-500 text-sm">
+                Your dedication, prologue, or intention for this journal
               </p>
             </div>
 
             {/* Decorative line */}
             <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="h-px flex-1 bg-amber-300/50" />
-              <div className="w-2 h-2 rounded-full bg-amber-300" />
-              <div className="h-px flex-1 bg-amber-300/50" />
+              <div className="h-px flex-1 bg-neutral-300" />
+              <div className="w-2 h-2 rounded-full bg-neutral-400" />
+              <div className="h-px flex-1 bg-neutral-300" />
             </div>
 
             {/* Why Content */}
@@ -108,9 +135,9 @@ export function WhyPage({ onClose }: WhyPageProps) {
                   <textarea
                     value={whyText}
                     onChange={(e) => setWhyText(e.target.value)}
-                    placeholder="Why do you write? What brings you to this journal? What do you hope to discover, remember, or create?..."
+                    placeholder="Write your dedication, prologue, or purpose here..."
                     className={cn(
-                      'w-full h-64 p-4 rounded-xl border-2 border-amber-200 focus:border-amber-400 focus:outline-none resize-none transition-colors',
+                      'w-full h-64 p-4 rounded-xl border-2 border-neutral-200 focus:border-neutral-400 focus:outline-none resize-none transition-colors',
                       currentFont.className
                     )}
                     style={{
@@ -121,16 +148,52 @@ export function WhyPage({ onClose }: WhyPageProps) {
                     }}
                     autoFocus
                   />
+
+                  {/* Writing Ideas Toggle */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setShowIdeas(!showIdeas)}
+                      className="flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-700 transition-colors"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      {showIdeas ? 'Hide ideas' : 'Need inspiration?'}
+                    </button>
+
+                    {showIdeas && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-3 space-y-2"
+                      >
+                        {writingIdeas.map((idea) => (
+                          <button
+                            key={idea.type}
+                            onClick={() => useIdea(idea.example)}
+                            className="w-full text-left p-3 rounded-lg border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 transition-all"
+                          >
+                            <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">
+                              {idea.type}
+                            </p>
+                            <p className="text-sm text-neutral-600 italic">
+                              {idea.example}
+                            </p>
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+
                   <div className="flex justify-end gap-3 mt-4">
                     <button
                       onClick={handleCancel}
-                      className="px-4 py-2 rounded-lg text-amber-700 hover:bg-amber-100 transition-colors"
+                      className="px-4 py-2 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSave}
-                      className="px-4 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 rounded-lg bg-neutral-900 text-white hover:bg-neutral-800 transition-colors flex items-center gap-2"
                     >
                       <Check className="w-4 h-4" />
                       Save
@@ -153,22 +216,41 @@ export function WhyPage({ onClose }: WhyPageProps) {
                       {whyText}
                     </div>
                   ) : (
-                    <div className="text-center py-12">
-                      <p className="text-amber-400 italic mb-6">
-                        You haven't written your "why" yet.
+                    <div className="text-center py-8">
+                      <p className="text-neutral-400 italic mb-6 text-lg">
+                        Every great journal begins with intention.
                       </p>
-                      <p className="text-amber-500/70 text-sm max-w-md mx-auto">
-                        Take a moment to reflect on why you're starting this journal.
-                        What do you hope to gain? What story do you want to tell?
-                      </p>
+                      <div className="space-y-4 text-left max-w-md mx-auto">
+                        <p className="text-neutral-500 text-sm">
+                          This is your front page—the first thing you'll see when you open your journal. Consider writing:
+                        </p>
+                        <ul className="text-neutral-500 text-sm space-y-2">
+                          <li className="flex items-start gap-2">
+                            <span className="text-neutral-400">•</span>
+                            <span><strong>A dedication</strong> — who or what this journal is for</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-neutral-400">•</span>
+                            <span><strong>A prologue</strong> — where you are in your story right now</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-neutral-400">•</span>
+                            <span><strong>A letter to your future self</strong> — what you want to remember</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-neutral-400">•</span>
+                            <span><strong>Your intention</strong> — why you're journaling and what you hope to discover</span>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   )}
 
                   {/* Edit button */}
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="absolute -bottom-2 right-0 p-3 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700 transition-all shadow-md hover:shadow-lg"
-                    title="Edit your why"
+                    className="absolute -bottom-2 right-0 p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-all shadow-md hover:shadow-lg"
+                    title="Edit your purpose"
                   >
                     <Pen className="w-5 h-5" />
                   </button>
@@ -177,10 +259,10 @@ export function WhyPage({ onClose }: WhyPageProps) {
             </div>
 
             {/* Footer quote */}
-            {!isEditing && (
-              <div className="mt-8 pt-6 border-t border-amber-200/50 text-center">
-                <p className="text-amber-500/60 text-sm italic">
-                  "The act of writing is the act of discovering what you believe."
+            {!isEditing && whyText && (
+              <div className="mt-8 pt-6 border-t border-neutral-200 text-center">
+                <p className="text-neutral-400 text-sm italic">
+                  "The first page sets the tone for everything that follows."
                 </p>
               </div>
             )}

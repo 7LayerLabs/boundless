@@ -79,18 +79,25 @@ export function Sidebar({
       onClick: onShowPrompt,
     },
     {
+      id: 'purpose',
+      icon: <BookHeart className="w-5 h-5" />,
+      label: 'My Purpose',
+      description: 'Your dedication & intention',
+      onClick: onShowWhyPage,
+    },
+    {
+      id: 'calendar',
+      icon: <Calendar className="w-5 h-5" />,
+      label: 'Calendar',
+      description: 'Navigate by date',
+      onClick: onShowCalendar,
+    },
+    {
       id: 'search',
       icon: <Search className="w-5 h-5" />,
       label: 'Search',
       description: 'Find entries by content',
       onClick: onShowSearch,
-    },
-    {
-      id: 'why',
-      icon: <BookHeart className="w-5 h-5" />,
-      label: 'My Why',
-      description: 'Your journaling purpose',
-      onClick: onShowWhyPage,
     },
     {
       id: 'bookmarks',
@@ -112,13 +119,6 @@ export function Sidebar({
       label: 'Mood Insights',
       description: 'Track your moods',
       onClick: onShowMoodInsights,
-    },
-    {
-      id: 'calendar',
-      icon: <Calendar className="w-5 h-5" />,
-      label: 'Calendar',
-      description: 'Navigate by date',
-      onClick: onShowCalendar,
     },
   ];
 
