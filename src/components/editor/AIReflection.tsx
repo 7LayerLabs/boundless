@@ -262,8 +262,7 @@ Each question should be distinct and match your assigned tone.`
         onClick={handleOpen}
         className={cn(
           'p-3 rounded-xl transition-all',
-          'bg-gradient-to-br from-purple-500 to-indigo-600',
-          'hover:from-purple-600 hover:to-indigo-700',
+          'bg-purple-600 hover:bg-purple-700',
           'shadow-lg hover:shadow-xl',
           'group'
         )}
@@ -291,7 +290,7 @@ Each question should be distinct and match your assigned tone.`
               className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4 flex items-center justify-between">
+              <div className="bg-purple-600 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-white/20 rounded-lg">
                     <Sparkles className="w-5 h-5 text-white" />

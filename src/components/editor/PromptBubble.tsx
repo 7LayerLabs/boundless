@@ -11,24 +11,24 @@ interface PromptBubbleProps {
 }
 
 const categoryColors: Record<string, string> = {
-  timeframe: 'from-blue-100 to-blue-50 border-blue-200',
-  simple: 'from-gray-100 to-gray-50 border-gray-200',
-  deep: 'from-purple-100 to-purple-50 border-purple-200',
-  memories: 'from-rose-100 to-rose-50 border-rose-200',
-  dreams: 'from-indigo-100 to-indigo-50 border-indigo-200',
-  selfCare: 'from-green-100 to-green-50 border-green-200',
-  gratitude: 'from-amber-100 to-amber-50 border-amber-200',
-  reflection: 'from-teal-100 to-teal-50 border-teal-200',
-  goals: 'from-orange-100 to-orange-50 border-orange-200',
-  creativity: 'from-pink-100 to-pink-50 border-pink-200',
-  emotions: 'from-red-100 to-red-50 border-red-200',
-  relationships: 'from-cyan-100 to-cyan-50 border-cyan-200',
+  timeframe: 'bg-blue-50 border-blue-200',
+  simple: 'bg-gray-50 border-gray-200',
+  deep: 'bg-purple-50 border-purple-200',
+  memories: 'bg-rose-50 border-rose-200',
+  dreams: 'bg-indigo-50 border-indigo-200',
+  selfCare: 'bg-green-50 border-green-200',
+  gratitude: 'bg-amber-50 border-amber-200',
+  reflection: 'bg-teal-50 border-teal-200',
+  goals: 'bg-orange-50 border-orange-200',
+  creativity: 'bg-pink-50 border-pink-200',
+  emotions: 'bg-red-50 border-red-200',
+  relationships: 'bg-cyan-50 border-cyan-200',
 };
 
 export function PromptBubble({ prompt, category, onDismiss }: PromptBubbleProps) {
-  const gradient = category && categoryColors[category]
+  const colorClass = category && categoryColors[category]
     ? categoryColors[category]
-    : 'from-amber-100 to-amber-50 border-amber-200';
+    : 'bg-amber-50 border-amber-200';
 
   return (
     <motion.div
@@ -43,9 +43,9 @@ export function PromptBubble({ prompt, category, onDismiss }: PromptBubbleProps)
     >
       <div
         className={cn(
-          'relative bg-gradient-to-br rounded-2xl border-2 shadow-lg',
+          'relative rounded-2xl border-2 shadow-lg',
           'p-4 pr-10',
-          gradient
+          colorClass
         )}
       >
         {/* Speech bubble tail */}
@@ -53,8 +53,7 @@ export function PromptBubble({ prompt, category, onDismiss }: PromptBubbleProps)
           className={cn(
             'absolute -bottom-2 left-1/2 -translate-x-1/2',
             'w-4 h-4 rotate-45 border-r-2 border-b-2',
-            'bg-gradient-to-br',
-            gradient
+            colorClass
           )}
         />
 

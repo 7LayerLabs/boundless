@@ -184,7 +184,7 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-amber-100 border-b border-amber-100">
+        <div className="flex items-center justify-between p-4 bg-amber-50 border-b border-amber-100">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-amber-600" />
             <span className="font-semibold text-amber-800">Writing Prompt</span>
@@ -240,7 +240,7 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
               onClick={() => handleUsePrompt(prompt)}
               className={cn(
                 'w-full p-4 rounded-xl border-2 text-left transition-all',
-                'bg-gradient-to-br from-amber-50 to-white border-amber-200',
+                'bg-amber-50 border-amber-200',
                 'hover:border-amber-400 hover:shadow-md hover:scale-[1.01]',
                 'cursor-pointer group'
               )}

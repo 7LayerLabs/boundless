@@ -21,13 +21,13 @@ export function ThoughtBubble({ question, onDismiss }: ThoughtBubbleProps) {
     }
   };
 
-  const getTypeGradient = (type: string) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
-      case 'emotion': return 'from-pink-100 to-pink-50 border-pink-200';
-      case 'insight': return 'from-amber-100 to-amber-50 border-amber-200';
-      case 'action': return 'from-green-100 to-green-50 border-green-200';
-      case 'connection': return 'from-blue-100 to-blue-50 border-blue-200';
-      default: return 'from-purple-100 to-purple-50 border-purple-200';
+      case 'emotion': return 'bg-pink-50 border-pink-200';
+      case 'insight': return 'bg-amber-50 border-amber-200';
+      case 'action': return 'bg-green-50 border-green-200';
+      case 'connection': return 'bg-blue-50 border-blue-200';
+      default: return 'bg-purple-50 border-purple-200';
     }
   };
 
@@ -44,9 +44,9 @@ export function ThoughtBubble({ question, onDismiss }: ThoughtBubbleProps) {
     >
       <div
         className={cn(
-          'relative bg-gradient-to-br rounded-2xl border-2 shadow-lg',
+          'relative rounded-2xl border-2 shadow-lg',
           'p-4 pr-10',
-          getTypeGradient(question.type)
+          getTypeColor(question.type)
         )}
       >
         {/* Speech bubble tail */}
@@ -54,8 +54,7 @@ export function ThoughtBubble({ question, onDismiss }: ThoughtBubbleProps) {
           className={cn(
             'absolute -bottom-2 left-1/2 -translate-x-1/2',
             'w-4 h-4 rotate-45 border-r-2 border-b-2',
-            'bg-gradient-to-br',
-            getTypeGradient(question.type)
+            getTypeColor(question.type)
           )}
         />
 

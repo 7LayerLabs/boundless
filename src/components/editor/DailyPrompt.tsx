@@ -169,7 +169,7 @@ export function DailyPrompt({ onUsePrompt }: DailyPromptProps) {
             className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-2xl border border-amber-100 overflow-hidden z-50"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-amber-100 border-b border-amber-100">
+            <div className="flex items-center justify-between p-3 bg-amber-50 border-b border-amber-100">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-600" />
                 <span className="text-sm font-medium text-amber-800">Writing Prompt</span>
