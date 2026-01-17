@@ -145,7 +145,7 @@ export function PinInput({ onComplete, error, disabled, resetKey = 0 }: PinInput
             key={index}
             className={cn(
               'relative w-16 h-20 rounded-xl overflow-hidden',
-              'bg-gradient-to-b from-stone-100 to-stone-200',
+              'bg-stone-100',
               'border-2',
               'shadow-lg shadow-stone-400/30',
               'transition-all duration-150',

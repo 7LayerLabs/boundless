@@ -131,7 +131,7 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-end pr-8 md:pr-16"
       style={{
-        background: 'linear-gradient(90deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.7) 100%)',
+        background: 'rgba(0,0,0,0.6)',
         backdropFilter: 'blur(2px)',
       }}
     >
@@ -145,7 +145,7 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
         <div
           className="relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #1a1816 0%, #14120f 100%)',
+            background: '#1a1816',
             borderRadius: '12px',
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.5),
@@ -158,7 +158,7 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
           <div
             className="absolute top-0 left-0 right-0 h-px"
             style={{
-              background: 'linear-gradient(90deg, transparent 20%, rgba(212, 175, 55, 0.3) 50%, transparent 80%)',
+              background: 'rgba(212, 175, 55, 0.3)',
             }}
           />
 

@@ -217,15 +217,15 @@ export function MoodInsights({ onClose }: MoodInsightsProps) {
 
           {/* Summary Cards */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4">
+            <div className="bg-amber-50 rounded-xl p-4">
               <p className="text-sm text-amber-600 mb-1">Total Entries</p>
               <p className="text-3xl font-bold text-amber-900">{stats.totalEntries}</p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4">
+            <div className="bg-green-50 rounded-xl p-4">
               <p className="text-sm text-green-600 mb-1">Moods Tracked</p>
               <p className="text-3xl font-bold text-green-900">{stats.entriesWithMood}</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-4">
+            <div className="bg-purple-50 rounded-xl p-4">
               <p className="text-sm text-purple-600 mb-1">Top Mood</p>
               <p className="text-3xl font-bold text-purple-900">
                 {stats.topMood ? moods[stats.topMood].emoji : '—'}
@@ -234,7 +234,7 @@ export function MoodInsights({ onClose }: MoodInsightsProps) {
           </div>
 
           {/* Insight Message */}
-          <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl p-4 mb-6">
+          <div className="bg-amber-100 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
               <TrendingUp className="w-5 h-5 text-amber-700 mt-0.5 flex-shrink-0" />
               <p className="text-amber-800">{insight}</p>

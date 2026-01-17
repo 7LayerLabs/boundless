@@ -48,10 +48,10 @@ export function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-stone-300 via-stone-200 to-stone-100 p-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-stone-200 p-4">
       {/* Ambient lighting */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-to-b from-amber-100/30 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-amber-100/20" />
       </div>
 
       <motion.div

@@ -52,7 +52,7 @@ export function AuthModal() {
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{
-        background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.85) 100%)',
+        background: 'rgba(0,0,0,0.8)',
         backdropFilter: 'blur(8px)',
       }}
     >
@@ -67,7 +67,7 @@ export function AuthModal() {
         <div
           className="relative overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #1a1816 0%, #14120f 100%)',
+            background: '#1a1816',
             borderRadius: '12px',
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.5),
@@ -80,7 +80,7 @@ export function AuthModal() {
           <div
             className="absolute top-0 left-0 right-0 h-px"
             style={{
-              background: 'linear-gradient(90deg, transparent 20%, rgba(212, 175, 55, 0.3) 50%, transparent 80%)',
+              background: 'rgba(212, 175, 55, 0.3)',
             }}
           />
 
@@ -151,7 +151,7 @@ export function AuthModal() {
                     disabled={isLoading || !email}
                     className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                     style={{
-                      background: 'linear-gradient(180deg, rgba(212, 175, 55, 0.2) 0%, rgba(180, 140, 40, 0.15) 100%)',
+                      background: 'rgba(212, 175, 55, 0.15)',
                       border: '1px solid rgba(212, 175, 55, 0.3)',
                       color: 'rgba(212, 175, 55, 0.9)',
                     }}
@@ -211,7 +211,7 @@ export function AuthModal() {
                     disabled={isLoading || code.length !== 6}
                     className="w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                     style={{
-                      background: 'linear-gradient(180deg, rgba(212, 175, 55, 0.2) 0%, rgba(180, 140, 40, 0.15) 100%)',
+                      background: 'rgba(212, 175, 55, 0.15)',
                       border: '1px solid rgba(212, 175, 55, 0.3)',
                       color: 'rgba(212, 175, 55, 0.9)',
                     }}

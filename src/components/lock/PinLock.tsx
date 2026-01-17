@@ -136,7 +136,7 @@ export function PinLock({ settingsId, pinHash, onUnlock, userEmail }: PinLockPro
   const currentPin = isSetupMode && setupStep === 'confirm' ? confirmPin : pin;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

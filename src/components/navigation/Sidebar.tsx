@@ -217,8 +217,8 @@ export function Sidebar({
           <div className={cn(
             'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
             darkMode
-              ? 'bg-gradient-to-br from-amber-500 to-amber-700'
-              : 'bg-gradient-to-br from-amber-400 to-amber-600'
+              ? 'bg-amber-600'
+              : 'bg-amber-500'
           )}>
             <span className="text-white font-bold text-lg">B</span>
           </div>
