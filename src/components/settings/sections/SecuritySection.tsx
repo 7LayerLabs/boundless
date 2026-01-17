@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Check } from 'lucide-react';
+import { Shield, Check, Trash2, AlertTriangle } from 'lucide-react';
+import { db } from '@/lib/db/instant';
+import { tx } from '@instantdb/react';
 
 // Hash function using SHA-256
 async function hashPin(pin: string): Promise<string> {
@@ -25,6 +27,41 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
   const [confirmNewPin, setConfirmNewPin] = useState('');
   const [pinError, setPinError] = useState('');
   const [pinSuccess, setPinSuccess] = useState(false);
+
+  // Delete all entries state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+
+  const { user } = db.useAuth();
+
+  // Query to get all entries for deletion
+  const { data } = db.useQuery(user ? { entries: { $: { where: { userId: user.id } } } } : null);
+  const entries = data?.entries || [];
+
+  const handleDeleteAllEntries = async () => {
+    if (deleteConfirmText !== 'DELETE' || !user) return;
+
+    setIsDeleting(true);
+    try {
+      // Delete all entries in a single transaction
+      const deleteOps = entries.map((entry: { id: string }) => tx.entries[entry.id].delete());
+      if (deleteOps.length > 0) {
+        await db.transact(deleteOps);
+      }
+      setDeleteSuccess(true);
+      setTimeout(() => {
+        setShowDeleteConfirm(false);
+        setDeleteConfirmText('');
+        setDeleteSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error deleting entries:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleChangePinClick = () => {
     setShowPinChange(true);
@@ -170,6 +207,98 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Danger Zone */}
+      <div className="mt-8 pt-6 border-t border-red-200">
+        <h3 className="text-sm font-medium text-red-700 mb-4 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4" />
+          Danger Zone
+        </h3>
+
+        <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <Trash2 className="w-5 h-5 text-red-500" />
+            <div>
+              <p className="text-sm font-medium text-gray-800">Delete All Entries</p>
+              <p className="text-xs text-gray-500">
+                Permanently delete all {entries.length} journal {entries.length === 1 ? 'entry' : 'entries'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            disabled={entries.length === 0}
+            className="px-3 py-1.5 text-sm font-medium text-red-700 bg-red-100 hover:bg-red-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Delete All
+          </button>
+        </div>
+
+        {/* Delete Confirmation */}
+        <AnimatePresence>
+          {showDeleteConfirm && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4 p-4 bg-red-50 rounded-xl border border-red-200 overflow-hidden"
+            >
+              {deleteSuccess ? (
+                <div className="flex items-center justify-center gap-2 py-4">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Check className="w-4 h-4 text-green-600" />
+                  </div>
+                  <p className="text-sm font-medium text-green-600">All entries deleted!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2 p-3 bg-red-100 rounded-lg">
+                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-red-800">This action cannot be undone</p>
+                      <p className="text-xs text-red-600 mt-1">
+                        All {entries.length} journal {entries.length === 1 ? 'entry' : 'entries'} will be permanently deleted.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-red-600 mb-1">
+                      Type DELETE to confirm
+                    </label>
+                    <input
+                      type="text"
+                      value={deleteConfirmText}
+                      onChange={(e) => setDeleteConfirmText(e.target.value.toUpperCase())}
+                      placeholder="DELETE"
+                      className="w-full px-3 py-2 text-sm border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-mono tracking-widest"
+                    />
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        setDeleteConfirmText('');
+                      }}
+                      className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDeleteAllEntries}
+                      disabled={deleteConfirmText !== 'DELETE' || isDeleting}
+                      className="flex-1 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {isDeleting ? 'Deleting...' : 'Delete All Entries'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 }
