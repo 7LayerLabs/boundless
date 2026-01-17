@@ -21,9 +21,10 @@ export function TagInput({ tags, onTagsChange, allTags, customTags = [], disable
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Combine starter tags with user tags for suggestions
+  // Combine starter tags with user tags and custom tags for suggestions
   const starterTagNames = starterTags.map(t => t.name);
-  const combinedTags = [...new Set([...starterTagNames, ...allTags])];
+  const customTagNames = customTags.map(t => t.name);
+  const combinedTags = [...new Set([...starterTagNames, ...customTagNames, ...allTags])];
 
   // Filter suggestions based on input
   const suggestions = inputValue.trim()
