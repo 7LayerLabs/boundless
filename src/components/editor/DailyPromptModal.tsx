@@ -126,26 +126,44 @@ interface DailyPromptModalProps {
 }
 
 export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps) {
-  const [currentPrompt, setCurrentPrompt] = useState('');
-  const [currentCategory, setCurrentCategory] = useState<keyof typeof defaultPrompts>('reflection');
+  const [currentPrompts, setCurrentPrompts] = useState<string[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<keyof typeof defaultPrompts>('gratitude');
   const { fontFamily } = useSettings();
   const currentFont = fonts[fontFamily] || fonts.caveat;
 
-  useEffect(() => {
-    getRandomPrompt();
-  }, []);
+  // Get 3 random prompts from a category
+  const getRandomPrompts = (category: keyof typeof defaultPrompts) => {
+    const prompts = [...defaultPrompts[category]];
+    const selected: string[] = [];
 
-  const getRandomPrompt = (category?: keyof typeof defaultPrompts) => {
-    const cat = category || categories[Math.floor(Math.random() * categories.length)];
-    const prompts = defaultPrompts[cat];
-    const prompt = prompts[Math.floor(Math.random() * prompts.length)];
-    setCurrentPrompt(prompt);
-    setCurrentCategory(cat);
+    // Pick up to 3 random prompts (or all if category has fewer)
+    const count = Math.min(3, prompts.length);
+    for (let i = 0; i < count; i++) {
+      const randomIndex = Math.floor(Math.random() * prompts.length);
+      selected.push(prompts[randomIndex]);
+      prompts.splice(randomIndex, 1);
+    }
+
+    setCurrentPrompts(selected);
+    setCurrentCategory(category);
   };
 
-  const handleUsePrompt = () => {
+  // Initialize with gratitude category
+  useEffect(() => {
+    getRandomPrompts('gratitude');
+  }, []);
+
+  const handleSelectCategory = (category: keyof typeof defaultPrompts) => {
+    getRandomPrompts(category);
+  };
+
+  const handleShuffle = () => {
+    getRandomPrompts(currentCategory);
+  };
+
+  const handleUsePrompt = (prompt: string) => {
     analytics.promptUsed(currentCategory);
-    onUsePrompt({ prompt: currentPrompt, category: currentCategory });
+    onUsePrompt({ prompt, category: currentCategory });
     onClose();
   };
 
@@ -184,7 +202,7 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => getRandomPrompt(cat)}
+              onClick={() => handleSelectCategory(cat)}
               className={cn(
                 'px-3 py-1.5 rounded-full text-sm capitalize transition-colors',
                 currentCategory === cat
@@ -197,31 +215,51 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
           ))}
         </div>
 
-        {/* Prompt Text */}
-        <div className="p-6">
-          <div className="flex items-start gap-3 mb-4">
-            <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0 mt-1" />
-            <p className={cn('text-xl text-gray-800 leading-relaxed', currentFont.className)}>
-              {currentPrompt}
-            </p>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-3 p-4 bg-gray-50 border-t border-gray-100">
+        {/* Category Header with Shuffle */}
+        <div className="flex items-center justify-between px-6 pt-4 pb-2">
+          <span className="text-sm font-medium text-gray-500 capitalize">
+            {currentCategory} prompts
+          </span>
           <button
-            onClick={() => getRandomPrompt()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-colors"
+            onClick={handleShuffle}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-amber-600 hover:bg-amber-50 transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
-            New Prompt
+            Shuffle
           </button>
-          <button
-            onClick={handleUsePrompt}
-            className="flex-1 px-4 py-2 rounded-lg bg-amber-500 text-white font-medium hover:bg-amber-600 transition-colors"
-          >
-            Use This Prompt
-          </button>
+        </div>
+
+        {/* 3 Prompt Cards */}
+        <div className="px-6 pb-6 space-y-3">
+          {currentPrompts.map((prompt, index) => (
+            <motion.button
+              key={`${currentCategory}-${index}-${prompt.slice(0, 20)}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              onClick={() => handleUsePrompt(prompt)}
+              className={cn(
+                'w-full p-4 rounded-xl border-2 text-left transition-all',
+                'bg-gradient-to-br from-amber-50 to-white border-amber-200',
+                'hover:border-amber-400 hover:shadow-md hover:scale-[1.01]',
+                'cursor-pointer group'
+              )}
+            >
+              <div className="flex items-start gap-3">
+                <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                <p className={cn('text-gray-800 leading-relaxed', currentFont.className)}>
+                  {prompt}
+                </p>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Footer hint */}
+        <div className="px-6 pb-4">
+          <p className="text-xs text-gray-400 text-center">
+            Click a prompt to use it
+          </p>
         </div>
       </motion.div>
     </motion.div>
