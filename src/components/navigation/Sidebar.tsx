@@ -171,8 +171,8 @@ export function Sidebar({
       className={cn(
         'w-full flex items-center gap-3 p-3 rounded-xl transition-all group',
         darkMode
-          ? 'hover:bg-amber-500/20 text-amber-300'
-          : 'hover:bg-amber-100/80 text-amber-800',
+          ? 'hover:bg-neutral-700/50 text-neutral-300'
+          : 'hover:bg-neutral-100 text-neutral-700',
         !shouldShowExpanded && 'justify-center'
       )}
       title={!shouldShowExpanded ? item.label : undefined}
@@ -187,7 +187,7 @@ export function Sidebar({
           <p className="font-medium text-sm truncate">{item.label}</p>
           <p className={cn(
             'text-xs truncate',
-            darkMode ? 'text-amber-400/70' : 'text-amber-600/70'
+            darkMode ? 'text-neutral-500' : 'text-neutral-500'
           )}>{item.description}</p>
         </motion.div>
       )}
@@ -200,15 +200,15 @@ export function Sidebar({
       {/* Logo */}
       <div className={cn(
         'p-4 border-b flex items-center',
-        darkMode ? 'border-gray-700' : 'border-amber-100',
+        darkMode ? 'border-neutral-700' : 'border-neutral-200',
         shouldShowExpanded ? 'justify-between' : 'justify-center'
       )}>
         <div className="flex items-center gap-3">
           <div className={cn(
             'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
             darkMode
-              ? 'bg-amber-600'
-              : 'bg-amber-500'
+              ? 'bg-neutral-700'
+              : 'bg-neutral-900'
           )}>
             <span className="text-white font-bold text-lg">B</span>
           </div>
@@ -219,11 +219,11 @@ export function Sidebar({
             >
               <p className={cn(
                 'font-bold',
-                darkMode ? 'text-amber-300' : 'text-amber-900'
+                darkMode ? 'text-neutral-200' : 'text-neutral-900'
               )}>Boundless</p>
               <p className={cn(
                 'text-xs',
-                darkMode ? 'text-amber-400/70' : 'text-amber-600'
+                darkMode ? 'text-neutral-500' : 'text-neutral-500'
               )}>Write Without Limits</p>
             </motion.div>
           )}
@@ -235,8 +235,8 @@ export function Sidebar({
             className={cn(
               'p-2 rounded-lg transition-colors',
               darkMode
-                ? 'hover:bg-amber-500/20 text-amber-300'
-                : 'hover:bg-amber-100/80 text-amber-800'
+                ? 'hover:bg-neutral-700/50 text-neutral-400'
+                : 'hover:bg-neutral-100 text-neutral-600'
             )}
           >
             <X className="w-5 h-5" />
@@ -251,8 +251,8 @@ export function Sidebar({
           className={cn(
             'absolute -right-3 top-20 w-6 h-6 text-white rounded-full flex items-center justify-center shadow-md transition-colors',
             darkMode
-              ? 'bg-amber-600 hover:bg-amber-500'
-              : 'bg-amber-500 hover:bg-amber-600'
+              ? 'bg-neutral-600 hover:bg-neutral-500'
+              : 'bg-neutral-900 hover:bg-neutral-700'
           )}
         >
           {isExpanded ? (
@@ -268,7 +268,7 @@ export function Sidebar({
         {shouldShowExpanded && (
           <p className={cn(
             'px-3 py-2 text-xs font-semibold uppercase tracking-wider',
-            darkMode ? 'text-amber-500/70' : 'text-amber-400'
+            darkMode ? 'text-neutral-500' : 'text-neutral-400'
           )}>
             Navigate
           </p>
@@ -277,13 +277,13 @@ export function Sidebar({
 
         <div className={cn(
           'my-3 border-t',
-          darkMode ? 'border-gray-700' : 'border-amber-100'
+          darkMode ? 'border-neutral-700' : 'border-neutral-200'
         )} />
 
         {shouldShowExpanded && (
           <p className={cn(
             'px-3 py-2 text-xs font-semibold uppercase tracking-wider',
-            darkMode ? 'text-amber-500/70' : 'text-amber-400'
+            darkMode ? 'text-neutral-500' : 'text-neutral-400'
           )}>
             Tools
           </p>
@@ -294,7 +294,7 @@ export function Sidebar({
       {/* Logout */}
       <div className={cn(
         'p-2 border-t',
-        darkMode ? 'border-gray-700' : 'border-amber-100'
+        darkMode ? 'border-neutral-700' : 'border-neutral-200'
       )}>
         <button
           onClick={() => {
@@ -305,8 +305,8 @@ export function Sidebar({
           className={cn(
             'w-full flex items-center gap-3 p-3 rounded-xl transition-all text-white disabled:opacity-50',
             darkMode
-              ? 'bg-amber-600 hover:bg-amber-500'
-              : 'bg-amber-500 hover:bg-amber-600',
+              ? 'bg-neutral-700 hover:bg-neutral-600'
+              : 'bg-neutral-900 hover:bg-neutral-800',
             !shouldShowExpanded && 'justify-center'
           )}
           title={!shouldShowExpanded ? 'Sign Out' : undefined}
@@ -336,8 +336,8 @@ export function Sidebar({
           className={cn(
             'fixed left-4 top-4 z-50 p-3 rounded-xl shadow-lg transition-all',
             darkMode
-              ? 'bg-gray-900/95 text-amber-300 hover:bg-gray-800'
-              : 'bg-white/95 text-amber-800 hover:bg-amber-50',
+              ? 'bg-neutral-800/95 text-neutral-300 hover:bg-neutral-700'
+              : 'bg-white/95 text-neutral-700 hover:bg-neutral-50',
             isMobileOpen && 'opacity-0 pointer-events-none'
           )}
           aria-label="Open menu"
@@ -368,8 +368,8 @@ export function Sidebar({
                 className={cn(
                   'fixed left-0 top-0 bottom-0 z-50 w-72 flex flex-col shadow-xl border-r',
                   darkMode
-                    ? 'bg-gray-900 border-gray-700'
-                    : 'bg-white border-amber-100'
+                    ? 'bg-neutral-900 border-neutral-700'
+                    : 'bg-white border-neutral-200'
                 )}
               >
                 {sidebarContent}
@@ -390,8 +390,8 @@ export function Sidebar({
       className={cn(
         'fixed left-0 top-0 bottom-0 z-50 flex flex-col backdrop-blur-sm shadow-xl border-r',
         darkMode
-          ? 'bg-gray-900/95 border-gray-700'
-          : 'bg-white/95 border-amber-100'
+          ? 'bg-neutral-900/95 border-neutral-700'
+          : 'bg-white/95 border-neutral-200'
       )}
     >
       {sidebarContent}
