@@ -42,7 +42,7 @@ export type FontSize = 'small' | 'medium' | 'large';
 
 export type InkColor = 'black' | 'blue' | 'red' | 'green' | 'purple';
 
-export type AITone = 'comforting' | 'toughLove' | 'curious' | 'philosophical' | 'playful';
+export type AITone = 'comforting' | 'toughLove' | 'curious' | 'philosophical' | 'playful' | 'devilsAdvocate' | 'silverLining';
 
 export type DateFormat = 'full' | 'short' | 'numeric' | 'dots';
 
