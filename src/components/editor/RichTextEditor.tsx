@@ -119,13 +119,15 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
 
   // Update editor content when entry changes
   useEffect(() => {
-    if (editor && entry?.content !== undefined) {
+    if (editor) {
+      const newContent = entry?.content || '';
       const currentContent = editor.getHTML();
-      if (currentContent !== entry.content) {
-        editor.commands.setContent(entry.content || '');
+      // Clear editor or update content when entry changes
+      if (currentContent !== newContent) {
+        editor.commands.setContent(newContent);
       }
     }
-  }, [editor, entry?.id]);
+  }, [editor, entry?.id, entry?.content]);
 
   // Update editable state when lock status changes
   useEffect(() => {
