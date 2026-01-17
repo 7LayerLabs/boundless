@@ -180,18 +180,18 @@ export function LibraryScene({ children }: LibrarySceneProps) {
       {/* Branding - bottom center */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-center">
         <h1
-          className="text-2xl font-serif tracking-wide"
+          className="text-3xl md:text-4xl font-serif tracking-wider"
           style={{
-            color: 'rgba(180, 160, 140, 0.6)',
-            textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+            color: 'rgba(200, 180, 155, 0.9)',
+            textShadow: '0 2px 4px rgba(0,0,0,0.6), 0 0 20px rgba(160, 140, 120, 0.3)',
           }}
         >
           Boundless
         </h1>
         <p
-          className="text-xs tracking-[0.2em] uppercase mt-0.5"
+          className="text-sm tracking-[0.25em] uppercase mt-1"
           style={{
-            color: 'rgba(160, 140, 120, 0.5)',
+            color: 'rgba(180, 160, 135, 0.75)',
           }}
         >
           Write without limits

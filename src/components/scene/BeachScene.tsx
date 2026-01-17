@@ -131,18 +131,18 @@ export function BeachScene({ children }: BeachSceneProps) {
       {/* Branding - bottom center */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-center">
         <h1
-          className="text-2xl font-serif tracking-wide"
+          className="text-3xl md:text-4xl font-serif tracking-wider"
           style={{
-            color: 'rgba(80, 60, 40, 0.7)',
-            textShadow: '0 1px 2px rgba(255,255,255,0.2)',
+            color: 'rgba(90, 70, 50, 0.95)',
+            textShadow: '0 2px 4px rgba(255,255,255,0.3), 0 0 20px rgba(100, 80, 60, 0.2)',
           }}
         >
           Boundless
         </h1>
         <p
-          className="text-xs tracking-[0.2em] uppercase mt-0.5"
+          className="text-sm tracking-[0.25em] uppercase mt-1"
           style={{
-            color: 'rgba(70, 50, 30, 0.6)',
+            color: 'rgba(80, 60, 40, 0.85)',
           }}
         >
           Write without limits
