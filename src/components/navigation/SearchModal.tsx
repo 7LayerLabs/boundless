@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, Search, Calendar, Tag } from 'lucide-react';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 import { cn } from '@/lib/utils/cn';
 import { useJournal } from '@/hooks/useJournal';
 import { useSettings } from '@/hooks/useSettings';
@@ -140,7 +141,7 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
                     </div>
                     <p
                       className={cn('text-gray-700 text-sm leading-relaxed', currentFont.className)}
-                      dangerouslySetInnerHTML={{ __html: highlightMatch(previewText, query) }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightMatch(previewText, query)) }}
                     />
                     {entry.tags && entry.tags.length > 0 && (
                       <div className="flex items-center gap-1 mt-2">

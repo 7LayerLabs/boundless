@@ -9,6 +9,7 @@ import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { PinModal } from '@/components/lock/PinModal';
 import { JournalBook } from '@/components/journal/JournalBook';
+import { ErrorBoundary, JournalErrorFallback } from '@/components/ErrorBoundary';
 import { db, type UserSettings } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
 
@@ -125,34 +126,52 @@ export default function Home() {
       )}
 
       {/* Main content */}
-      <AnimatePresence mode="wait">
-        {!showOpenJournal ? (
-          <motion.div
-            key="closed-journal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.9, y: 50 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ClosedJournal isLocked={!isPinVerified} />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="open-journal"
-            initial={{ opacity: 0, scale: 0.8, rotateY: -90 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="w-full max-w-6xl mx-auto"
-          >
-            <JournalBook />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ErrorBoundary
+        fallback={
+          <div className="w-full max-w-2xl mx-auto mt-8">
+            <JournalErrorFallback
+              error={new Error('An error occurred')}
+              resetErrorBoundary={() => window.location.reload()}
+            />
+          </div>
+        }
+      >
+        <AnimatePresence mode="wait">
+          {!showOpenJournal ? (
+            <motion.div
+              key="closed-journal"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.9, y: 50 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ClosedJournal isLocked={!isPinVerified} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="open-journal"
+              initial={{ opacity: 0, scale: 0.8, rotateY: -90 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="w-full max-w-6xl mx-auto"
+            >
+              <JournalBook />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </ErrorBoundary>
 
       {/* Auth Modal */}
       <AnimatePresence>
-        {showAuthModal && !isLoading && <AuthModal />}
+        {showAuthModal && !isLoading && (
+          <ErrorBoundary
+            title="Login error"
+            description="We couldn't load the login form. Please refresh the page."
+          >
+            <AuthModal />
+          </ErrorBoundary>
+        )}
       </AnimatePresence>
 
       {/* Sticky note - only on welcome page */}
@@ -239,12 +258,17 @@ export default function Home() {
       {/* PIN Modal */}
       <AnimatePresence>
         {showPinModal && !isLoading && (
-          <PinModal
-            settingsId={userSettings?.id || null}
-            pinHash={userSettings?.pinHash || null}
-            onUnlock={() => setIsPinVerified(true)}
-            userEmail={user?.email}
-          />
+          <ErrorBoundary
+            title="Security check error"
+            description="We couldn't load the PIN verification. Please refresh the page."
+          >
+            <PinModal
+              settingsId={userSettings?.id || null}
+              pinHash={userSettings?.pinHash || null}
+              onUnlock={() => setIsPinVerified(true)}
+              userEmail={user?.email}
+            />
+          </ErrorBoundary>
         )}
       </AnimatePresence>
     </DeskScene>

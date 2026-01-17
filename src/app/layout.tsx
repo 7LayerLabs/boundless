@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { PostHogProvider } from '@/components/providers/PostHogProvider';
 import {
   // Neat & Tidy
@@ -239,6 +239,9 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+};
+
+export const viewport: Viewport = {
   themeColor: '#1a1714',
 };
 

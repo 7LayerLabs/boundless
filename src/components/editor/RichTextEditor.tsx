@@ -26,12 +26,13 @@ import { fonts, fontCategories, fontsByCategory } from '@/constants/fonts';
 import { inkColors } from '@/constants/themes';
 import { ImageAttachment } from './ImageAttachment';
 import type { FontFamily as FontFamilyType, InkColor } from '@/types/settings';
+import type { Mood } from '@/types/journal';
 
 interface RichTextEditorProps {
   entry?: {
     id: string;
     content: string;
-    mood: string | null;
+    mood: Mood | null;
     tags: string[];
     images?: { id: string; url: string; caption?: string }[];
   };
@@ -144,7 +145,7 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
     setIsSaving(true);
     try {
       if (entry) {
-        await updateEntry(entry.id, html, entry.mood as any, entry.tags || []);
+        await updateEntry(entry.id, html, entry.mood, entry.tags || []);
       } else {
         await createEntry(date, html, null, []);
       }
