@@ -349,7 +349,7 @@ Each question should be distinct and match your assigned tone.`
       case 'insight': return 'bg-amber-50 border-amber-200';
       case 'action': return 'bg-green-50 border-green-200';
       case 'connection': return 'bg-blue-50 border-blue-200';
-      default: return 'bg-purple-50 border-purple-200';
+      default: return 'bg-amber-50 border-amber-200';
     }
   };
 
@@ -360,7 +360,7 @@ Each question should be distinct and match your assigned tone.`
         onClick={handleOpen}
         className={cn(
           'p-3 rounded-xl transition-all',
-          'bg-purple-600 hover:bg-purple-700',
+          'bg-amber-700 hover:bg-amber-800',
           'shadow-lg hover:shadow-xl',
           'group'
         )}
@@ -388,21 +388,21 @@ Each question should be distinct and match your assigned tone.`
               className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-purple-600 px-6 py-4 flex items-center justify-between">
+              <div className="bg-amber-800 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-lg">
-                    <Sparkles className="w-5 h-5 text-white" />
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <Sparkles className="w-5 h-5 text-amber-200" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-white">AI Reflection</h2>
-                    <p className="text-sm text-white/70">Questions to deepen your writing</p>
+                    <h2 className="text-lg font-medium text-amber-50">AI Reflection</h2>
+                    <p className="text-sm text-amber-200/70">Questions to deepen your writing</p>
                   </div>
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 rounded-lg hover:bg-white/20 transition-colors"
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-5 h-5 text-amber-200" />
                 </button>
               </div>
 
@@ -436,12 +436,12 @@ Each question should be distinct and match your assigned tone.`
                         value={tempApiKey}
                         onChange={(e) => setTempApiKey(e.target.value)}
                         placeholder="AIza..."
-                        className="flex-1 px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="flex-1 px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                       <button
                         onClick={handleSaveApiKey}
                         disabled={!tempApiKey.trim()}
-                        className="px-4 py-2 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Save
                       </button>
@@ -466,7 +466,7 @@ Each question should be distinct and match your assigned tone.`
                           className={cn(
                             'w-full p-4 rounded-xl border-2 text-left transition-all',
                             'hover:scale-[1.01] hover:shadow-md',
-                            'bg-white border-gray-200 hover:border-purple-300'
+                            'bg-white border-gray-200 hover:border-amber-400'
                           )}
                         >
                           <div className="flex items-start gap-3">
@@ -474,7 +474,7 @@ Each question should be distinct and match your assigned tone.`
                             <div className="flex-1">
                               <p className="font-medium text-gray-800">{info.label}</p>
                               <p className="text-sm text-gray-500">{info.description}</p>
-                              <p className="text-xs text-purple-600 mt-1">Best for: {info.bestFor}</p>
+                              <p className="text-xs text-amber-600 mt-1">Best for: {info.bestFor}</p>
                             </div>
                           </div>
                         </motion.button>
@@ -486,7 +486,7 @@ Each question should be distinct and match your assigned tone.`
                 {/* Loading State */}
                 {isLoading && (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-purple-500 animate-spin mb-4" />
+                    <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-4" />
                     <p className="text-sm text-gray-500">Reading your thoughts...</p>
                     <p className="text-xs text-gray-400 mt-1">Using {toneInfo[selectedTone].label} tone</p>
                   </div>
