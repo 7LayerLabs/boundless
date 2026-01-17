@@ -5,6 +5,8 @@ import { db, type UserSettings } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
 import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor, AITone, DateFormat, DateColor, SceneType } from '@/types/settings';
 
+export type CustomTag = { name: string; color: string };
+
 const DEFAULT_SETTINGS = {
   bindingColor: 'brown' as BindingColor,
   claspStyle: 'gold' as ClaspStyle,
@@ -24,6 +26,7 @@ const DEFAULT_SETTINGS = {
   journalWhy: '' as string, // User's personal "why" for journaling
   darkMode: false as boolean, // Dark mode toggle
   currentNotebookId: '' as string, // Currently selected notebook
+  customTags: [] as CustomTag[], // Custom tags with colors
 };
 
 export function useSettings() {
@@ -83,6 +86,7 @@ export function useSettings() {
     journalWhy: userSettings?.journalWhy || DEFAULT_SETTINGS.journalWhy,
     darkMode: userSettings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
     currentNotebookId: userSettings?.currentNotebookId || DEFAULT_SETTINGS.currentNotebookId,
+    customTags: (userSettings?.customTags as CustomTag[]) || DEFAULT_SETTINGS.customTags,
   };
 
   // Update a setting
@@ -112,10 +116,48 @@ export function useSettings() {
     ]);
   };
 
+  // Add a custom tag with color
+  const addCustomTag = async (name: string, color: string) => {
+    if (!userSettings?.id) return;
+
+    const trimmedName = name.trim().toLowerCase();
+    if (!trimmedName) return;
+
+    const existingTags = settings.customTags || [];
+    // Don't add if it already exists
+    if (existingTags.some(t => t.name === trimmedName)) return;
+
+    const newTags = [...existingTags, { name: trimmedName, color }];
+
+    await db.transact([
+      tx.settings[userSettings.id].update({
+        customTags: newTags,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
+  // Remove a custom tag
+  const removeCustomTag = async (name: string) => {
+    if (!userSettings?.id) return;
+
+    const existingTags = settings.customTags || [];
+    const newTags = existingTags.filter(t => t.name !== name);
+
+    await db.transact([
+      tx.settings[userSettings.id].update({
+        customTags: newTags,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
   return {
     ...settings,
     isLoading,
     updateSetting,
     resetSettings,
+    addCustomTag,
+    removeCustomTag,
   };
 }

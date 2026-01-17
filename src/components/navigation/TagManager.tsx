@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { X, Tag, Plus, Trash2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useJournal } from '@/hooks/useJournal';
+import { useSettings } from '@/hooks/useSettings';
 import { starterTags, tagColors, getTagColor } from '@/constants/tags';
 
 interface TagManagerProps {
@@ -13,6 +14,7 @@ interface TagManagerProps {
 
 export function TagManager({ onClose }: TagManagerProps) {
   const { allTags, allEntries } = useJournal();
+  const { customTags, addCustomTag, removeCustomTag } = useSettings();
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState(tagColors[0]);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -20,7 +22,10 @@ export function TagManager({ onClose }: TagManagerProps) {
 
   // Combine starter tags with user-created tags
   const starterTagNames = starterTags.map(t => t.name);
-  const userCreatedTags = allTags.filter(t => !starterTagNames.includes(t));
+  // User created tags = tags used in entries that aren't starter tags OR custom tags from settings
+  const customTagNames = customTags.map(t => t.name);
+  const tagsFromEntries = allTags.filter(t => !starterTagNames.includes(t));
+  const userCreatedTags = [...new Set([...customTagNames, ...tagsFromEntries])];
 
   // Get entry count for each tag
   const getTagCount = (tag: string) => {
@@ -32,11 +37,10 @@ export function TagManager({ onClose }: TagManagerProps) {
     return allTags.includes(tagName);
   };
 
-  const handleAddTag = () => {
+  const handleAddTag = async () => {
     const trimmed = newTagName.trim().toLowerCase();
-    if (trimmed && !allTags.includes(trimmed) && !starterTagNames.includes(trimmed)) {
-      // Tags are created when first used on an entry
-      // For now, we just show them in the list
+    if (trimmed && !starterTagNames.includes(trimmed) && !customTagNames.includes(trimmed)) {
+      await addCustomTag(trimmed, newTagColor);
       setNewTagName('');
       setShowColorPicker(false);
     }
@@ -125,7 +129,7 @@ export function TagManager({ onClose }: TagManagerProps) {
               <div className="space-y-2">
                 {userCreatedTags.map((tag) => {
                   const count = getTagCount(tag);
-                  const color = getTagColor(tag);
+                  const color = getTagColor(tag, customTags);
                   return (
                     <div
                       key={tag}
@@ -152,9 +156,8 @@ export function TagManager({ onClose }: TagManagerProps) {
                             No
                           </button>
                           <button
-                            onClick={() => {
-                              // Note: Deleting a tag would require removing it from all entries
-                              // For now, we just hide the confirmation
+                            onClick={async () => {
+                              await removeCustomTag(tag);
                               setConfirmDelete(null);
                             }}
                             className="px-2 py-1 text-xs text-red-500 hover:text-red-700"

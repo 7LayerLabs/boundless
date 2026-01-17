@@ -62,6 +62,7 @@ export function JournalBook() {
     dateFormat,
     dateColor,
     darkMode,
+    customTags,
     updateSetting,
   } = useSettings();
 
@@ -338,6 +339,7 @@ export function JournalBook() {
             showMoodSelector={showMoodSelector}
             onMoodSelect={handleMoodSelect}
             allTags={allTags}
+            customTags={customTags}
             onTagsChange={handleTagsChange}
             onAddUpdate={handleAddUpdate}
             darkMode={darkMode}

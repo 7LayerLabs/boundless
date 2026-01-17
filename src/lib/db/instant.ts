@@ -58,6 +58,7 @@ const schema = i.schema({
       darkMode: i.boolean().optional(), // Dark mode toggle
       currentNotebookId: i.string().optional(), // Currently selected notebook
       scene: i.string().optional(), // Background scene: desk, cafe, beach, library
+      customTags: i.json<{ name: string; color: string }[]>().optional(), // Custom tags with colors
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -130,6 +131,7 @@ export type UserSettings = {
   darkMode?: boolean; // Dark mode toggle
   currentNotebookId?: string; // Currently selected notebook
   scene?: string; // Background scene: desk, cafe, beach, library
+  customTags?: { name: string; color: string }[]; // Custom tags with colors
   createdAt: number;
   updatedAt: number;
 };

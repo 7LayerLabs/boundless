@@ -9,11 +9,12 @@ interface TagInputProps {
   tags: string[];
   onTagsChange: (tags: string[]) => void;
   allTags: string[]; // For suggestions
+  customTags?: { name: string; color: string }[]; // Custom tags with colors from settings
   disabled?: boolean;
   darkMode?: boolean;
 }
 
-export function TagInput({ tags, onTagsChange, allTags, disabled = false, darkMode = false }: TagInputProps) {
+export function TagInput({ tags, onTagsChange, allTags, customTags = [], disabled = false, darkMode = false }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
   const [showInput, setShowInput] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -89,7 +90,7 @@ export function TagInput({ tags, onTagsChange, allTags, disabled = false, darkMo
       <div className="flex items-center gap-1.5 flex-wrap">
         <Tag className={cn('w-3.5 h-3.5', darkMode ? 'text-amber-400/60' : 'text-amber-500/60')} />
         {tags.map((tag) => {
-          const color = getTagColor(tag);
+          const color = getTagColor(tag, customTags);
           return (
             <span
               key={tag}
@@ -115,7 +116,7 @@ export function TagInput({ tags, onTagsChange, allTags, disabled = false, darkMo
 
         {/* Existing tags */}
         {tags.map((tag) => {
-          const color = getTagColor(tag);
+          const color = getTagColor(tag, customTags);
           return (
             <span
               key={tag}
@@ -168,7 +169,7 @@ export function TagInput({ tags, onTagsChange, allTags, disabled = false, darkMo
                 )}
               >
                 {suggestions.map((suggestion) => {
-                  const color = getTagColor(suggestion);
+                  const color = getTagColor(suggestion, customTags);
                   return (
                     <button
                       key={suggestion}
