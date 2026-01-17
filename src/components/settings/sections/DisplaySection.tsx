@@ -23,12 +23,12 @@ export function DisplaySection({
   updateSetting,
 }: DisplaySectionProps) {
   return (
-    <section className="pb-6 border-b border-amber-100">
-      <h3 className="text-sm font-medium text-amber-800 mb-4">Display</h3>
+    <section className="pb-6 border-b border-neutral-200">
+      <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Display</h3>
 
       {/* Date Format */}
       <div className="space-y-3 mb-6">
-        <p className="text-sm text-amber-700">Date Format</p>
+        <p className="text-sm text-neutral-600">Date Format</p>
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(dateFormats) as DateFormat[]).map((format) => {
             const formatConfig = dateFormats[format];
@@ -37,14 +37,14 @@ export function DisplaySection({
                 key={format}
                 onClick={() => updateSetting('dateFormat', format)}
                 className={cn(
-                  'px-3 py-2 rounded-lg border-2 text-left transition-all',
+                  'px-3 py-2 rounded-lg border text-left transition-all',
                   dateFormat === format
-                    ? 'border-amber-500 bg-amber-50'
-                    : 'border-amber-100 hover:border-amber-300 bg-white'
+                    ? 'border-neutral-900 bg-neutral-50'
+                    : 'border-neutral-200 hover:border-neutral-400 bg-white'
                 )}
               >
-                <p className="text-xs text-amber-500">{formatConfig.label}</p>
-                <p className="text-sm font-medium text-amber-800">{formatConfig.example}</p>
+                <p className="text-xs text-neutral-500">{formatConfig.label}</p>
+                <p className="text-sm font-medium text-neutral-800">{formatConfig.example}</p>
               </button>
             );
           })}
@@ -53,7 +53,7 @@ export function DisplaySection({
 
       {/* Date Color */}
       <div className="space-y-3">
-        <p className="text-sm text-amber-700">Date Color</p>
+        <p className="text-sm text-neutral-600">Date Color</p>
         <div className="grid grid-cols-3 gap-2">
           {(Object.keys(dateColors) as DateColor[]).map((color) => {
             const colorConfig = dateColors[color];
@@ -62,10 +62,10 @@ export function DisplaySection({
                 key={color}
                 onClick={() => updateSetting('dateColor', color)}
                 className={cn(
-                  'px-3 py-3 rounded-lg border-2 text-center transition-all',
+                  'px-3 py-3 rounded-lg border text-center transition-all',
                   dateColor === color
-                    ? 'border-amber-500 bg-amber-50'
-                    : 'border-amber-100 hover:border-amber-300 bg-white'
+                    ? 'border-neutral-900 bg-neutral-50'
+                    : 'border-neutral-200 hover:border-neutral-400 bg-white'
                 )}
               >
                 <p
@@ -74,7 +74,7 @@ export function DisplaySection({
                 >
                   Aa
                 </p>
-                <p className="text-xs text-amber-500 mt-1">{colorConfig.name}</p>
+                <p className="text-xs text-neutral-500 mt-1">{colorConfig.name}</p>
               </button>
             );
           })}

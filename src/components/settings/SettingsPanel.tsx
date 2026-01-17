@@ -69,18 +69,18 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         className="h-full w-[480px] bg-white shadow-2xl flex flex-col"
       >
         {/* Header */}
-        <div className="bg-white border-b border-amber-100 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-medium text-amber-900">Settings</h2>
+        <div className="bg-neutral-900 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-medium text-white">Settings</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-amber-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
           >
-            <X className="w-5 h-5 text-amber-600" />
+            <X className="w-5 h-5 text-neutral-400" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="bg-amber-50/50 border-b border-amber-100 px-4">
+        <div className="bg-neutral-100 border-b border-neutral-200 px-4">
           <div className="flex gap-1">
             {tabs.map((tab) => (
               <button
@@ -89,8 +89,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 className={cn(
                   'flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all border-b-2 -mb-px',
                   activeTab === tab.id
-                    ? 'text-amber-900 border-amber-500 bg-white'
-                    : 'text-amber-600 border-transparent hover:text-amber-800 hover:bg-amber-50'
+                    ? 'text-neutral-900 border-neutral-900 bg-white'
+                    : 'text-neutral-500 border-transparent hover:text-neutral-700 hover:bg-neutral-50'
                 )}
               >
                 {tab.icon}
@@ -141,15 +141,15 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
         </div>
 
         {/* API Key Footer - Always visible at bottom */}
-        <div className="border-t border-amber-100 bg-gray-50 px-6 py-4">
+        <div className="border-t border-neutral-200 bg-neutral-50 px-6 py-4">
           <div className="flex items-center gap-2 mb-2">
-            <Key className="w-4 h-4 text-gray-500" />
-            <p className="text-sm font-medium text-gray-700">Gemini API Key</p>
+            <Key className="w-4 h-4 text-neutral-500" />
+            <p className="text-sm font-medium text-neutral-700">Gemini API Key</p>
             <a
               href="https://aistudio.google.com/app/apikey"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-amber-600 hover:text-amber-700 underline ml-auto"
+              className="text-xs text-neutral-500 hover:text-neutral-700 underline ml-auto"
             >
               Get a key (free)
             </a>
@@ -161,12 +161,12 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
                 value={tempApiKey}
                 onChange={(e) => setTempApiKey(e.target.value)}
                 placeholder="AIza..."
-                className="w-full px-3 py-2 pr-10 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                className="w-full px-3 py-2 pr-10 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-400 bg-white"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-neutral-400 hover:text-neutral-600"
               >
                 {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -174,7 +174,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <button
               onClick={handleSaveApiKey}
               disabled={tempApiKey === aiApiKey}
-              className="px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-neutral-900 text-white text-sm font-medium rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Save
             </button>
