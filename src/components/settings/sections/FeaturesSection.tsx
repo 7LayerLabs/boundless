@@ -10,6 +10,8 @@ const aiTones: Record<AITone, { label: string; description: string; emoji: strin
   curious: { label: 'Curious', description: 'Neutral, exploratory, Socratic', emoji: '🤔' },
   philosophical: { label: 'Philosophical', description: 'Deep, reflective, existential', emoji: '🧘' },
   playful: { label: 'Playful', description: 'Light, humorous, casual', emoji: '😄' },
+  devilsAdvocate: { label: "Devil's Advocate", description: 'Challenges your perspective', emoji: '😈' },
+  silverLining: { label: 'Silver Lining', description: 'Finds the positive angle', emoji: '🌤️' },
 };
 
 interface FeaturesSectionProps {
