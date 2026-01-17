@@ -19,6 +19,8 @@ import { ModalsContainer } from './ModalsContainer';
 import { analytics } from '@/components/providers/PostHogProvider';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
+import type { Quote } from '@/constants/quotes';
+import type { EntryTemplate } from '@/constants/templates';
 
 export function JournalBook() {
   // Modal visibility states
@@ -34,6 +36,13 @@ export function JournalBook() {
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
   const [pinnedPrompt, setPinnedPrompt] = useState<PromptSelection | null>(null);
+
+  // New optional feature modals
+  const [showWritingStats, setShowWritingStats] = useState(false);
+  const [showEntryTemplates, setShowEntryTemplates] = useState(false);
+  const [showGuidedPrograms, setShowGuidedPrograms] = useState(false);
+  const [showDailyQuote, setShowDailyQuote] = useState(false);
+  const [pinnedQuote, setPinnedQuote] = useState<Quote | null>(null);
 
   // Use InstantDB hooks
   const {
@@ -62,6 +71,10 @@ export function JournalBook() {
     dateColor,
     darkMode,
     updateSetting,
+    showWritingStats: showWritingStatsSetting,
+    showEntryTemplates: showEntryTemplatesSetting,
+    showGuidedPrograms: showGuidedProgramsSetting,
+    showDailyQuote: showDailyQuoteSetting,
   } = useSettings();
 
   // Check if current date is a past day (not today)
@@ -169,6 +182,31 @@ export function JournalBook() {
   const handleUsePrompt = (selection: PromptSelection) => {
     // Show prompt in floating bubble instead of inserting into notes
     setPinnedPrompt(selection);
+  };
+
+  // Handler for template selection - inserts template content into current entry
+  const handleSelectTemplate = async (template: EntryTemplate) => {
+    if (currentEntry) {
+      // Append template content to existing entry
+      const newContent = currentEntry.content
+        ? `${currentEntry.content}${template.content}`
+        : template.content;
+      await updateEntry(currentEntry.id, newContent, currentEntry.mood as Mood | null, currentEntry.tags || []);
+    } else {
+      // Create new entry with template content
+      await createEntry(currentDate, template.content, null, []);
+    }
+  };
+
+  // Handler for program prompt selection
+  const handleUseProgramPrompt = (prompt: string) => {
+    // Show prompt in floating bubble
+    setPinnedPrompt({ prompt, category: 'program' });
+  };
+
+  // Handler for pinning a quote
+  const handlePinQuote = (quote: Quote) => {
+    setPinnedQuote(quote);
   };
 
   const handleLogout = () => {
@@ -347,6 +385,8 @@ export function JournalBook() {
             onDismissPinnedQuestion={() => setPinnedQuestion(null)}
             pinnedPrompt={pinnedPrompt}
             onDismissPinnedPrompt={() => setPinnedPrompt(null)}
+            pinnedQuote={pinnedQuote}
+            onDismissPinnedQuote={() => setPinnedQuote(null)}
           />
 
           {/* Right Cover Edge */}
@@ -380,6 +420,15 @@ export function JournalBook() {
         onLogout={handleLogout}
         onShowPrompt={() => setShowPromptModal(true)}
         isLoggingOut={isClosing}
+        // Optional sidebar features
+        showWritingStats={showWritingStatsSetting}
+        showEntryTemplates={showEntryTemplatesSetting}
+        showGuidedPrograms={showGuidedProgramsSetting}
+        showDailyQuote={showDailyQuoteSetting}
+        onShowWritingStats={() => setShowWritingStats(true)}
+        onShowEntryTemplates={() => setShowEntryTemplates(true)}
+        onShowGuidedPrograms={() => setShowGuidedPrograms(true)}
+        onShowDailyQuote={() => setShowDailyQuote(true)}
       />
 
       {/* All Modals */}
@@ -393,6 +442,10 @@ export function JournalBook() {
         showBookmarks={showBookmarks}
         showPDFExport={showPDFExport}
         showPromptModal={showPromptModal}
+        showWritingStats={showWritingStats}
+        showEntryTemplates={showEntryTemplates}
+        showGuidedPrograms={showGuidedPrograms}
+        showDailyQuote={showDailyQuote}
         onCloseCalendar={() => setShowCalendar(false)}
         onCloseSettings={() => setShowSettings(false)}
         onCloseMoodInsights={() => setShowMoodInsights(false)}
@@ -402,6 +455,10 @@ export function JournalBook() {
         onCloseBookmarks={() => setShowBookmarks(false)}
         onClosePDFExport={() => setShowPDFExport(false)}
         onClosePromptModal={() => setShowPromptModal(false)}
+        onCloseWritingStats={() => setShowWritingStats(false)}
+        onCloseEntryTemplates={() => setShowEntryTemplates(false)}
+        onCloseGuidedPrograms={() => setShowGuidedPrograms(false)}
+        onCloseDailyQuote={() => setShowDailyQuote(false)}
         currentDate={currentDate}
         onSelectDate={(date) => {
           setCurrentDate(date);
@@ -409,6 +466,9 @@ export function JournalBook() {
         }}
         onSelectEntry={handleSelectEntry}
         onUsePrompt={handleUsePrompt}
+        onSelectTemplate={handleSelectTemplate}
+        onUseProgramPrompt={handleUseProgramPrompt}
+        onPinQuote={handlePinQuote}
       />
     </div>
   );

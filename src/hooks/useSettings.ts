@@ -27,6 +27,10 @@ const DEFAULT_SETTINGS = {
   darkMode: false as boolean, // Dark mode toggle
   currentNotebookId: '' as string, // Currently selected notebook
   customTags: [] as CustomTag[], // Custom tags with colors
+  showWritingStats: false as boolean, // Show Writing Stats in sidebar
+  showEntryTemplates: false as boolean, // Show Entry Templates in sidebar
+  showGuidedPrograms: false as boolean, // Show Guided Programs in sidebar
+  showDailyQuote: false as boolean, // Show Daily Quote in sidebar
 };
 
 export function useSettings() {
@@ -87,6 +91,10 @@ export function useSettings() {
     darkMode: userSettings?.darkMode ?? DEFAULT_SETTINGS.darkMode,
     currentNotebookId: userSettings?.currentNotebookId || DEFAULT_SETTINGS.currentNotebookId,
     customTags: (userSettings?.customTags as CustomTag[]) || DEFAULT_SETTINGS.customTags,
+    showWritingStats: userSettings?.showWritingStats ?? DEFAULT_SETTINGS.showWritingStats,
+    showEntryTemplates: userSettings?.showEntryTemplates ?? DEFAULT_SETTINGS.showEntryTemplates,
+    showGuidedPrograms: userSettings?.showGuidedPrograms ?? DEFAULT_SETTINGS.showGuidedPrograms,
+    showDailyQuote: userSettings?.showDailyQuote ?? DEFAULT_SETTINGS.showDailyQuote,
   };
 
   // Update a setting

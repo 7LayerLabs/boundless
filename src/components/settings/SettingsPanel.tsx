@@ -40,6 +40,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     dateFormat,
     dateColor,
     pinHash,
+    showWritingStats,
+    showEntryTemplates,
+    showGuidedPrograms,
+    showDailyQuote,
     updateSetting,
   } = useSettings();
 
@@ -107,6 +111,10 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
               showMoodSelector={showMoodSelector}
               aiReflectionEnabled={aiReflectionEnabled}
               aiTone={aiTone}
+              showWritingStats={showWritingStats}
+              showEntryTemplates={showEntryTemplates}
+              showGuidedPrograms={showGuidedPrograms}
+              showDailyQuote={showDailyQuote}
               updateSetting={updateSetting}
             />
           )}

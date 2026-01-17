@@ -1,6 +1,6 @@
 'use client';
 
-import { Smile, Brain, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Smile, Brain, ToggleLeft, ToggleRight, BarChart2, FileText, Compass, Quote } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { AITone } from '@/types/settings';
 
@@ -18,6 +18,10 @@ interface FeaturesSectionProps {
   showMoodSelector: boolean;
   aiReflectionEnabled: boolean;
   aiTone: AITone;
+  showWritingStats: boolean;
+  showEntryTemplates: boolean;
+  showGuidedPrograms: boolean;
+  showDailyQuote: boolean;
   updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
@@ -25,6 +29,10 @@ export function FeaturesSection({
   showMoodSelector,
   aiReflectionEnabled,
   aiTone,
+  showWritingStats,
+  showEntryTemplates,
+  showGuidedPrograms,
+  showDailyQuote,
   updateSetting,
 }: FeaturesSectionProps) {
   return (
@@ -105,6 +113,95 @@ export function FeaturesSection({
           </div>
         </div>
       )}
+
+      {/* Sidebar Features Section */}
+      <div className="mt-6 pt-6 border-t border-neutral-200">
+        <h4 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Sidebar Features</h4>
+
+        {/* Writing Stats Toggle */}
+        <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <BarChart2 className="w-5 h-5 text-neutral-400" />
+            <div>
+              <p className="text-sm font-medium text-neutral-800">Writing Stats</p>
+              <p className="text-xs text-neutral-500">Track words, entries & streaks</p>
+            </div>
+          </div>
+          <button
+            onClick={() => updateSetting('showWritingStats', !showWritingStats)}
+            className="relative"
+          >
+            {showWritingStats ? (
+              <ToggleRight className="w-10 h-10 text-neutral-900" />
+            ) : (
+              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            )}
+          </button>
+        </div>
+
+        {/* Entry Templates Toggle */}
+        <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <FileText className="w-5 h-5 text-neutral-400" />
+            <div>
+              <p className="text-sm font-medium text-neutral-800">Entry Templates</p>
+              <p className="text-xs text-neutral-500">Quick-start formats</p>
+            </div>
+          </div>
+          <button
+            onClick={() => updateSetting('showEntryTemplates', !showEntryTemplates)}
+            className="relative"
+          >
+            {showEntryTemplates ? (
+              <ToggleRight className="w-10 h-10 text-neutral-900" />
+            ) : (
+              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            )}
+          </button>
+        </div>
+
+        {/* Guided Programs Toggle */}
+        <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <Compass className="w-5 h-5 text-neutral-400" />
+            <div>
+              <p className="text-sm font-medium text-neutral-800">Guided Programs</p>
+              <p className="text-xs text-neutral-500">30-day journaling challenges</p>
+            </div>
+          </div>
+          <button
+            onClick={() => updateSetting('showGuidedPrograms', !showGuidedPrograms)}
+            className="relative"
+          >
+            {showGuidedPrograms ? (
+              <ToggleRight className="w-10 h-10 text-neutral-900" />
+            ) : (
+              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            )}
+          </button>
+        </div>
+
+        {/* Daily Quote Toggle */}
+        <div className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <Quote className="w-5 h-5 text-neutral-400" />
+            <div>
+              <p className="text-sm font-medium text-neutral-800">Daily Quote</p>
+              <p className="text-xs text-neutral-500">Inspiring quotes with pin-to-page</p>
+            </div>
+          </div>
+          <button
+            onClick={() => updateSetting('showDailyQuote', !showDailyQuote)}
+            className="relative"
+          >
+            {showDailyQuote ? (
+              <ToggleRight className="w-10 h-10 text-neutral-900" />
+            ) : (
+              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            )}
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

@@ -7,6 +7,7 @@ import { MoodSelector } from '../editor/MoodSelector';
 import { TagInput } from '../editor/TagInput';
 import { ThoughtBubble } from '../editor/ThoughtBubble';
 import { PromptBubble } from '../editor/PromptBubble';
+import { QuoteBubble } from '../editor/QuoteBubble';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DateNavigation } from './DateNavigation';
 import { EntryTabs } from './EntryTabs';
@@ -15,6 +16,7 @@ import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
 import type { ReflectionQuestion } from '../editor/AIReflection';
 import type { PromptSelection } from '../editor/DailyPromptModal';
+import type { Quote } from '@/constants/quotes';
 
 interface PageContentProps {
   // Date navigation
@@ -60,6 +62,10 @@ interface PageContentProps {
   // Writing Prompt
   pinnedPrompt: PromptSelection | null;
   onDismissPinnedPrompt: () => void;
+
+  // Daily Quote
+  pinnedQuote: Quote | null;
+  onDismissPinnedQuote: () => void;
 }
 
 export function PageContent({
@@ -91,6 +97,8 @@ export function PageContent({
   onDismissPinnedQuestion,
   pinnedPrompt,
   onDismissPinnedPrompt,
+  pinnedQuote,
+  onDismissPinnedQuote,
 }: PageContentProps) {
   return (
     <div
@@ -189,9 +197,19 @@ export function PageContent({
 
         {/* Journal Editor - The main writing area */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
+          {/* Pinned Daily Quote Bubble - highest priority */}
+          <AnimatePresence>
+            {pinnedQuote && (
+              <QuoteBubble
+                quote={pinnedQuote}
+                onDismiss={onDismissPinnedQuote}
+              />
+            )}
+          </AnimatePresence>
+
           {/* Pinned Writing Prompt Bubble */}
           <AnimatePresence>
-            {pinnedPrompt && (
+            {pinnedPrompt && !pinnedQuote && (
               <PromptBubble
                 prompt={pinnedPrompt.prompt}
                 category={pinnedPrompt.category}
@@ -202,7 +220,7 @@ export function PageContent({
 
           {/* Pinned AI Reflection Bubble */}
           <AnimatePresence>
-            {pinnedQuestion && !pinnedPrompt && (
+            {pinnedQuestion && !pinnedPrompt && !pinnedQuote && (
               <ThoughtBubble
                 question={pinnedQuestion}
                 onDismiss={onDismissPinnedQuestion}

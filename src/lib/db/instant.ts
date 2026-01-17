@@ -59,6 +59,10 @@ const schema = i.schema({
       currentNotebookId: i.string().optional(), // Currently selected notebook
       scene: i.string().optional(), // Background scene: desk, cafe, beach, library
       customTags: i.json<{ name: string; color: string }[]>().optional(), // Custom tags with colors
+      showWritingStats: i.boolean().optional(), // Show Writing Stats in sidebar
+      showEntryTemplates: i.boolean().optional(), // Show Entry Templates in sidebar
+      showGuidedPrograms: i.boolean().optional(), // Show Guided Programs in sidebar
+      showDailyQuote: i.boolean().optional(), // Show Daily Quote in sidebar
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -132,6 +136,10 @@ export type UserSettings = {
   currentNotebookId?: string; // Currently selected notebook
   scene?: string; // Background scene: desk, cafe, beach, library
   customTags?: { name: string; color: string }[]; // Custom tags with colors
+  showWritingStats?: boolean; // Show Writing Stats in sidebar
+  showEntryTemplates?: boolean; // Show Entry Templates in sidebar
+  showGuidedPrograms?: boolean; // Show Guided Programs in sidebar
+  showDailyQuote?: boolean; // Show Daily Quote in sidebar
   createdAt: number;
   updatedAt: number;
 };

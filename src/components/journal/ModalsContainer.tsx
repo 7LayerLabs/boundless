@@ -10,8 +10,14 @@ import { BookmarksView } from '../navigation/BookmarksView';
 import { PDFExport } from '../navigation/PDFExport';
 import { WhyPage } from './WhyPage';
 import { DailyPromptModal, type PromptSelection } from '../editor/DailyPromptModal';
+import { WritingStatsModal } from '../navigation/WritingStatsModal';
+import { EntryTemplatesModal } from '../editor/EntryTemplatesModal';
+import { GuidedProgramsModal } from '../navigation/GuidedProgramsModal';
+import { DailyQuoteModal } from '../navigation/DailyQuoteModal';
 import { ErrorBoundary, CompactErrorFallback } from '@/components/ErrorBoundary';
 import type { JournalEntry } from '@/lib/db/instant';
+import type { EntryTemplate } from '@/constants/templates';
+import type { Quote } from '@/constants/quotes';
 
 interface ModalsContainerProps {
   // Modal visibility states
@@ -24,6 +30,10 @@ interface ModalsContainerProps {
   showBookmarks: boolean;
   showPDFExport: boolean;
   showPromptModal: boolean;
+  showWritingStats: boolean;
+  showEntryTemplates: boolean;
+  showGuidedPrograms: boolean;
+  showDailyQuote: boolean;
 
   // Modal close handlers
   onCloseCalendar: () => void;
@@ -35,6 +45,10 @@ interface ModalsContainerProps {
   onCloseBookmarks: () => void;
   onClosePDFExport: () => void;
   onClosePromptModal: () => void;
+  onCloseWritingStats: () => void;
+  onCloseEntryTemplates: () => void;
+  onCloseGuidedPrograms: () => void;
+  onCloseDailyQuote: () => void;
 
   // Calendar specific
   currentDate: Date;
@@ -45,6 +59,11 @@ interface ModalsContainerProps {
 
   // Prompt modal
   onUsePrompt: (selection: PromptSelection) => void;
+
+  // New feature handlers
+  onSelectTemplate: (template: EntryTemplate) => void;
+  onUseProgramPrompt: (prompt: string) => void;
+  onPinQuote: (quote: Quote) => void;
 }
 
 function ModalErrorFallback({ error, onClose }: { error: Error; onClose: () => void }) {
@@ -70,6 +89,10 @@ export function ModalsContainer({
   showBookmarks,
   showPDFExport,
   showPromptModal,
+  showWritingStats,
+  showEntryTemplates,
+  showGuidedPrograms,
+  showDailyQuote,
   onCloseCalendar,
   onCloseSettings,
   onCloseMoodInsights,
@@ -79,10 +102,17 @@ export function ModalsContainer({
   onCloseBookmarks,
   onClosePDFExport,
   onClosePromptModal,
+  onCloseWritingStats,
+  onCloseEntryTemplates,
+  onCloseGuidedPrograms,
+  onCloseDailyQuote,
   currentDate,
   onSelectDate,
   onSelectEntry,
   onUsePrompt,
+  onSelectTemplate,
+  onUseProgramPrompt,
+  onPinQuote,
 }: ModalsContainerProps) {
   return (
     <>
@@ -189,6 +219,43 @@ export function ModalsContainer({
               onUsePrompt={onUsePrompt}
             />
           </ErrorBoundary>
+        )}
+      </AnimatePresence>
+
+      {/* Writing Stats Modal */}
+      <AnimatePresence>
+        {showWritingStats && (
+          <WritingStatsModal onClose={onCloseWritingStats} />
+        )}
+      </AnimatePresence>
+
+      {/* Entry Templates Modal */}
+      <AnimatePresence>
+        {showEntryTemplates && (
+          <EntryTemplatesModal
+            onClose={onCloseEntryTemplates}
+            onSelectTemplate={onSelectTemplate}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Guided Programs Modal */}
+      <AnimatePresence>
+        {showGuidedPrograms && (
+          <GuidedProgramsModal
+            onClose={onCloseGuidedPrograms}
+            onUsePrompt={onUseProgramPrompt}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Daily Quote Modal */}
+      <AnimatePresence>
+        {showDailyQuote && (
+          <DailyQuoteModal
+            onClose={onCloseDailyQuote}
+            onPinQuote={onPinQuote}
+          />
         )}
       </AnimatePresence>
     </>

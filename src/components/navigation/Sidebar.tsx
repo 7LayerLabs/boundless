@@ -20,6 +20,10 @@ import {
   ChevronLeft,
   Menu,
   X,
+  BarChart2,
+  FileText,
+  Compass,
+  Quote,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -39,6 +43,15 @@ interface SidebarProps {
   onLogout: () => void;
   onShowPrompt: () => void;
   isLoggingOut: boolean;
+  // Optional sidebar features
+  showWritingStats?: boolean;
+  showEntryTemplates?: boolean;
+  showGuidedPrograms?: boolean;
+  showDailyQuote?: boolean;
+  onShowWritingStats?: () => void;
+  onShowEntryTemplates?: () => void;
+  onShowGuidedPrograms?: () => void;
+  onShowDailyQuote?: () => void;
 }
 
 interface SidebarItem {
@@ -65,6 +78,14 @@ export function Sidebar({
   onLogout,
   onShowPrompt,
   isLoggingOut,
+  showWritingStats,
+  showEntryTemplates,
+  showGuidedPrograms,
+  showDailyQuote,
+  onShowWritingStats,
+  onShowEntryTemplates,
+  onShowGuidedPrograms,
+  onShowDailyQuote,
 }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -120,6 +141,35 @@ export function Sidebar({
       description: 'Track your moods',
       onClick: onShowMoodInsights,
     },
+    // Optional sidebar features - conditionally rendered
+    ...(showWritingStats && onShowWritingStats ? [{
+      id: 'writing-stats',
+      icon: <BarChart2 className="w-5 h-5" />,
+      label: 'Writing Stats',
+      description: 'Words, entries & streaks',
+      onClick: onShowWritingStats,
+    }] : []),
+    ...(showEntryTemplates && onShowEntryTemplates ? [{
+      id: 'templates',
+      icon: <FileText className="w-5 h-5" />,
+      label: 'Entry Templates',
+      description: 'Quick-start formats',
+      onClick: onShowEntryTemplates,
+    }] : []),
+    ...(showGuidedPrograms && onShowGuidedPrograms ? [{
+      id: 'programs',
+      icon: <Compass className="w-5 h-5" />,
+      label: 'Guided Programs',
+      description: '30-day challenges',
+      onClick: onShowGuidedPrograms,
+    }] : []),
+    ...(showDailyQuote && onShowDailyQuote ? [{
+      id: 'quote',
+      icon: <Quote className="w-5 h-5" />,
+      label: 'Daily Quote',
+      description: 'Inspiring words',
+      onClick: onShowDailyQuote,
+    }] : []),
   ];
 
   const toolItems: SidebarItem[] = [
