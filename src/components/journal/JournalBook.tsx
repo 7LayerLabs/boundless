@@ -10,6 +10,7 @@ import { bindingColors, pageColors, dateColors } from '@/constants/themes';
 import { fonts } from '@/constants/fonts';
 import { moods } from '@/constants/moods';
 import { AIReflection, type ReflectionQuestion } from '../editor/AIReflection';
+import type { PromptSelection } from '../editor/DailyPromptModal';
 import { Sidebar } from '../navigation/Sidebar';
 import { BookCover } from './BookCover';
 import { BookSpine } from './BookSpine';
@@ -33,6 +34,7 @@ export function JournalBook() {
   const [showPromptModal, setShowPromptModal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
+  const [pinnedPrompt, setPinnedPrompt] = useState<PromptSelection | null>(null);
 
   // Use InstantDB hooks
   const {
@@ -165,20 +167,9 @@ export function JournalBook() {
     setShowBookmarks(false);
   };
 
-  const handleUsePrompt = async (prompt: string) => {
-    const promptHtml = `<p><em>${prompt}</em></p><p></p>`;
-
-    if (!currentEntry) {
-      await createEntry(currentDate, promptHtml, null, []);
-    } else {
-      const plainText = currentEntry.content?.replace(/<[^>]*>/g, '').trim() || '';
-      if (!plainText) {
-        await updateEntry(currentEntry.id, promptHtml, currentEntry.mood as Mood | null, currentEntry.tags || []);
-      } else {
-        const newContent = currentEntry.content + `<p></p><p><em>${prompt}</em></p><p></p>`;
-        await updateEntry(currentEntry.id, newContent, currentEntry.mood as Mood | null, currentEntry.tags || []);
-      }
-    }
+  const handleUsePrompt = (selection: PromptSelection) => {
+    // Show prompt in floating bubble instead of inserting into notes
+    setPinnedPrompt(selection);
   };
 
   const handleLogout = () => {
@@ -355,6 +346,8 @@ export function JournalBook() {
             fontClassName={currentFont.className}
             pinnedQuestion={pinnedQuestion}
             onDismissPinnedQuestion={() => setPinnedQuestion(null)}
+            pinnedPrompt={pinnedPrompt}
+            onDismissPinnedPrompt={() => setPinnedPrompt(null)}
           />
 
           {/* Right Cover Edge */}

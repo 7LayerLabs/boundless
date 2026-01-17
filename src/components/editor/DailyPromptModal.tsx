@@ -115,9 +115,14 @@ const defaultPrompts = {
 
 const categories = Object.keys(defaultPrompts) as (keyof typeof defaultPrompts)[];
 
+export interface PromptSelection {
+  prompt: string;
+  category: string;
+}
+
 interface DailyPromptModalProps {
   onClose: () => void;
-  onUsePrompt: (prompt: string) => void;
+  onUsePrompt: (selection: PromptSelection) => void;
 }
 
 export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps) {
@@ -140,7 +145,7 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
 
   const handleUsePrompt = () => {
     analytics.promptUsed(currentCategory);
-    onUsePrompt(currentPrompt);
+    onUsePrompt({ prompt: currentPrompt, category: currentCategory });
     onClose();
   };
 

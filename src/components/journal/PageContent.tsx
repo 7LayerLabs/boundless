@@ -6,6 +6,7 @@ import { RichTextEditor } from '../editor/RichTextEditor';
 import { MoodSelector } from '../editor/MoodSelector';
 import { TagInput } from '../editor/TagInput';
 import { ThoughtBubble } from '../editor/ThoughtBubble';
+import { PromptBubble } from '../editor/PromptBubble';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DateNavigation } from './DateNavigation';
 import { EntryTabs } from './EntryTabs';
@@ -13,6 +14,7 @@ import { EntryUpdates } from './EntryUpdates';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
 import type { ReflectionQuestion } from '../editor/AIReflection';
+import type { PromptSelection } from '../editor/DailyPromptModal';
 
 interface PageContentProps {
   // Date navigation
@@ -54,6 +56,10 @@ interface PageContentProps {
   // AI Reflection
   pinnedQuestion: ReflectionQuestion | null;
   onDismissPinnedQuestion: () => void;
+
+  // Writing Prompt
+  pinnedPrompt: PromptSelection | null;
+  onDismissPinnedPrompt: () => void;
 }
 
 export function PageContent({
@@ -83,6 +89,8 @@ export function PageContent({
   fontClassName,
   pinnedQuestion,
   onDismissPinnedQuestion,
+  pinnedPrompt,
+  onDismissPinnedPrompt,
 }: PageContentProps) {
   return (
     <div
@@ -181,9 +189,20 @@ export function PageContent({
 
         {/* Journal Editor - The main writing area */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
-          {/* Pinned Thought Bubble */}
+          {/* Pinned Writing Prompt Bubble */}
           <AnimatePresence>
-            {pinnedQuestion && (
+            {pinnedPrompt && (
+              <PromptBubble
+                prompt={pinnedPrompt.prompt}
+                category={pinnedPrompt.category}
+                onDismiss={onDismissPinnedPrompt}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Pinned AI Reflection Bubble */}
+          <AnimatePresence>
+            {pinnedQuestion && !pinnedPrompt && (
               <ThoughtBubble
                 question={pinnedQuestion}
                 onDismiss={onDismissPinnedQuestion}

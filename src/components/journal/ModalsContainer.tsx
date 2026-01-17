@@ -10,7 +10,7 @@ import { BookmarksView } from '../navigation/BookmarksView';
 import { PDFExport } from '../navigation/PDFExport';
 import { NotebooksView } from '../navigation/NotebooksView';
 import { WhyPage } from './WhyPage';
-import { DailyPromptModal } from '../editor/DailyPromptModal';
+import { DailyPromptModal, type PromptSelection } from '../editor/DailyPromptModal';
 import { ErrorBoundary, CompactErrorFallback } from '@/components/ErrorBoundary';
 import type { JournalEntry } from '@/lib/db/instant';
 
@@ -50,7 +50,7 @@ interface ModalsContainerProps {
   onSelectNotebook: () => void;
 
   // Prompt modal
-  onUsePrompt: (prompt: string) => Promise<void>;
+  onUsePrompt: (selection: PromptSelection) => void;
 }
 
 function ModalErrorFallback({ error, onClose }: { error: Error; onClose: () => void }) {
