@@ -10,7 +10,6 @@ import {
   BarChart3,
   Calendar,
   Lightbulb,
-  Book,
   FileDown,
   Printer,
   Moon,
@@ -34,7 +33,6 @@ interface SidebarProps {
   onShowTags: () => void;
   onShowMoodInsights: () => void;
   onShowCalendar: () => void;
-  onShowNotebooks: () => void;
   onShowPDFExport: () => void;
   onPrint: () => void;
   onShowSettings: () => void;
@@ -61,7 +59,6 @@ export function Sidebar({
   onShowTags,
   onShowMoodInsights,
   onShowCalendar,
-  onShowNotebooks,
   onShowPDFExport,
   onPrint,
   onShowSettings,
@@ -126,13 +123,6 @@ export function Sidebar({
   ];
 
   const toolItems: SidebarItem[] = [
-    {
-      id: 'notebooks',
-      icon: <Book className="w-5 h-5" />,
-      label: 'Notebooks',
-      description: 'Manage journals',
-      onClick: onShowNotebooks,
-    },
     {
       id: 'export',
       icon: <FileDown className="w-5 h-5" />,

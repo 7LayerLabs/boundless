@@ -8,7 +8,6 @@ import { SearchModal } from '../navigation/SearchModal';
 import { TagsView } from '../navigation/TagsView';
 import { BookmarksView } from '../navigation/BookmarksView';
 import { PDFExport } from '../navigation/PDFExport';
-import { NotebooksView } from '../navigation/NotebooksView';
 import { WhyPage } from './WhyPage';
 import { DailyPromptModal, type PromptSelection } from '../editor/DailyPromptModal';
 import { ErrorBoundary, CompactErrorFallback } from '@/components/ErrorBoundary';
@@ -24,7 +23,6 @@ interface ModalsContainerProps {
   showTags: boolean;
   showBookmarks: boolean;
   showPDFExport: boolean;
-  showNotebooks: boolean;
   showPromptModal: boolean;
 
   // Modal close handlers
@@ -36,7 +34,6 @@ interface ModalsContainerProps {
   onCloseTags: () => void;
   onCloseBookmarks: () => void;
   onClosePDFExport: () => void;
-  onCloseNotebooks: () => void;
   onClosePromptModal: () => void;
 
   // Calendar specific
@@ -45,9 +42,6 @@ interface ModalsContainerProps {
 
   // Entry selection for search/tags/bookmarks
   onSelectEntry: (entry: JournalEntry) => void;
-
-  // Notebook selection
-  onSelectNotebook: () => void;
 
   // Prompt modal
   onUsePrompt: (selection: PromptSelection) => void;
@@ -75,7 +69,6 @@ export function ModalsContainer({
   showTags,
   showBookmarks,
   showPDFExport,
-  showNotebooks,
   showPromptModal,
   onCloseCalendar,
   onCloseSettings,
@@ -85,12 +78,10 @@ export function ModalsContainer({
   onCloseTags,
   onCloseBookmarks,
   onClosePDFExport,
-  onCloseNotebooks,
   onClosePromptModal,
   currentDate,
   onSelectDate,
   onSelectEntry,
-  onSelectNotebook,
   onUsePrompt,
 }: ModalsContainerProps) {
   return (
@@ -179,16 +170,6 @@ export function ModalsContainer({
       <AnimatePresence>
         {showPDFExport && (
           <PDFExport onClose={onClosePDFExport} />
-        )}
-      </AnimatePresence>
-
-      {/* Notebooks View */}
-      <AnimatePresence>
-        {showNotebooks && (
-          <NotebooksView
-            onClose={onCloseNotebooks}
-            onSelectNotebook={onSelectNotebook}
-          />
         )}
       </AnimatePresence>
 

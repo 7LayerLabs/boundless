@@ -30,7 +30,6 @@ export function JournalBook() {
   const [showTags, setShowTags] = useState(false);
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showPDFExport, setShowPDFExport] = useState(false);
-  const [showNotebooks, setShowNotebooks] = useState(false);
   const [showPromptModal, setShowPromptModal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
@@ -375,7 +374,6 @@ export function JournalBook() {
         onShowTags={() => setShowTags(true)}
         onShowMoodInsights={() => setShowMoodInsights(true)}
         onShowCalendar={() => setShowCalendar(true)}
-        onShowNotebooks={() => setShowNotebooks(true)}
         onShowPDFExport={() => setShowPDFExport(true)}
         onPrint={handlePrint}
         onShowSettings={() => setShowSettings(true)}
@@ -394,7 +392,6 @@ export function JournalBook() {
         showTags={showTags}
         showBookmarks={showBookmarks}
         showPDFExport={showPDFExport}
-        showNotebooks={showNotebooks}
         showPromptModal={showPromptModal}
         onCloseCalendar={() => setShowCalendar(false)}
         onCloseSettings={() => setShowSettings(false)}
@@ -404,7 +401,6 @@ export function JournalBook() {
         onCloseTags={() => setShowTags(false)}
         onCloseBookmarks={() => setShowBookmarks(false)}
         onClosePDFExport={() => setShowPDFExport(false)}
-        onCloseNotebooks={() => setShowNotebooks(false)}
         onClosePromptModal={() => setShowPromptModal(false)}
         currentDate={currentDate}
         onSelectDate={(date) => {
@@ -412,7 +408,6 @@ export function JournalBook() {
           setShowCalendar(false);
         }}
         onSelectEntry={handleSelectEntry}
-        onSelectNotebook={() => setShowNotebooks(false)}
         onUsePrompt={handleUsePrompt}
       />
     </div>
