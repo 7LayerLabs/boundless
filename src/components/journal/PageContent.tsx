@@ -42,7 +42,6 @@ interface PageContentProps {
 
   // Tags
   allTags: string[];
-  customTags: { name: string; color: string }[];
   onTagsChange: (tags: string[]) => void;
 
   // Updates
@@ -82,7 +81,6 @@ export function PageContent({
   showMoodSelector,
   onMoodSelect,
   allTags,
-  customTags,
   onTagsChange,
   onAddUpdate,
   darkMode,
@@ -183,7 +181,6 @@ export function PageContent({
               tags={currentEntry.tags || []}
               onTagsChange={onTagsChange}
               allTags={allTags}
-              customTags={customTags}
               disabled={isPastDay || currentEntry.isLocked}
               darkMode={darkMode}
             />
