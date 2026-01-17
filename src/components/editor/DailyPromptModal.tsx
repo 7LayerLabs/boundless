@@ -246,8 +246,8 @@ export function DailyPromptModal({ onClose, onUsePrompt }: DailyPromptModalProps
               )}
             >
               <div className="flex items-start gap-3">
-                <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                <p className={cn('text-gray-800 leading-relaxed', currentFont.className)}>
+                <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-1 group-hover:scale-110 transition-transform" />
+                <p className={cn('text-lg text-gray-800 leading-relaxed', currentFont.className)}>
                   {prompt}
                 </p>
               </div>
