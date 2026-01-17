@@ -39,10 +39,17 @@ export function TagManager({ onClose }: TagManagerProps) {
 
   const handleAddTag = async () => {
     const trimmed = newTagName.trim().toLowerCase();
-    if (trimmed && !starterTagNames.includes(trimmed) && !customTagNames.includes(trimmed)) {
+    if (!trimmed) return;
+    if (starterTagNames.includes(trimmed)) return;
+    if (customTagNames.includes(trimmed)) return;
+
+    try {
       await addCustomTag(trimmed, newTagColor);
       setNewTagName('');
+      setNewTagColor(tagColors[0]); // Reset color to default
       setShowColorPicker(false);
+    } catch (error) {
+      console.error('Failed to add tag:', error);
     }
   };
 
@@ -202,12 +209,12 @@ export function TagManager({ onClose }: TagManagerProps) {
               <div className="relative">
                 <button
                   onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center"
+                  className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: newTagColor }}
                 />
                 {showColorPicker && (
-                  <div className="absolute right-0 top-12 bg-white rounded-lg shadow-xl border border-gray-100 p-2 z-10">
-                    <div className="grid grid-cols-4 gap-1">
+                  <div className="absolute right-0 top-12 bg-white rounded-lg shadow-xl border border-gray-100 p-3 z-50 min-w-[140px]">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                       {tagColors.map((color) => (
                         <button
                           key={color}
@@ -216,8 +223,8 @@ export function TagManager({ onClose }: TagManagerProps) {
                             setShowColorPicker(false);
                           }}
                           className={cn(
-                            'w-6 h-6 rounded-full transition-transform hover:scale-110',
-                            newTagColor === color && 'ring-2 ring-offset-1 ring-gray-400'
+                            'w-7 h-7 rounded-full transition-transform hover:scale-110 flex-shrink-0',
+                            newTagColor === color && 'ring-2 ring-offset-2 ring-gray-400'
                           )}
                           style={{ backgroundColor: color }}
                         />

@@ -117,15 +117,24 @@ export function useSettings() {
   };
 
   // Add a custom tag with color
-  const addCustomTag = async (name: string, color: string) => {
-    if (!userSettings?.id) return;
+  const addCustomTag = async (name: string, color: string): Promise<boolean> => {
+    if (!userSettings?.id) {
+      console.error('addCustomTag: No user settings found');
+      return false;
+    }
 
     const trimmedName = name.trim().toLowerCase();
-    if (!trimmedName) return;
+    if (!trimmedName) {
+      console.error('addCustomTag: Empty tag name');
+      return false;
+    }
 
     const existingTags = settings.customTags || [];
     // Don't add if it already exists
-    if (existingTags.some(t => t.name === trimmedName)) return;
+    if (existingTags.some(t => t.name === trimmedName)) {
+      console.log('addCustomTag: Tag already exists');
+      return false;
+    }
 
     const newTags = [...existingTags, { name: trimmedName, color }];
 
@@ -135,6 +144,8 @@ export function useSettings() {
         updatedAt: Date.now(),
       }),
     ]);
+
+    return true;
   };
 
   // Remove a custom tag
