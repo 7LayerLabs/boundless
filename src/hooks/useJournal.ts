@@ -273,6 +273,25 @@ export function useJournal() {
     ]);
   };
 
+  // Resize image in entry
+  const resizeImage = async (entryId: string, imageId: string, size: number) => {
+    if (!user) return;
+
+    const entry = entries.find((e) => e.id === entryId);
+    if (!entry) return;
+
+    const updatedImages = (entry.images || []).map((img) =>
+      img.id === imageId ? { ...img, size } : img
+    );
+
+    await db.transact([
+      tx.entries[entryId].update({
+        images: updatedImages,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
   return {
     currentDate,
     setCurrentDate,
@@ -295,5 +314,6 @@ export function useJournal() {
     searchEntries,
     addImage,
     removeImage,
+    resizeImage,
   };
 }

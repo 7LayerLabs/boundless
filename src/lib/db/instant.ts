@@ -15,7 +15,7 @@ const schema = i.schema({
       wordCount: i.number(),
       isLocked: i.boolean().optional(), // Lock entry to prevent edits
       isBookmarked: i.boolean().optional(), // Bookmark important entries
-      images: i.json<{ id: string; url: string; caption?: string }[]>().optional(), // Photo attachments
+      images: i.json<{ id: string; url: string; caption?: string; size?: number }[]>().optional(), // Photo attachments with optional size
       notebookId: i.string().optional(), // Which notebook this belongs to
       updates: i.json<{ id: string; content: string; createdAt: number }[]>().optional(), // Updates added after locking
       createdAt: i.number(),
@@ -97,7 +97,7 @@ export type JournalEntry = {
   wordCount: number;
   isLocked?: boolean;
   isBookmarked?: boolean;
-  images?: { id: string; url: string; caption?: string }[];
+  images?: { id: string; url: string; caption?: string; size?: number }[];
   notebookId?: string;
   updates?: { id: string; content: string; createdAt: number }[];
   createdAt: number;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image, Plus, X, Link, Trash2, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -9,19 +9,24 @@ interface ImageData {
   id: string;
   url: string;
   caption?: string;
+  size?: number;
 }
 
 interface ImageAttachmentProps {
   images: ImageData[];
   onAddImage: (url: string, caption?: string) => void;
   onRemoveImage: (id: string) => void;
+  onResizeImage?: (id: string, size: number) => void;
   isLocked?: boolean;
   darkMode?: boolean;
 }
 
-export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked, darkMode }: ImageAttachmentProps) {
+export function ImageAttachment({ images, onAddImage, onRemoveImage, onResizeImage, isLocked, darkMode }: ImageAttachmentProps) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [resizingImage, setResizingImage] = useState<string | null>(null);
+  const [resizeStartX, setResizeStartX] = useState(0);
+  const [resizeStartSize, setResizeStartSize] = useState(0);
   const [caption, setCaption] = useState('');
   const [previewError, setPreviewError] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageData | null>(null);
@@ -93,38 +98,126 @@ export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked, d
     setPreviewError(false);
   };
 
+  // Resize handlers
+  const handleResizeStart = (e: React.MouseEvent, img: ImageData) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setResizingImage(img.id);
+    setResizeStartX(e.clientX);
+    setResizeStartSize(img.size || 80);
+  };
+
+  const handleResizeMove = useCallback((e: MouseEvent) => {
+    if (!resizingImage) return;
+
+    const delta = e.clientX - resizeStartX;
+    const newSize = Math.max(40, Math.min(300, resizeStartSize + delta));
+
+    // Update the DOM directly for smooth resizing
+    const imgElement = document.querySelector(`[data-image-id="${resizingImage}"]`) as HTMLElement;
+    if (imgElement) {
+      imgElement.style.width = `${newSize}px`;
+      imgElement.style.height = `${newSize}px`;
+    }
+  }, [resizingImage, resizeStartX, resizeStartSize]);
+
+  const handleResizeEnd = useCallback((e: MouseEvent) => {
+    if (!resizingImage || !onResizeImage) return;
+
+    const delta = e.clientX - resizeStartX;
+    const newSize = Math.max(40, Math.min(300, resizeStartSize + delta));
+
+    onResizeImage(resizingImage, newSize);
+    setResizingImage(null);
+  }, [resizingImage, resizeStartX, resizeStartSize, onResizeImage]);
+
+  // Add global mouse listeners when resizing
+  useEffect(() => {
+    if (resizingImage) {
+      window.addEventListener('mousemove', handleResizeMove);
+      window.addEventListener('mouseup', handleResizeEnd);
+      return () => {
+        window.removeEventListener('mousemove', handleResizeMove);
+        window.removeEventListener('mouseup', handleResizeEnd);
+      };
+    }
+  }, [resizingImage, handleResizeMove, handleResizeEnd]);
+
   return (
     <div className="mt-4">
       {/* Images Grid */}
       {images.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-3">
-          {images.map((img) => (
-            <div
-              key={img.id}
-              className="relative group cursor-pointer"
-              onClick={() => setSelectedImage(img)}
-            >
-              <img
-                src={img.url}
-                alt={img.caption || 'Journal image'}
-                className="w-20 h-20 object-cover rounded-lg border border-amber-200"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="%23ccc"%3E%3Crect width="80" height="80"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="10"%3EError%3C/text%3E%3C/svg%3E';
-                }}
-              />
-              {!isLocked && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemoveImage(img.id);
-                  }}
-                  className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        <div className="flex flex-wrap gap-3 mb-3">
+          {images.map((img) => {
+            const size = img.size || 80;
+            return (
+              <div
+                key={img.id}
+                className="relative group"
+              >
+                <div
+                  data-image-id={img.id}
+                  className={cn(
+                    'relative cursor-pointer rounded-lg overflow-hidden',
+                    darkMode ? 'border-neutral-600' : 'border-amber-200',
+                    'border'
+                  )}
+                  style={{ width: size, height: size }}
+                  onClick={() => setSelectedImage(img)}
                 >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-          ))}
+                  <img
+                    src={img.url}
+                    alt={img.caption || 'Journal image'}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="%23ccc"%3E%3Crect width="80" height="80"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="10"%3EError%3C/text%3E%3C/svg%3E';
+                    }}
+                  />
+                </div>
+
+                {/* Delete button */}
+                {!isLocked && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemoveImage(img.id);
+                    }}
+                    className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+
+                {/* Resize handle */}
+                {!isLocked && onResizeImage && (
+                  <div
+                    onMouseDown={(e) => handleResizeStart(e, img)}
+                    className={cn(
+                      'absolute bottom-0 right-0 w-4 h-4 cursor-se-resize',
+                      'opacity-0 group-hover:opacity-100 transition-opacity',
+                      'flex items-center justify-center',
+                      resizingImage === img.id && 'opacity-100'
+                    )}
+                    title="Drag to resize"
+                  >
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 10 10"
+                      className={darkMode ? 'text-neutral-400' : 'text-amber-600'}
+                    >
+                      <path
+                        d="M9 1L1 9M9 5L5 9M9 9L9 9"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

@@ -34,7 +34,7 @@ interface RichTextEditorProps {
     content: string;
     mood: Mood | null;
     tags: string[];
-    images?: { id: string; url: string; caption?: string }[];
+    images?: { id: string; url: string; caption?: string; size?: number }[];
   };
   date: Date;
   isLocked?: boolean;
@@ -59,7 +59,7 @@ const FontSize = TextStyle.extend({
 
 export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditorProps) {
   const { fontFamily: defaultFont, inkColor: defaultInk, fontSize: defaultSize, darkMode } = useSettings();
-  const { createEntry, updateEntry, addImage, removeImage } = useJournal();
+  const { createEntry, updateEntry, addImage, removeImage, resizeImage } = useJournal();
 
   const defaultFontConfig = fonts[defaultFont] || fonts.caveat;
   const defaultInkConfig = inkColors[defaultInk] || inkColors.black;
@@ -415,6 +415,7 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
             images={entry.images || []}
             onAddImage={(url, caption) => addImage(entry.id, url, caption)}
             onRemoveImage={(imageId) => removeImage(entry.id, imageId)}
+            onResizeImage={(imageId, size) => resizeImage(entry.id, imageId, size)}
             isLocked={isLocked}
             darkMode={darkMode}
           />
