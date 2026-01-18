@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Compass, Play, RotateCcw, ChevronLeft, Check } from 'lucide-react';
+import { X, Compass, Play, RotateCcw, ChevronLeft, Check, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import {
   guidedPrograms,
@@ -24,6 +25,7 @@ type View = 'categories' | 'list' | 'program';
 const categoryOrder: ProgramCategory[] = ['legacy', 'relationships', 'business', 'wellness'];
 
 export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModalProps) {
+  const router = useRouter();
   const [view, setView] = useState<View>('categories');
   const [selectedCategory, setSelectedCategory] = useState<ProgramCategory | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<GuidedProgram | null>(null);
@@ -82,6 +84,15 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
       onUsePrompt(prompt);
       onClose();
     }
+  };
+
+  const handleOpenProgram = (program: GuidedProgram) => {
+    // Make sure program is started
+    if (!programProgress[program.id]?.startDate) {
+      startProgram(program.id);
+    }
+    onClose();
+    router.push(`/program/${program.id}`);
   };
 
   const getHeaderTitle = () => {
@@ -259,7 +270,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         <div className="mt-4 flex gap-2">
                           {!isActive ? (
                             <button
-                              onClick={() => handleStartProgram(program)}
+                              onClick={() => handleOpenProgram(program)}
                               className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
                             >
                               <Play className="w-4 h-4" />
@@ -268,10 +279,17 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                           ) : (
                             <>
                               <button
-                                onClick={() => handleSelectProgram(program)}
+                                onClick={() => handleOpenProgram(program)}
                                 className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
                               >
-                                {isCompleted ? 'View Prompts' : 'Continue'}
+                                <ExternalLink className="w-4 h-4" />
+                                {isCompleted ? 'Review' : 'Continue'}
+                              </button>
+                              <button
+                                onClick={() => handleSelectProgram(program)}
+                                className="flex items-center gap-2 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg text-sm font-medium hover:bg-neutral-50 transition-colors"
+                              >
+                                View Prompts
                               </button>
                               <button
                                 onClick={() => handleResetProgram(program)}
@@ -298,7 +316,19 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
               >
-                {/* Today's Prompt */}
+                {/* Open Program Button */}
+                <button
+                  onClick={() => handleOpenProgram(selectedProgram)}
+                  className={cn(
+                    'w-full flex items-center justify-center gap-2 py-3 mb-6 rounded-xl text-white font-medium transition-colors',
+                    'bg-neutral-900 hover:bg-neutral-800'
+                  )}
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  Open Program
+                </button>
+
+                {/* Today's Prompt Preview */}
                 {programProgress[selectedProgram.id]?.startDate && (
                   <div className={cn('rounded-xl border-2 p-4 mb-6', selectedProgram.color)}>
                     <div className="flex items-center gap-2 mb-2">
@@ -307,7 +337,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         Day {Math.min(programProgress[selectedProgram.id].currentDay, selectedProgram.duration)} Prompt
                       </span>
                     </div>
-                    <p className="text-neutral-900 font-medium mb-4">
+                    <p className="text-neutral-900 font-medium">
                       {selectedProgram.prompts[
                         Math.min(
                           programProgress[selectedProgram.id].currentDay - 1,
@@ -315,12 +345,6 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         )
                       ]}
                     </p>
-                    <button
-                      onClick={handleUseTodayPrompt}
-                      className="w-full py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
-                    >
-                      Use This Prompt
-                    </button>
                   </div>
                 )}
 

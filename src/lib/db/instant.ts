@@ -38,6 +38,16 @@ const schema = i.schema({
       usedAt: i.number().optional(),
       createdAt: i.number(),
     }),
+    programEntries: i.entity({
+      userId: i.string(),
+      programId: i.string(), // ID of the guided program
+      promptIndex: i.number(), // Which prompt (0-indexed)
+      content: i.string(), // The user's writing
+      wordCount: i.number(),
+      completedAt: i.number(), // When they finished this prompt
+      createdAt: i.number(),
+      updatedAt: i.number(),
+    }),
     settings: i.entity({
       userId: i.string(),
       bindingColor: i.string(),
@@ -113,6 +123,18 @@ export type Prompt = {
   isCustom?: boolean;
   usedAt?: number;
   createdAt: number;
+};
+
+export type ProgramEntry = {
+  id: string;
+  userId: string;
+  programId: string;
+  promptIndex: number;
+  content: string;
+  wordCount: number;
+  completedAt: number;
+  createdAt: number;
+  updatedAt: number;
 };
 
 export type UserSettings = {
