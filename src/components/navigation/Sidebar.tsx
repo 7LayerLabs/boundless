@@ -24,6 +24,7 @@ import {
   FileText,
   Compass,
   Quote,
+  Star,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -61,6 +62,7 @@ interface SidebarItem {
   description: string;
   onClick: () => void;
   variant?: 'default' | 'accent';
+  isPro?: boolean;
 }
 
 export function Sidebar({
@@ -91,21 +93,8 @@ export function Sidebar({
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const isMobile = useIsMobile();
 
+  // Free features - core journal functionality
   const mainItems: SidebarItem[] = [
-    {
-      id: 'prompt',
-      icon: <Lightbulb className="w-5 h-5" />,
-      label: 'Writing Prompt',
-      description: 'Get inspired with a prompt',
-      onClick: onShowPrompt,
-    },
-    {
-      id: 'purpose',
-      icon: <BookHeart className="w-5 h-5" />,
-      label: 'My Purpose',
-      description: 'Your dedication & intention',
-      onClick: onShowWhyPage,
-    },
     {
       id: 'calendar',
       icon: <Calendar className="w-5 h-5" />,
@@ -135,19 +124,37 @@ export function Sidebar({
       onClick: onShowTags,
     },
     {
+      id: 'prompt',
+      icon: <Lightbulb className="w-5 h-5" />,
+      label: 'Writing Prompt',
+      description: 'Get inspired with a prompt',
+      onClick: onShowPrompt,
+    },
+    {
+      id: 'purpose',
+      icon: <BookHeart className="w-5 h-5" />,
+      label: 'My Purpose',
+      description: 'Your dedication & intention',
+      onClick: onShowWhyPage,
+    },
+    {
       id: 'insights',
       icon: <BarChart3 className="w-5 h-5" />,
       label: 'Mood Insights',
       description: 'Track your moods',
       onClick: onShowMoodInsights,
     },
-    // Optional sidebar features - conditionally rendered
+  ];
+
+  // Pro features - premium functionality (conditionally rendered)
+  const proItems: SidebarItem[] = [
     ...(showWritingStats && onShowWritingStats ? [{
       id: 'writing-stats',
       icon: <BarChart2 className="w-5 h-5" />,
       label: 'Writing Stats',
       description: 'Words, entries & streaks',
       onClick: onShowWritingStats,
+      isPro: true,
     }] : []),
     ...(showEntryTemplates && onShowEntryTemplates ? [{
       id: 'templates',
@@ -155,13 +162,15 @@ export function Sidebar({
       label: 'Entry Templates',
       description: 'Quick-start formats',
       onClick: onShowEntryTemplates,
+      isPro: true,
     }] : []),
     ...(showGuidedPrograms && onShowGuidedPrograms ? [{
       id: 'programs',
       icon: <Compass className="w-5 h-5" />,
       label: 'Guided Programs',
-      description: '30-day challenges',
+      description: 'Multi-day journeys',
       onClick: onShowGuidedPrograms,
+      isPro: true,
     }] : []),
     ...(showDailyQuote && onShowDailyQuote ? [{
       id: 'quote',
@@ -169,16 +178,17 @@ export function Sidebar({
       label: 'Daily Quote',
       description: 'Inspiring words',
       onClick: onShowDailyQuote,
+      isPro: true,
     }] : []),
   ];
 
   const toolItems: SidebarItem[] = [
     {
-      id: 'export',
-      icon: <FileDown className="w-5 h-5" />,
-      label: 'Export PDF',
-      description: 'Download as PDF',
-      onClick: onShowPDFExport,
+      id: 'darkmode',
+      icon: darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />,
+      label: darkMode ? 'Light Mode' : 'Dark Mode',
+      description: 'Toggle theme',
+      onClick: onToggleDarkMode,
     },
     {
       id: 'print',
@@ -188,11 +198,12 @@ export function Sidebar({
       onClick: onPrint,
     },
     {
-      id: 'darkmode',
-      icon: darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />,
-      label: darkMode ? 'Light Mode' : 'Dark Mode',
-      description: 'Toggle theme',
-      onClick: onToggleDarkMode,
+      id: 'export',
+      icon: <FileDown className="w-5 h-5" />,
+      label: 'Export PDF',
+      description: 'Download as PDF',
+      onClick: onShowPDFExport,
+      isPro: true,
     },
     {
       id: 'settings',
@@ -227,14 +238,24 @@ export function Sidebar({
       )}
       title={!shouldShowExpanded ? item.label : undefined}
     >
-      <div className="flex-shrink-0">{item.icon}</div>
+      <div className="flex-shrink-0 relative">
+        {item.icon}
+        {item.isPro && !shouldShowExpanded && (
+          <Star className="w-2.5 h-2.5 absolute -top-1 -right-1 text-amber-500 fill-amber-500" />
+        )}
+      </div>
       {shouldShowExpanded && (
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex-1 text-left overflow-hidden"
         >
-          <p className="font-medium text-sm truncate">{item.label}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="font-medium text-sm truncate">{item.label}</p>
+            {item.isPro && (
+              <Star className="w-3 h-3 text-amber-500 fill-amber-500 flex-shrink-0" />
+            )}
+          </div>
           <p className={cn(
             'text-xs truncate',
             darkMode ? 'text-neutral-500' : 'text-neutral-500'
@@ -324,6 +345,27 @@ export function Sidebar({
           </p>
         )}
         {mainItems.map(renderItem)}
+
+        {/* Pro Features Section */}
+        {proItems.length > 0 && (
+          <>
+            <div className={cn(
+              'my-3 border-t',
+              darkMode ? 'border-neutral-700' : 'border-neutral-200'
+            )} />
+
+            {shouldShowExpanded && (
+              <p className={cn(
+                'px-3 py-2 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5',
+                darkMode ? 'text-neutral-500' : 'text-neutral-400'
+              )}>
+                <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                Pro
+              </p>
+            )}
+            {proItems.map(renderItem)}
+          </>
+        )}
 
         <div className={cn(
           'my-3 border-t',
