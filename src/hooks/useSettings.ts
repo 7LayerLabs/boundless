@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { db, type UserSettings } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
 import type { BindingColor, ClaspStyle, PageColor, FontFamily, FontSize, InkColor, AITone, DateFormat, DateColor, SceneType } from '@/types/settings';
+import type { Quote } from '@/constants/quotes';
 
 export type CustomTag = { name: string; color: string };
 
@@ -31,6 +32,7 @@ const DEFAULT_SETTINGS = {
   showEntryTemplates: false as boolean, // Show Entry Templates in sidebar
   showGuidedPrograms: false as boolean, // Show Guided Programs in sidebar
   showDailyQuote: false as boolean, // Show Daily Quote in sidebar
+  lockedQuote: null as Quote | null, // Locked quote that persists across days
 };
 
 export function useSettings() {
@@ -95,6 +97,7 @@ export function useSettings() {
     showEntryTemplates: userSettings?.showEntryTemplates ?? DEFAULT_SETTINGS.showEntryTemplates,
     showGuidedPrograms: userSettings?.showGuidedPrograms ?? DEFAULT_SETTINGS.showGuidedPrograms,
     showDailyQuote: userSettings?.showDailyQuote ?? DEFAULT_SETTINGS.showDailyQuote,
+    lockedQuote: (userSettings?.lockedQuote as Quote | null) ?? DEFAULT_SETTINGS.lockedQuote,
   };
 
   // Update a setting

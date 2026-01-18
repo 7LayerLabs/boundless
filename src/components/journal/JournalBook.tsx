@@ -43,6 +43,7 @@ export function JournalBook() {
   const [showGuidedPrograms, setShowGuidedPrograms] = useState(false);
   const [showDailyQuote, setShowDailyQuote] = useState(false);
   const [pinnedQuote, setPinnedQuote] = useState<Quote | null>(null);
+  const [pinnedQuoteDate, setPinnedQuoteDate] = useState<string | null>(null); // Track which date the quote was pinned for
 
   // Use InstantDB hooks
   const {
@@ -75,6 +76,7 @@ export function JournalBook() {
     showEntryTemplates: showEntryTemplatesSetting,
     showGuidedPrograms: showGuidedProgramsSetting,
     showDailyQuote: showDailyQuoteSetting,
+    lockedQuote,
   } = useSettings();
 
   // Check if current date is a past day (not today)
@@ -92,6 +94,22 @@ export function JournalBook() {
       document.body.classList.remove('dark-mode');
     }
   }, [darkMode]);
+
+  // Determine which quote to show for the current date
+  // - Locked quote: shows on all dates
+  // - Pinned quote: only shows on the date it was pinned for
+  const currentDateStr = format(currentDate, 'yyyy-MM-dd');
+  const displayQuote = useMemo(() => {
+    // Locked quote takes priority and shows on all dates
+    if (lockedQuote) {
+      return lockedQuote;
+    }
+    // Pinned quote only shows on the date it was pinned for
+    if (pinnedQuote && pinnedQuoteDate === currentDateStr) {
+      return pinnedQuote;
+    }
+    return null;
+  }, [lockedQuote, pinnedQuote, pinnedQuoteDate, currentDateStr]);
 
   // Derived values
   const binding = bindingColors[bindingColor];
@@ -204,9 +222,23 @@ export function JournalBook() {
     setPinnedPrompt({ prompt, category: 'program' });
   };
 
-  // Handler for pinning a quote
+  // Handler for pinning a quote (for the current date only)
   const handlePinQuote = (quote: Quote) => {
     setPinnedQuote(quote);
+    setPinnedQuoteDate(currentDateStr);
+  };
+
+  // Handler for locking a quote (persists in settings)
+  const handleLockQuote = (quote: Quote) => {
+    updateSetting('lockedQuote', quote);
+    // Clear any pinned quote since locked quote takes priority
+    setPinnedQuote(null);
+    setPinnedQuoteDate(null);
+  };
+
+  // Handler for unlocking a quote (removes from settings)
+  const handleUnlockQuote = () => {
+    updateSetting('lockedQuote', null);
   };
 
   const handleLogout = () => {
@@ -385,8 +417,12 @@ export function JournalBook() {
             onDismissPinnedQuestion={() => setPinnedQuestion(null)}
             pinnedPrompt={pinnedPrompt}
             onDismissPinnedPrompt={() => setPinnedPrompt(null)}
-            pinnedQuote={pinnedQuote}
-            onDismissPinnedQuote={() => setPinnedQuote(null)}
+            pinnedQuote={displayQuote}
+            onDismissPinnedQuote={() => {
+              setPinnedQuote(null);
+              setPinnedQuoteDate(null);
+            }}
+            isQuoteLocked={!!lockedQuote && displayQuote?.text === lockedQuote.text}
           />
 
           {/* Right Cover Edge */}
@@ -469,6 +505,9 @@ export function JournalBook() {
         onSelectTemplate={handleSelectTemplate}
         onUseProgramPrompt={handleUseProgramPrompt}
         onPinQuote={handlePinQuote}
+        onLockQuote={handleLockQuote}
+        onUnlockQuote={handleUnlockQuote}
+        lockedQuote={lockedQuote}
       />
     </div>
   );

@@ -63,6 +63,7 @@ const schema = i.schema({
       showEntryTemplates: i.boolean().optional(), // Show Entry Templates in sidebar
       showGuidedPrograms: i.boolean().optional(), // Show Guided Programs in sidebar
       showDailyQuote: i.boolean().optional(), // Show Daily Quote in sidebar
+      lockedQuote: i.json<{ text: string; author: string } | null>().optional(), // Locked quote that persists across days
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -140,6 +141,7 @@ export type UserSettings = {
   showEntryTemplates?: boolean; // Show Entry Templates in sidebar
   showGuidedPrograms?: boolean; // Show Guided Programs in sidebar
   showDailyQuote?: boolean; // Show Daily Quote in sidebar
+  lockedQuote?: { text: string; author: string } | null; // Locked quote that persists across days
   createdAt: number;
   updatedAt: number;
 };

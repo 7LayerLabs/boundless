@@ -2,18 +2,33 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Quote, RefreshCw, Pin } from 'lucide-react';
+import { X, Quote, RefreshCw, Pin, Lock, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { getDailyQuote, getRandomQuote, type Quote as QuoteType } from '@/constants/quotes';
 
 interface DailyQuoteModalProps {
   onClose: () => void;
   onPinQuote: (quote: QuoteType) => void;
+  onLockQuote: (quote: QuoteType) => void;
+  onUnlockQuote: () => void;
+  lockedQuote: QuoteType | null;
 }
 
-export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
-  const [currentQuote, setCurrentQuote] = useState<QuoteType>(getDailyQuote);
-  const [isDaily, setIsDaily] = useState(true);
+export function DailyQuoteModal({
+  onClose,
+  onPinQuote,
+  onLockQuote,
+  onUnlockQuote,
+  lockedQuote
+}: DailyQuoteModalProps) {
+  const [currentQuote, setCurrentQuote] = useState<QuoteType>(
+    lockedQuote || getDailyQuote()
+  );
+  const [isDaily, setIsDaily] = useState(!lockedQuote);
+
+  const isCurrentQuoteLocked = lockedQuote &&
+    lockedQuote.text === currentQuote.text &&
+    lockedQuote.author === currentQuote.author;
 
   const handleRefresh = () => {
     setCurrentQuote(getRandomQuote());
@@ -28,6 +43,17 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
   const handlePinQuote = () => {
     onPinQuote(currentQuote);
     onClose();
+  };
+
+  const handleLockQuote = () => {
+    onLockQuote(currentQuote);
+    onClose();
+  };
+
+  const handleUnlockQuote = () => {
+    onUnlockQuote();
+    setCurrentQuote(getDailyQuote());
+    setIsDaily(true);
   };
 
   return (
@@ -54,7 +80,11 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
             <div>
               <h2 className="text-xl font-semibold text-neutral-900">Daily Quote</h2>
               <p className="text-sm text-neutral-500">
-                {isDaily ? "Today's inspiration" : 'Random inspiration'}
+                {isCurrentQuoteLocked
+                  ? 'Locked quote (persists daily)'
+                  : isDaily
+                    ? "Today's inspiration"
+                    : 'Random inspiration'}
               </p>
             </div>
           </div>
@@ -75,7 +105,12 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
             transition={{ duration: 0.3 }}
             className="text-center"
           >
-            <Quote className="w-8 h-8 mx-auto text-neutral-300 mb-4" />
+            <div className="relative inline-block">
+              <Quote className="w-8 h-8 mx-auto text-neutral-300 mb-4" />
+              {isCurrentQuoteLocked && (
+                <Lock className="w-4 h-4 absolute -top-1 -right-5 text-amber-500" />
+              )}
+            </div>
             <p className="text-xl text-neutral-800 leading-relaxed mb-4 font-serif italic">
               "{currentQuote.text}"
             </p>
@@ -86,8 +121,9 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-neutral-200 bg-neutral-50 flex justify-between items-center">
-          <div className="flex gap-2">
+        <div className="px-6 py-4 border-t border-neutral-200 bg-neutral-50">
+          {/* Top row - refresh controls */}
+          <div className="flex gap-2 mb-3">
             <button
               onClick={handleRefresh}
               className="flex items-center gap-2 px-4 py-2 text-neutral-700 hover:bg-neutral-200 rounded-lg text-sm font-medium transition-colors"
@@ -95,7 +131,7 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
               <RefreshCw className="w-4 h-4" />
               Random
             </button>
-            {!isDaily && (
+            {!isDaily && !isCurrentQuoteLocked && (
               <button
                 onClick={handleResetToDaily}
                 className="flex items-center gap-2 px-4 py-2 text-neutral-700 hover:bg-neutral-200 rounded-lg text-sm font-medium transition-colors"
@@ -103,14 +139,62 @@ export function DailyQuoteModal({ onClose, onPinQuote }: DailyQuoteModalProps) {
                 Today's Quote
               </button>
             )}
+            {lockedQuote && !isCurrentQuoteLocked && (
+              <button
+                onClick={() => setCurrentQuote(lockedQuote)}
+                className="flex items-center gap-2 px-4 py-2 text-amber-700 hover:bg-amber-100 rounded-lg text-sm font-medium transition-colors"
+              >
+                <Lock className="w-4 h-4" />
+                Locked Quote
+              </button>
+            )}
           </div>
-          <button
-            onClick={handlePinQuote}
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
-          >
-            <Pin className="w-4 h-4" />
-            Pin to Page
-          </button>
+
+          {/* Bottom row - pin/lock actions */}
+          <div className="flex justify-between items-center">
+            {isCurrentQuoteLocked ? (
+              <button
+                onClick={handleUnlockQuote}
+                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium transition-colors"
+              >
+                <Unlock className="w-4 h-4" />
+                Unlock Quote
+              </button>
+            ) : (
+              <div className="text-xs text-neutral-500">
+                Pin: today only | Lock: every day
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              {!isCurrentQuoteLocked && (
+                <>
+                  <button
+                    onClick={handlePinQuote}
+                    className="flex items-center gap-2 px-4 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-sm font-medium hover:bg-neutral-300 transition-colors"
+                  >
+                    <Pin className="w-4 h-4" />
+                    Pin to Page
+                  </button>
+                  <button
+                    onClick={handleLockQuote}
+                    className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors"
+                  >
+                    <Lock className="w-4 h-4" />
+                    Lock Quote
+                  </button>
+                </>
+              )}
+              {isCurrentQuoteLocked && (
+                <button
+                  onClick={onClose}
+                  className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
+                >
+                  Done
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </motion.div>
     </motion.div>

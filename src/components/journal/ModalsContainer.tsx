@@ -64,6 +64,9 @@ interface ModalsContainerProps {
   onSelectTemplate: (template: EntryTemplate) => void;
   onUseProgramPrompt: (prompt: string) => void;
   onPinQuote: (quote: Quote) => void;
+  onLockQuote: (quote: Quote) => void;
+  onUnlockQuote: () => void;
+  lockedQuote: Quote | null;
 }
 
 function ModalErrorFallback({ error, onClose }: { error: Error; onClose: () => void }) {
@@ -113,6 +116,9 @@ export function ModalsContainer({
   onSelectTemplate,
   onUseProgramPrompt,
   onPinQuote,
+  onLockQuote,
+  onUnlockQuote,
+  lockedQuote,
 }: ModalsContainerProps) {
   return (
     <>
@@ -255,6 +261,9 @@ export function ModalsContainer({
           <DailyQuoteModal
             onClose={onCloseDailyQuote}
             onPinQuote={onPinQuote}
+            onLockQuote={onLockQuote}
+            onUnlockQuote={onUnlockQuote}
+            lockedQuote={lockedQuote}
           />
         )}
       </AnimatePresence>

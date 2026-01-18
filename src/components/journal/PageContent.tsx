@@ -3,14 +3,11 @@
 import { AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
 import { RichTextEditor } from '../editor/RichTextEditor';
-import { MoodSelector } from '../editor/MoodSelector';
-import { TagInput } from '../editor/TagInput';
 import { ThoughtBubble } from '../editor/ThoughtBubble';
 import { PromptBubble } from '../editor/PromptBubble';
-import { QuoteBubble } from '../editor/QuoteBubble';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { DateNavigation } from './DateNavigation';
-import { EntryTabs } from './EntryTabs';
+import { JournalHeader } from './JournalHeader';
+import { EntryToolbar } from './EntryToolbar';
 import { EntryUpdates } from './EntryUpdates';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
@@ -66,6 +63,7 @@ interface PageContentProps {
   // Daily Quote
   pinnedQuote: Quote | null;
   onDismissPinnedQuote: () => void;
+  isQuoteLocked?: boolean;
 }
 
 export function PageContent({
@@ -75,7 +73,6 @@ export function PageContent({
   onToday,
   dateColor,
   dayColor,
-  formatDate,
   dayEntries,
   selectedEntryId,
   currentEntry,
@@ -99,6 +96,7 @@ export function PageContent({
   onDismissPinnedPrompt,
   pinnedQuote,
   onDismissPinnedQuote,
+  isQuoteLocked = false,
 }: PageContentProps) {
   return (
     <div
@@ -143,8 +141,8 @@ export function PageContent({
 
       {/* Page Content */}
       <div className="relative h-full flex flex-col p-4 md:p-6 lg:p-10 pl-4 md:pl-28 lg:pl-36 overflow-hidden">
-        {/* Date Header */}
-        <DateNavigation
+        {/* Journal Header - Date + Pinned Quote */}
+        <JournalHeader
           currentDate={currentDate}
           onPreviousDay={onPreviousDay}
           onNextDay={onNextDay}
@@ -152,64 +150,35 @@ export function PageContent({
           dateColor={dateColor}
           dayColor={dayColor}
           darkMode={darkMode}
-          formatDate={formatDate}
+          pinnedQuote={pinnedQuote}
+          onDismissQuote={onDismissPinnedQuote}
+          isQuoteLocked={isQuoteLocked}
         />
 
-        {/* Mood Selector - conditionally rendered */}
-        {showMoodSelector && (
-          <div className="mb-4 md:mb-6">
-            <MoodSelector
-              selectedMood={(currentEntry?.mood as Mood) || null}
-              onSelect={onMoodSelect}
-              disabled={isPastDay}
-            />
-          </div>
-        )}
-
-        {/* Entry Tabs */}
-        <EntryTabs
+        {/* Entry Toolbar - Mood, Entries, Tags, Actions */}
+        <EntryToolbar
+          showMoodSelector={showMoodSelector}
+          selectedMood={(currentEntry?.mood as Mood) || null}
+          onMoodSelect={onMoodSelect}
           dayEntries={dayEntries}
           selectedEntryId={selectedEntryId}
           currentEntry={currentEntry}
           isPastDay={isPastDay}
-          darkMode={darkMode}
           onSelectEntry={onSelectEntry}
           onNewEntry={onNewEntry}
           onToggleBookmark={onToggleBookmark}
           onLockEntry={onLockEntry}
+          tags={currentEntry?.tags || []}
+          allTags={allTags}
+          onTagsChange={onTagsChange}
+          darkMode={darkMode}
         />
-
-        {/* Tag Input */}
-        {currentEntry && (
-          <div className={cn(
-            'mb-4 pb-3 border-b',
-            darkMode ? 'border-amber-500/20' : 'border-amber-200/50'
-          )}>
-            <TagInput
-              tags={currentEntry.tags || []}
-              onTagsChange={onTagsChange}
-              allTags={allTags}
-              disabled={isPastDay || currentEntry.isLocked}
-              darkMode={darkMode}
-            />
-          </div>
-        )}
 
         {/* Journal Editor - The main writing area */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
-          {/* Pinned Daily Quote Bubble - highest priority */}
-          <AnimatePresence>
-            {pinnedQuote && (
-              <QuoteBubble
-                quote={pinnedQuote}
-                onDismiss={onDismissPinnedQuote}
-              />
-            )}
-          </AnimatePresence>
-
           {/* Pinned Writing Prompt Bubble */}
           <AnimatePresence>
-            {pinnedPrompt && !pinnedQuote && (
+            {pinnedPrompt && (
               <PromptBubble
                 prompt={pinnedPrompt.prompt}
                 category={pinnedPrompt.category}
@@ -220,7 +189,7 @@ export function PageContent({
 
           {/* Pinned AI Reflection Bubble */}
           <AnimatePresence>
-            {pinnedQuestion && !pinnedPrompt && !pinnedQuote && (
+            {pinnedQuestion && !pinnedPrompt && (
               <ThoughtBubble
                 question={pinnedQuestion}
                 onDismiss={onDismissPinnedQuestion}
