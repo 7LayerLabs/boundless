@@ -475,13 +475,24 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               viewport={{ once: true }}
               className="relative p-8 bg-gradient-to-br from-[#2c1810] to-[#3d251a] rounded-3xl shadow-2xl text-white overflow-hidden"
             >
+              {/* Coming Soon Overlay */}
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                <div className="text-center">
+                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#d4a574] text-[#2c1810] rounded-full text-lg font-bold shadow-lg">
+                    <Sparkles className="w-5 h-5" />
+                    Coming Soon
+                  </div>
+                  <p className="text-white/80 mt-3 text-sm">Premium features launching soon</p>
+                </div>
+              </div>
+
               {/* Gold accent */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4a574]/20 rounded-full blur-3xl" />
 
-              {/* Popular badge */}
-              <div className="absolute top-6 right-6 flex items-center gap-1 px-3 py-1 bg-[#d4a574] text-[#2c1810] rounded-full text-sm font-medium">
+              {/* Pro badge */}
+              <div className="absolute top-6 right-6 flex items-center gap-1 px-3 py-1 bg-[#d4a574]/50 text-white/80 rounded-full text-sm font-medium">
                 <Star className="w-3.5 h-3.5 fill-current" />
-                Popular
+                Pro
               </div>
 
               <h3 className="font-serif text-2xl font-bold mb-2">Pro</h3>
@@ -518,10 +529,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </ul>
 
               <button
-                onClick={onGetStarted}
-                className="w-full py-4 bg-[#d4a574] text-[#2c1810] rounded-full font-medium hover:bg-[#e0b485] transition-colors"
+                disabled
+                className="w-full py-4 bg-[#d4a574]/50 text-[#2c1810]/70 rounded-full font-medium cursor-not-allowed"
               >
-                Start Free Trial
+                Coming Soon
               </button>
             </motion.div>
           </div>
