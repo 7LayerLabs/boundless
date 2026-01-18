@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Compass, Play, RotateCcw, ChevronLeft, Check, Circle } from 'lucide-react';
+import { X, Compass, Play, RotateCcw, ChevronLeft, Check } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import {
   guidedPrograms,
+  programCategories,
   getProgramProgress,
   startProgram,
   resetProgram,
   type GuidedProgram,
+  type ProgramCategory,
 } from '@/constants/programs';
 
 interface GuidedProgramsModalProps {
@@ -17,10 +19,13 @@ interface GuidedProgramsModalProps {
   onUsePrompt: (prompt: string) => void;
 }
 
-type View = 'list' | 'program';
+type View = 'categories' | 'list' | 'program';
+
+const categoryOrder: ProgramCategory[] = ['legacy', 'relationships', 'business', 'wellness'];
 
 export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModalProps) {
-  const [view, setView] = useState<View>('list');
+  const [view, setView] = useState<View>('categories');
+  const [selectedCategory, setSelectedCategory] = useState<ProgramCategory | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<GuidedProgram | null>(null);
   const [programProgress, setProgramProgress] = useState<Record<string, { startDate: string | null; currentDay: number }>>({});
 
@@ -49,9 +54,24 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
     }));
   };
 
+  const handleSelectCategory = (category: ProgramCategory) => {
+    setSelectedCategory(category);
+    setView('list');
+  };
+
   const handleSelectProgram = (program: GuidedProgram) => {
     setSelectedProgram(program);
     setView('program');
+  };
+
+  const handleBack = () => {
+    if (view === 'program') {
+      setView('list');
+      setSelectedProgram(null);
+    } else if (view === 'list') {
+      setView('categories');
+      setSelectedCategory(null);
+    }
   };
 
   const handleUseTodayPrompt = () => {
@@ -62,6 +82,29 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
       onUsePrompt(prompt);
       onClose();
     }
+  };
+
+  const getHeaderTitle = () => {
+    if (view === 'program' && selectedProgram) return selectedProgram.name;
+    if (view === 'list' && selectedCategory) return programCategories[selectedCategory].name;
+    return 'Guided Programs';
+  };
+
+  const getHeaderSubtitle = () => {
+    if (view === 'program' && selectedProgram) return selectedProgram.description;
+    if (view === 'list' && selectedCategory) return programCategories[selectedCategory].description;
+    return 'Meaningful journeys for life, love, and growth';
+  };
+
+  const getCategoryPrograms = (category: ProgramCategory) => {
+    return guidedPrograms.filter(p => p.category === category);
+  };
+
+  const getActiveCount = (category: ProgramCategory) => {
+    return getCategoryPrograms(category).filter(p => {
+      const progress = programProgress[p.id];
+      return progress?.startDate !== null;
+    }).length;
   };
 
   return (
@@ -82,9 +125,9 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
         {/* Header */}
         <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {view === 'program' && (
+            {view !== 'categories' && (
               <button
-                onClick={() => setView('list')}
+                onClick={handleBack}
                 className="p-2 -ml-2 rounded-lg hover:bg-neutral-100 transition-colors"
               >
                 <ChevronLeft className="w-5 h-5 text-neutral-600" />
@@ -95,10 +138,10 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
             </div>
             <div>
               <h2 className="text-xl font-semibold text-neutral-900">
-                {view === 'list' ? 'Guided Programs' : selectedProgram?.name}
+                {getHeaderTitle()}
               </h2>
               <p className="text-sm text-neutral-500">
-                {view === 'list' ? 'Structured journaling challenges' : selectedProgram?.description}
+                {getHeaderSubtitle()}
               </p>
             </div>
           </div>
@@ -113,15 +156,61 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(85vh-80px)]">
           <AnimatePresence mode="wait">
-            {view === 'list' ? (
+            {/* Categories View */}
+            {view === 'categories' && (
+              <motion.div
+                key="categories"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="grid grid-cols-2 gap-4"
+              >
+                {categoryOrder.map((categoryId) => {
+                  const category = programCategories[categoryId];
+                  const programCount = getCategoryPrograms(categoryId).length;
+                  const activeCount = getActiveCount(categoryId);
+
+                  return (
+                    <button
+                      key={categoryId}
+                      onClick={() => handleSelectCategory(categoryId)}
+                      className={cn(
+                        'p-5 rounded-xl border-2 text-left transition-all hover:shadow-md',
+                        'hover:scale-[1.02] active:scale-[0.98]',
+                        categoryId === 'legacy' && 'bg-amber-50 border-amber-200 hover:border-amber-300',
+                        categoryId === 'relationships' && 'bg-red-50 border-red-200 hover:border-red-300',
+                        categoryId === 'business' && 'bg-blue-50 border-blue-200 hover:border-blue-300',
+                        categoryId === 'wellness' && 'bg-green-50 border-green-200 hover:border-green-300',
+                      )}
+                    >
+                      <span className="text-3xl">{category.icon}</span>
+                      <h3 className="font-semibold text-neutral-900 mt-2">{category.name}</h3>
+                      <p className="text-sm text-neutral-600 mt-1">{category.description}</p>
+                      <div className="flex items-center gap-2 mt-3 text-xs text-neutral-500">
+                        <span>{programCount} programs</span>
+                        {activeCount > 0 && (
+                          <>
+                            <span>•</span>
+                            <span className="text-green-600 font-medium">{activeCount} active</span>
+                          </>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </motion.div>
+            )}
+
+            {/* Programs List View */}
+            {view === 'list' && selectedCategory && (
               <motion.div
                 key="list"
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-4"
               >
-                {guidedPrograms.map((program) => {
+                {getCategoryPrograms(selectedCategory).map((program) => {
                   const progress = programProgress[program.id] || { startDate: null, currentDay: 0 };
                   const isActive = progress.startDate !== null;
                   const isCompleted = isActive && progress.currentDay > program.duration;
@@ -199,89 +288,88 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                   );
                 })}
               </motion.div>
-            ) : (
+            )}
+
+            {/* Program Detail View */}
+            {view === 'program' && selectedProgram && (
               <motion.div
                 key="program"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
               >
-                {selectedProgram && (
-                  <>
-                    {/* Today's Prompt */}
-                    {programProgress[selectedProgram.id]?.startDate && (
-                      <div className={cn('rounded-xl border-2 p-4 mb-6', selectedProgram.color)}>
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-lg">{selectedProgram.icon}</span>
-                          <span className="text-sm font-medium text-neutral-700">
-                            Day {Math.min(programProgress[selectedProgram.id].currentDay, selectedProgram.duration)} Prompt
-                          </span>
-                        </div>
-                        <p className="text-neutral-900 font-medium mb-4">
-                          {selectedProgram.prompts[
-                            Math.min(
-                              programProgress[selectedProgram.id].currentDay - 1,
-                              selectedProgram.prompts.length - 1
-                            )
-                          ]}
-                        </p>
-                        <button
-                          onClick={handleUseTodayPrompt}
-                          className="w-full py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
-                        >
-                          Use This Prompt
-                        </button>
-                      </div>
-                    )}
-
-                    {/* All Prompts List */}
-                    <h3 className="text-lg font-medium text-neutral-900 mb-3">All Prompts</h3>
-                    <div className="space-y-2">
-                      {selectedProgram.prompts.map((prompt, index) => {
-                        const progress = programProgress[selectedProgram.id];
-                        const isCompleted = progress?.startDate && index < progress.currentDay - 1;
-                        const isCurrent = progress?.startDate && index === progress.currentDay - 1;
-
-                        return (
-                          <div
-                            key={index}
-                            className={cn(
-                              'flex items-start gap-3 p-3 rounded-lg border transition-all',
-                              isCurrent
-                                ? 'border-neutral-900 bg-neutral-50'
-                                : 'border-neutral-200'
-                            )}
-                          >
-                            <div
-                              className={cn(
-                                'w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
-                                isCompleted
-                                  ? 'bg-green-500 text-white'
-                                  : isCurrent
-                                  ? 'bg-neutral-900 text-white'
-                                  : 'bg-neutral-200 text-neutral-500'
-                              )}
-                            >
-                              {isCompleted ? (
-                                <Check className="w-4 h-4" />
-                              ) : (
-                                <span className="text-xs font-medium">{index + 1}</span>
-                              )}
-                            </div>
-                            <p
-                              className={cn(
-                                'text-sm flex-1',
-                                isCompleted ? 'text-neutral-500' : 'text-neutral-700'
-                              )}
-                            >
-                              {prompt}
-                            </p>
-                          </div>
-                        );
-                      })}
+                {/* Today's Prompt */}
+                {programProgress[selectedProgram.id]?.startDate && (
+                  <div className={cn('rounded-xl border-2 p-4 mb-6', selectedProgram.color)}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">{selectedProgram.icon}</span>
+                      <span className="text-sm font-medium text-neutral-700">
+                        Day {Math.min(programProgress[selectedProgram.id].currentDay, selectedProgram.duration)} Prompt
+                      </span>
                     </div>
-                  </>
+                    <p className="text-neutral-900 font-medium mb-4">
+                      {selectedProgram.prompts[
+                        Math.min(
+                          programProgress[selectedProgram.id].currentDay - 1,
+                          selectedProgram.prompts.length - 1
+                        )
+                      ]}
+                    </p>
+                    <button
+                      onClick={handleUseTodayPrompt}
+                      className="w-full py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
+                    >
+                      Use This Prompt
+                    </button>
+                  </div>
                 )}
+
+                {/* All Prompts List */}
+                <h3 className="text-lg font-medium text-neutral-900 mb-3">All Prompts</h3>
+                <div className="space-y-2">
+                  {selectedProgram.prompts.map((prompt, index) => {
+                    const progress = programProgress[selectedProgram.id];
+                    const isCompleted = progress?.startDate && index < progress.currentDay - 1;
+                    const isCurrent = progress?.startDate && index === progress.currentDay - 1;
+
+                    return (
+                      <div
+                        key={index}
+                        className={cn(
+                          'flex items-start gap-3 p-3 rounded-lg border transition-all',
+                          isCurrent
+                            ? 'border-neutral-900 bg-neutral-50'
+                            : 'border-neutral-200'
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            'w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
+                            isCompleted
+                              ? 'bg-green-500 text-white'
+                              : isCurrent
+                              ? 'bg-neutral-900 text-white'
+                              : 'bg-neutral-200 text-neutral-500'
+                          )}
+                        >
+                          {isCompleted ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <span className="text-xs font-medium">{index + 1}</span>
+                          )}
+                        </div>
+                        <p
+                          className={cn(
+                            'text-sm flex-1',
+                            isCompleted ? 'text-neutral-500' : 'text-neutral-700'
+                          )}
+                        >
+                          {prompt}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
