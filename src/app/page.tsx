@@ -9,6 +9,7 @@ import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { PinModal } from '@/components/lock/PinModal';
 import { JournalBook } from '@/components/journal/JournalBook';
+import { LandingPage } from '@/components/landing/LandingPage';
 import { ErrorBoundary, JournalErrorFallback } from '@/components/ErrorBoundary';
 import { db, type UserSettings } from '@/lib/db/instant';
 import { id, tx } from '@instantdb/react';
@@ -33,6 +34,7 @@ export default function Home() {
   const { isLoading: authLoading, user, error: authError } = db.useAuth();
   const [isPinVerified, setIsPinVerified] = useState(false);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Query user settings
   const query = user
@@ -71,6 +73,7 @@ export default function Home() {
     if (!user) {
       setIsPinVerified(false);
       setIsJournalOpen(false);
+      setShowAuthModal(false);
     }
   }, [user]);
 
@@ -88,7 +91,7 @@ export default function Home() {
   const isLoading = authLoading || (user && settingsLoading);
 
   // Determine what to show
-  const showAuthModal = !user;
+  const showLandingPage = !user && !showAuthModal;
   const showPinModal = user && !isPinVerified;
   const showOpenJournal = user && isPinVerified && isJournalOpen;
 
@@ -106,6 +109,11 @@ export default function Home() {
         </div>
       </DeskScene>
     );
+  }
+
+  // Show landing page for non-authenticated users
+  if (showLandingPage && !isLoading) {
+    return <LandingPage onGetStarted={() => setShowAuthModal(true)} />;
   }
 
   return (
@@ -171,87 +179,6 @@ export default function Home() {
           >
             <AuthModal />
           </ErrorBoundary>
-        )}
-      </AnimatePresence>
-
-      {/* Sticky note - only on welcome page */}
-      <AnimatePresence>
-        {showAuthModal && !isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, rotate: -5 }}
-            animate={{ opacity: 1, y: 0, rotate: -3 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
-            className="absolute top-6 right-6 w-52 z-[60]"
-          >
-            <div
-              className="relative p-4 shadow-lg"
-              style={{
-                background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
-                boxShadow: `
-                  0 4px 6px rgba(0, 0, 0, 0.25),
-                  0 10px 20px rgba(0, 0, 0, 0.15),
-                  inset 0 -2px 4px rgba(0, 0, 0, 0.05)
-                `,
-              }}
-            >
-              {/* Tape effect at top */}
-              <div
-                className="absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-4 rounded-sm"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%)',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                }}
-              />
-
-              {/* Content */}
-              <div className="relative">
-                <h3
-                  className="text-sm font-bold mb-2"
-                  style={{
-                    color: '#78350f',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
-                  }}
-                >
-                  What is Boundless?
-                </h3>
-                <p
-                  className="text-xs leading-relaxed mb-2"
-                  style={{
-                    color: '#92400e',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
-                  }}
-                >
-                  A private space to write honestly with two-layer security.
-                </p>
-                <ul
-                  className="text-xs space-y-1"
-                  style={{
-                    color: '#a16207',
-                    fontFamily: 'Comic Sans MS, cursive, sans-serif',
-                  }}
-                >
-                  <li>• Daily prompts</li>
-                  <li>• Mood tracking</li>
-                  <li>• Distraction-free</li>
-                </ul>
-
-                {/* More info link */}
-                <Link href="/about">
-                  <div
-                    className="mt-3 pt-2 text-xs text-center cursor-pointer hover:underline"
-                    style={{
-                      color: '#1d4ed8',
-                      fontFamily: 'Comic Sans MS, cursive, sans-serif',
-                      borderTop: '1px dashed rgba(120, 53, 15, 0.2)',
-                    }}
-                  >
-                    More info & features →
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </motion.div>
         )}
       </AnimatePresence>
 
