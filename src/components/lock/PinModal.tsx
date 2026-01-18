@@ -303,6 +303,15 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
                 </svg>
               </button>
             </div>
+
+            {/* Logout link */}
+            <button
+              onClick={handleLogout}
+              className="w-full mt-4 text-xs transition-colors hover:text-amber-400/70"
+              style={{ color: 'rgba(150, 140, 120, 0.5)' }}
+            >
+              Switch account
+            </button>
           </div>
         </div>
       </motion.div>
