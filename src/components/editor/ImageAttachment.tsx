@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image, Plus, X, Link, Trash2 } from 'lucide-react';
+import { Image, Plus, X, Link, Trash2, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 interface ImageData {
@@ -16,14 +16,67 @@ interface ImageAttachmentProps {
   onAddImage: (url: string, caption?: string) => void;
   onRemoveImage: (id: string) => void;
   isLocked?: boolean;
+  darkMode?: boolean;
 }
 
-export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked }: ImageAttachmentProps) {
+export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked, darkMode }: ImageAttachmentProps) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [caption, setCaption] = useState('');
   const [previewError, setPreviewError] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageData | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Convert file to base64 data URL
+  const fileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handle file selection
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    setIsProcessing(true);
+    try {
+      for (const file of Array.from(files)) {
+        if (file.type.startsWith('image/')) {
+          const dataUrl = await fileToDataUrl(file);
+          onAddImage(dataUrl);
+        }
+      }
+    } catch (error) {
+      console.error('Error processing image:', error);
+    }
+    setIsProcessing(false);
+    setShowAddForm(false);
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    handleFileSelect(e.dataTransfer.files);
+  }, []);
 
   const handleAddImage = () => {
     if (imageUrl.trim()) {
@@ -95,15 +148,87 @@ export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked }:
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 space-y-3">
+            <div className={cn(
+              'p-3 rounded-lg border space-y-3',
+              darkMode ? 'bg-neutral-800 border-neutral-600' : 'bg-amber-50 border-amber-200'
+            )}>
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleFileSelect(e.target.files)}
+                className="hidden"
+              />
+
+              {/* Drag & Drop Zone */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={cn(
+                  'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
+                  isDragging
+                    ? 'border-amber-500 bg-amber-100'
+                    : darkMode
+                    ? 'border-neutral-600 hover:border-neutral-500'
+                    : 'border-amber-300 hover:border-amber-400',
+                  isProcessing && 'opacity-50 pointer-events-none'
+                )}
+              >
+                <Upload className={cn(
+                  'w-8 h-8 mx-auto mb-2',
+                  darkMode ? 'text-neutral-400' : 'text-amber-400'
+                )} />
+                <p className={cn(
+                  'text-sm font-medium',
+                  darkMode ? 'text-neutral-300' : 'text-amber-700'
+                )}>
+                  {isProcessing ? 'Processing...' : 'Drop images here or click to upload'}
+                </p>
+                <p className={cn(
+                  'text-xs mt-1',
+                  darkMode ? 'text-neutral-500' : 'text-amber-500'
+                )}>
+                  Supports JPG, PNG, GIF
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  'flex-1 h-px',
+                  darkMode ? 'bg-neutral-600' : 'bg-amber-200'
+                )} />
+                <span className={cn(
+                  'text-xs',
+                  darkMode ? 'text-neutral-500' : 'text-amber-400'
+                )}>or paste URL</span>
+                <div className={cn(
+                  'flex-1 h-px',
+                  darkMode ? 'bg-neutral-600' : 'bg-amber-200'
+                )} />
+              </div>
+
+              {/* URL Input */}
               <div className="flex items-center gap-2">
-                <Link className="w-4 h-4 text-amber-500" />
+                <Link className={cn(
+                  'w-4 h-4',
+                  darkMode ? 'text-neutral-400' : 'text-amber-500'
+                )} />
                 <input
                   type="url"
                   value={imageUrl}
                   onChange={(e) => handleUrlChange(e.target.value)}
                   placeholder="Paste image URL..."
-                  className="flex-1 px-2 py-1.5 text-sm rounded border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className={cn(
+                    'flex-1 px-2 py-1.5 text-sm rounded border focus:outline-none focus:ring-2 focus:ring-amber-500',
+                    darkMode
+                      ? 'bg-neutral-700 border-neutral-600 text-neutral-100 placeholder:text-neutral-500'
+                      : 'bg-white border-amber-200 text-neutral-800'
+                  )}
                 />
               </div>
 
@@ -112,7 +237,10 @@ export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked }:
                   <img
                     src={imageUrl}
                     alt="Preview"
-                    className="max-h-40 rounded-lg border border-amber-200"
+                    className={cn(
+                      'max-h-40 rounded-lg border',
+                      darkMode ? 'border-neutral-600' : 'border-amber-200'
+                    )}
                     onError={() => setPreviewError(true)}
                   />
                 </div>
@@ -127,7 +255,12 @@ export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked }:
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 placeholder="Caption (optional)"
-                className="w-full px-2 py-1.5 text-sm rounded border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className={cn(
+                  'w-full px-2 py-1.5 text-sm rounded border focus:outline-none focus:ring-2 focus:ring-amber-500',
+                  darkMode
+                    ? 'bg-neutral-700 border-neutral-600 text-neutral-100 placeholder:text-neutral-500'
+                    : 'bg-white border-amber-200 text-neutral-800'
+                )}
               />
 
               <div className="flex justify-end gap-2">
@@ -137,7 +270,10 @@ export function ImageAttachment({ images, onAddImage, onRemoveImage, isLocked }:
                     setImageUrl('');
                     setCaption('');
                   }}
-                  className="px-3 py-1.5 text-sm text-amber-600 hover:text-amber-800"
+                  className={cn(
+                    'px-3 py-1.5 text-sm',
+                    darkMode ? 'text-neutral-400 hover:text-neutral-200' : 'text-amber-600 hover:text-amber-800'
+                  )}
                 >
                   Cancel
                 </button>

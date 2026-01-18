@@ -58,7 +58,7 @@ const FontSize = TextStyle.extend({
 });
 
 export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditorProps) {
-  const { fontFamily: defaultFont, inkColor: defaultInk, fontSize: defaultSize } = useSettings();
+  const { fontFamily: defaultFont, inkColor: defaultInk, fontSize: defaultSize, darkMode } = useSettings();
   const { createEntry, updateEntry, addImage, removeImage } = useJournal();
 
   const defaultFontConfig = fonts[defaultFont] || fonts.caveat;
@@ -416,6 +416,7 @@ export function RichTextEditor({ entry, date, isLocked = false }: RichTextEditor
             onAddImage={(url, caption) => addImage(entry.id, url, caption)}
             onRemoveImage={(imageId) => removeImage(entry.id, imageId)}
             isLocked={isLocked}
+            darkMode={darkMode}
           />
         )}
       </div>
