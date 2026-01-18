@@ -310,6 +310,107 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </div>
       </section>
 
+      {/* Guided Programs Section */}
+      <section className="relative py-32 px-6 bg-gradient-to-b from-[#2c1810] to-[#3d251a] overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[#d4a574]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#d4a574]/5 rounded-full blur-3xl" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#d4a574]/20 rounded-full mb-6">
+              <Star className="w-4 h-4 text-[#d4a574] fill-current" />
+              <span className="text-sm font-medium text-[#d4a574]">Pro Feature</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
+              14 Guided Journaling Programs
+            </h2>
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              Structured journeys to help you explore your life story, build better relationships, achieve goals, and grow as a person
+            </p>
+          </motion.div>
+
+          {/* Program Categories */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {[
+              {
+                category: 'Wellness & Growth',
+                emoji: '🌱',
+                programs: ['30 Days of Gratitude', 'Self-Discovery Journey', '21 Days of Mindfulness', '14 Days to Confidence'],
+                color: 'from-amber-500/20 to-amber-600/10',
+              },
+              {
+                category: 'My Story & Legacy',
+                emoji: '📖',
+                programs: ['My Life Story', 'Letters to Loved Ones', 'Family History Project'],
+                color: 'from-pink-500/20 to-pink-600/10',
+              },
+              {
+                category: 'Business & Dreams',
+                emoji: '✨',
+                programs: ['Business Builder', 'Dream Life Blueprint', '30-Day Goal Crusher'],
+                color: 'from-blue-500/20 to-blue-600/10',
+              },
+              {
+                category: 'Relationships',
+                emoji: '💕',
+                programs: ['Marriage & Partnership', 'Parenting Reflections', 'Healing Relationships', 'Friendship Circle'],
+                color: 'from-rose-500/20 to-rose-600/10',
+              },
+            ].map((cat, index) => (
+              <motion.div
+                key={cat.category}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className={`relative p-6 rounded-2xl bg-gradient-to-br ${cat.color} border border-white/10 backdrop-blur-sm`}
+              >
+                <div className="text-3xl mb-3">{cat.emoji}</div>
+                <h3 className="font-serif text-lg font-semibold text-white mb-3">
+                  {cat.category}
+                </h3>
+                <ul className="space-y-2">
+                  {cat.programs.map((program) => (
+                    <li key={program} className="flex items-center gap-2 text-sm text-white/70">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#d4a574]" />
+                      {program}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Sample prompts preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+          >
+            <p className="text-sm text-[#d4a574] font-medium mb-4">SAMPLE PROMPTS FROM "MY LIFE STORY"</p>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { day: 'Day 1', prompt: 'Describe your earliest childhood memory. What do you see, hear, and feel?' },
+                { day: 'Day 15', prompt: 'Write about a teacher or mentor who shaped who you became.' },
+                { day: 'Day 30', prompt: 'If you could write a letter to your younger self, what would you say?' },
+              ].map((item) => (
+                <div key={item.day} className="text-white/80">
+                  <span className="text-xs text-[#d4a574] font-medium">{item.day}</span>
+                  <p className="mt-1 text-sm leading-relaxed italic">"{item.prompt}"</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section className="relative py-32 px-6 bg-gradient-to-b from-transparent via-[#2c1810]/5 to-transparent">
         <div className="max-w-5xl mx-auto">
