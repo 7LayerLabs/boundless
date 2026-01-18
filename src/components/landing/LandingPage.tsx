@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
 import {
   BookOpen,
   Feather,
@@ -461,9 +461,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             <span className="font-serif text-lg font-bold text-[#2c1810]">Boundless</span>
           </div>
           <div className="flex items-center gap-8 text-sm text-[#5c3d2e]/60">
-            <a href="/about" className="hover:text-[#2c1810] transition-colors">About</a>
-            <a href="#" className="hover:text-[#2c1810] transition-colors">Privacy</a>
-            <a href="#" className="hover:text-[#2c1810] transition-colors">Terms</a>
+            <Link href="/privacy" className="hover:text-[#2c1810] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#2c1810] transition-colors">Terms</Link>
           </div>
           <p className="text-sm text-[#5c3d2e]/50">
             &copy; 2026 Boundless. Write without limits.
