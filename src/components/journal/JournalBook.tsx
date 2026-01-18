@@ -42,8 +42,24 @@ export function JournalBook() {
   const [showEntryTemplates, setShowEntryTemplates] = useState(false);
   const [showGuidedPrograms, setShowGuidedPrograms] = useState(false);
   const [showDailyQuote, setShowDailyQuote] = useState(false);
-  const [pinnedQuote, setPinnedQuote] = useState<Quote | null>(null);
-  const [pinnedQuoteDate, setPinnedQuoteDate] = useState<string | null>(null); // Track which date the quote was pinned for
+  const [pinnedQuotes, setPinnedQuotes] = useState<Record<string, Quote>>({}); // Map of date strings to pinned quotes
+
+  // Load pinned quotes from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('boundless-pinned-quotes');
+    if (stored) {
+      try {
+        setPinnedQuotes(JSON.parse(stored));
+      } catch (e) {
+        // Ignore invalid JSON
+      }
+    }
+  }, []);
+
+  // Save pinned quotes to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('boundless-pinned-quotes', JSON.stringify(pinnedQuotes));
+  }, [pinnedQuotes]);
 
   // Use InstantDB hooks
   const {
@@ -105,11 +121,12 @@ export function JournalBook() {
       return lockedQuote;
     }
     // Pinned quote only shows on the date it was pinned for
-    if (pinnedQuote && pinnedQuoteDate === currentDateStr) {
-      return pinnedQuote;
+    const pinnedForDate = pinnedQuotes[currentDateStr];
+    if (pinnedForDate) {
+      return pinnedForDate;
     }
     return null;
-  }, [lockedQuote, pinnedQuote, pinnedQuoteDate, currentDateStr]);
+  }, [lockedQuote, pinnedQuotes, currentDateStr]);
 
   // Derived values
   const binding = bindingColors[bindingColor];
@@ -224,16 +241,21 @@ export function JournalBook() {
 
   // Handler for pinning a quote (for the current date only)
   const handlePinQuote = (quote: Quote) => {
-    setPinnedQuote(quote);
-    setPinnedQuoteDate(currentDateStr);
+    setPinnedQuotes(prev => ({
+      ...prev,
+      [currentDateStr]: quote,
+    }));
   };
 
   // Handler for locking a quote (persists in settings)
   const handleLockQuote = (quote: Quote) => {
     updateSetting('lockedQuote', quote);
-    // Clear any pinned quote since locked quote takes priority
-    setPinnedQuote(null);
-    setPinnedQuoteDate(null);
+    // Clear pinned quote for current date since locked quote takes priority
+    setPinnedQuotes(prev => {
+      const updated = { ...prev };
+      delete updated[currentDateStr];
+      return updated;
+    });
   };
 
   // Handler for unlocking a quote (removes from settings)
@@ -419,8 +441,11 @@ export function JournalBook() {
             onDismissPinnedPrompt={() => setPinnedPrompt(null)}
             pinnedQuote={displayQuote}
             onDismissPinnedQuote={() => {
-              setPinnedQuote(null);
-              setPinnedQuoteDate(null);
+              setPinnedQuotes(prev => {
+                const updated = { ...prev };
+                delete updated[currentDateStr];
+                return updated;
+              });
             }}
             isQuoteLocked={!!lockedQuote && displayQuote?.text === lockedQuote.text}
           />
