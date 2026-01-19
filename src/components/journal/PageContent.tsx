@@ -34,6 +34,7 @@ interface PageContentProps {
   onNewEntry: () => void;
   onToggleBookmark: (entryId: string) => void;
   onLockEntry: () => void;
+  onDeleteEntry: (entryId: string) => void;
 
   // Mood
   showMoodSelector: boolean;
@@ -82,6 +83,7 @@ export function PageContent({
   onNewEntry,
   onToggleBookmark,
   onLockEntry,
+  onDeleteEntry,
   showMoodSelector,
   onMoodSelect,
   allTags,
@@ -170,6 +172,7 @@ export function PageContent({
           onNewEntry={onNewEntry}
           onToggleBookmark={onToggleBookmark}
           onLockEntry={onLockEntry}
+          onDeleteEntry={onDeleteEntry}
           tags={currentEntry?.tags || []}
           allTags={allTags}
           onTagsChange={onTagsChange}

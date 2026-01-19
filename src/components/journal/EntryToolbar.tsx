@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { format } from 'date-fns';
-import { Plus, Lock, Unlock, Bookmark, X, Tag } from 'lucide-react';
+import { Plus, Lock, Unlock, Bookmark, X, Tag, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { moods } from '@/constants/moods';
 import { starterTags, getTagColor } from '@/constants/tags';
@@ -25,6 +25,7 @@ interface EntryToolbarProps {
   onNewEntry: () => void;
   onToggleBookmark: (entryId: string) => void;
   onLockEntry: () => void;
+  onDeleteEntry: (entryId: string) => void;
 
   // Tags
   tags: string[];
@@ -47,6 +48,7 @@ export function EntryToolbar({
   onNewEntry,
   onToggleBookmark,
   onLockEntry,
+  onDeleteEntry,
   tags,
   allTags,
   onTagsChange,
@@ -383,6 +385,22 @@ export function EntryToolbar({
           >
             <Lock className="w-3.5 h-3.5" />
           </div>
+        )}
+
+        {/* Delete button - shows for non-locked entries */}
+        {currentEntry && !currentEntry.isLocked && !isPastDay && (
+          <button
+            onClick={() => onDeleteEntry(currentEntry.id)}
+            className={cn(
+              'p-1.5 rounded-md transition-all',
+              darkMode
+                ? 'text-neutral-500 hover:text-red-400 hover:bg-neutral-700'
+                : 'text-neutral-400 hover:text-red-500 hover:bg-neutral-100'
+            )}
+            title="Delete Entry"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
         )}
       </div>
     </div>

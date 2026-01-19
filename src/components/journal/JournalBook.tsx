@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { format, startOfDay, isAfter } from 'date-fns';
 import { db } from '@/lib/db/instant';
@@ -43,27 +43,21 @@ export function JournalBook() {
   const [showEntryTemplates, setShowEntryTemplates] = useState(false);
   const [showGuidedPrograms, setShowGuidedPrograms] = useState(false);
   const [showDailyQuote, setShowDailyQuote] = useState(false);
-  const [pinnedQuotes, setPinnedQuotes] = useState<Record<string, Quote>>({}); // Map of date strings to pinned quotes
-  const pinnedQuotesLoaded = useRef(false);
 
-  // Load pinned quotes from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('boundless-pinned-quotes');
-    if (stored) {
-      try {
-        setPinnedQuotes(JSON.parse(stored));
-      } catch (e) {
-        // Ignore invalid JSON
-      }
+  // Initialize pinned quotes from localStorage (avoids race conditions)
+  const [pinnedQuotes, setPinnedQuotes] = useState<Record<string, Quote>>(() => {
+    if (typeof window === 'undefined') return {};
+    try {
+      const stored = localStorage.getItem('boundless-pinned-quotes');
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
     }
-    pinnedQuotesLoaded.current = true;
-  }, []);
+  });
 
-  // Save pinned quotes to localStorage when they change (but not on initial load)
+  // Save pinned quotes to localStorage when they change
   useEffect(() => {
-    if (pinnedQuotesLoaded.current) {
-      localStorage.setItem('boundless-pinned-quotes', JSON.stringify(pinnedQuotes));
-    }
+    localStorage.setItem('boundless-pinned-quotes', JSON.stringify(pinnedQuotes));
   }, [pinnedQuotes]);
 
   // Use InstantDB hooks
@@ -78,6 +72,7 @@ export function JournalBook() {
     updateEntry,
     lockEntry,
     addEntryUpdate,
+    deleteEntry,
     toggleBookmark,
     allTags,
   } = useJournal();
@@ -431,6 +426,7 @@ export function JournalBook() {
             onNewEntry={handleNewEntry}
             onToggleBookmark={(entryId) => toggleBookmark(entryId)}
             onLockEntry={handleLockEntry}
+            onDeleteEntry={deleteEntry}
             showMoodSelector={showMoodSelector}
             onMoodSelect={handleMoodSelect}
             allTags={allTags}
