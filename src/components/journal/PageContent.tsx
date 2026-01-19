@@ -73,6 +73,7 @@ export function PageContent({
   onToday,
   dateColor,
   dayColor,
+  formatDate,
   dayEntries,
   selectedEntryId,
   currentEntry,
@@ -147,6 +148,7 @@ export function PageContent({
           onPreviousDay={onPreviousDay}
           onNextDay={onNextDay}
           onToday={onToday}
+          formatDate={formatDate}
           dateColor={dateColor}
           dayColor={dayColor}
           darkMode={darkMode}

@@ -12,6 +12,7 @@ interface JournalHeaderProps {
   onPreviousDay: () => void;
   onNextDay: () => void;
   onToday: () => void;
+  formatDate: (date: Date) => string;
   dateColor: string;
   dayColor: string;
   darkMode: boolean;
@@ -25,6 +26,7 @@ export function JournalHeader({
   onPreviousDay,
   onNextDay,
   onToday,
+  formatDate,
   dateColor,
   dayColor,
   darkMode,
@@ -33,10 +35,6 @@ export function JournalHeader({
   isQuoteLocked = false,
 }: JournalHeaderProps) {
   const [isHoveringQuote, setIsHoveringQuote] = useState(false);
-
-  const formatDisplayDate = (date: Date) => {
-    return format(date, 'MMMM d, yyyy').toUpperCase();
-  };
 
   return (
     <div className="mb-4">
@@ -66,7 +64,7 @@ export function JournalHeader({
             className="text-lg md:text-xl font-bold tracking-wide"
             style={{ color: dateColor }}
           >
-            {formatDisplayDate(currentDate)}
+            {formatDate(currentDate)}
           </p>
         </button>
 
