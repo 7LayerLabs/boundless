@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { format, startOfDay, isAfter } from 'date-fns';
 import { db } from '@/lib/db/instant';
@@ -44,6 +44,7 @@ export function JournalBook() {
   const [showGuidedPrograms, setShowGuidedPrograms] = useState(false);
   const [showDailyQuote, setShowDailyQuote] = useState(false);
   const [pinnedQuotes, setPinnedQuotes] = useState<Record<string, Quote>>({}); // Map of date strings to pinned quotes
+  const pinnedQuotesLoaded = useRef(false);
 
   // Load pinned quotes from localStorage on mount
   useEffect(() => {
@@ -55,11 +56,14 @@ export function JournalBook() {
         // Ignore invalid JSON
       }
     }
+    pinnedQuotesLoaded.current = true;
   }, []);
 
-  // Save pinned quotes to localStorage when they change
+  // Save pinned quotes to localStorage when they change (but not on initial load)
   useEffect(() => {
-    localStorage.setItem('boundless-pinned-quotes', JSON.stringify(pinnedQuotes));
+    if (pinnedQuotesLoaded.current) {
+      localStorage.setItem('boundless-pinned-quotes', JSON.stringify(pinnedQuotes));
+    }
   }, [pinnedQuotes]);
 
   // Use InstantDB hooks
