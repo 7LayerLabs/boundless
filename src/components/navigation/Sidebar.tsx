@@ -45,6 +45,7 @@ interface SidebarProps {
   onLogout: () => void;
   onShowPrompt: () => void;
   onShowOnThisDay: () => void;
+  showMoodSelector: boolean;
   isLoggingOut: boolean;
   // Optional sidebar features
   showWritingStats?: boolean;
@@ -82,6 +83,7 @@ export function Sidebar({
   onLogout,
   onShowPrompt,
   onShowOnThisDay,
+  showMoodSelector,
   isLoggingOut,
   showWritingStats,
   showEntryTemplates,
@@ -147,13 +149,14 @@ export function Sidebar({
       description: 'Your dedication & intention',
       onClick: onShowWhyPage,
     },
-    {
+    // Only show Mood Insights if mood tracking is enabled
+    ...(showMoodSelector ? [{
       id: 'insights',
       icon: <BarChart3 className="w-5 h-5" />,
       label: 'Mood Insights',
       description: 'Track your moods',
       onClick: onShowMoodInsights,
-    },
+    }] : []),
   ];
 
   // Pro features - premium functionality (conditionally rendered)

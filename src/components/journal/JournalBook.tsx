@@ -486,6 +486,7 @@ export function JournalBook() {
         onLogout={handleLogout}
         onShowPrompt={() => setShowPromptModal(true)}
         onShowOnThisDay={() => setShowOnThisDay(true)}
+        showMoodSelector={showMoodSelector}
         isLoggingOut={isClosing}
         // Optional sidebar features
         showWritingStats={showWritingStatsSetting}
