@@ -39,7 +39,27 @@ export function AuthModal() {
     try {
       await db.auth.signInWithMagicCode({ email, code });
     } catch (err: any) {
-      setError(err.message || 'Invalid code');
+      const errorMessage = err.message || 'Invalid code';
+
+      // Handle expired/stale session errors
+      if (errorMessage.includes('Record not found') || errorMessage.includes('magic-code')) {
+        // Clear any stale auth state
+        try {
+          await db.auth.signOut();
+        } catch {
+          // Ignore signout errors
+        }
+        localStorage.removeItem('instantdb-session');
+        setError('Session expired. Please request a new code.');
+        setCode('');
+        setStep('email');
+      } else if (errorMessage.includes('expired')) {
+        setError('Code expired. Please request a new one.');
+        setCode('');
+        setStep('email');
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

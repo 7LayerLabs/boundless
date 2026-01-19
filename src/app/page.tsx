@@ -95,16 +95,39 @@ export default function Home() {
   const showPinModal = user && !isPinVerified;
   const showOpenJournal = user && isPinVerified && isJournalOpen;
 
+  // Handle auth errors - clear stale sessions and recover
+  useEffect(() => {
+    if (authError) {
+      const errorMessage = authError.message || '';
+      // Handle stale session errors
+      if (errorMessage.includes('Record not found') || errorMessage.includes('magic-code')) {
+        // Clear stale auth data and reload
+        localStorage.removeItem('instantdb-session');
+        db.auth.signOut().catch(() => {});
+        window.location.reload();
+      }
+    }
+  }, [authError]);
+
   if (authError) {
+    const errorMessage = authError.message || '';
+    const isSessionError = errorMessage.includes('Record not found') || errorMessage.includes('magic-code');
+
     return (
       <DeskScene>
         <div className="text-center p-8 bg-amber-50/90 rounded-2xl shadow-xl">
-          <p className="text-red-600 mb-4">Connection error</p>
+          <p className="text-red-600 mb-4">
+            {isSessionError ? 'Session expired' : 'Connection error'}
+          </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              localStorage.removeItem('instantdb-session');
+              db.auth.signOut().catch(() => {});
+              window.location.reload();
+            }}
             className="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
           >
-            Retry
+            {isSessionError ? 'Sign in again' : 'Retry'}
           </button>
         </div>
       </DeskScene>
