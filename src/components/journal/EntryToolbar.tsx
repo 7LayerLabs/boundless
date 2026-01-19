@@ -60,7 +60,7 @@ export function EntryToolbar({
   const tagInputRef = useRef<HTMLInputElement>(null);
   const tagContainerRef = useRef<HTMLDivElement>(null);
 
-  const isDisabled = isPastDay || currentEntry?.isLocked;
+  const isDisabled = isPastDay; // Tags can still be edited on locked entries
   const maxVisibleTags = 3;
   const visibleTags = tags.slice(0, maxVisibleTags);
   const hiddenTagCount = tags.length - maxVisibleTags;

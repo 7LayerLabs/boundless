@@ -133,6 +133,18 @@ export function useJournal() {
     analytics.entryUpdated(wordCount);
   };
 
+  // Update tags on an entry (works even on locked entries)
+  const updateEntryTags = async (entryId: string, tags: string[]) => {
+    if (!user) return;
+
+    await db.transact([
+      tx.entries[entryId].update({
+        tags,
+        updatedAt: Date.now(),
+      }),
+    ]);
+  };
+
   // Lock an entry (prevents further edits to original content)
   const lockEntry = async (entryId: string) => {
     if (!user) return;
@@ -306,6 +318,7 @@ export function useJournal() {
     error,
     createEntry,
     updateEntry,
+    updateEntryTags,
     lockEntry,
     addEntryUpdate,
     deleteEntry,

@@ -74,6 +74,7 @@ export function JournalBook() {
     addEntryUpdate,
     deleteEntry,
     toggleBookmark,
+    updateEntryTags,
     allTags,
   } = useJournal();
 
@@ -180,7 +181,7 @@ export function JournalBook() {
 
   const handleTagsChange = async (tags: string[]) => {
     if (currentEntry) {
-      await updateEntry(currentEntry.id, currentEntry.content, currentEntry.mood as Mood | null, tags);
+      await updateEntryTags(currentEntry.id, tags);
     }
   };
 
