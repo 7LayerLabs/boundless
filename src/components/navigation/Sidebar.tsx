@@ -146,7 +146,7 @@ export function Sidebar({
       id: 'purpose',
       icon: <BookHeart className="w-5 h-5" />,
       label: 'My Purpose',
-      description: 'Your dedication & intention',
+      description: 'Your why',
       onClick: onShowWhyPage,
     },
     // Only show Mood Insights if mood tracking is enabled
