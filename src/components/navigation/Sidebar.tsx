@@ -92,7 +92,7 @@ export function Sidebar({
   onShowGuidedPrograms,
   onShowDailyQuote,
 }: SidebarProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const isMobile = useIsMobile();
 
