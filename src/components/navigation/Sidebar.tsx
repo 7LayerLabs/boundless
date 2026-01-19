@@ -25,6 +25,7 @@ import {
   Compass,
   Quote,
   Star,
+  Clock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useIsMobile } from '@/hooks/useMediaQuery';
@@ -43,6 +44,7 @@ interface SidebarProps {
   onShowSettings: () => void;
   onLogout: () => void;
   onShowPrompt: () => void;
+  onShowOnThisDay: () => void;
   isLoggingOut: boolean;
   // Optional sidebar features
   showWritingStats?: boolean;
@@ -79,6 +81,7 @@ export function Sidebar({
   onShowSettings,
   onLogout,
   onShowPrompt,
+  onShowOnThisDay,
   isLoggingOut,
   showWritingStats,
   showEntryTemplates,
@@ -115,6 +118,13 @@ export function Sidebar({
       label: 'Bookmarks',
       description: 'Starred entries',
       onClick: onShowBookmarks,
+    },
+    {
+      id: 'on-this-day',
+      icon: <Clock className="w-5 h-5" />,
+      label: 'On This Day',
+      description: 'Memories from past years',
+      onClick: onShowOnThisDay,
     },
     {
       id: 'tags',

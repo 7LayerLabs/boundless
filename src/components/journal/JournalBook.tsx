@@ -33,6 +33,7 @@ export function JournalBook() {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showPDFExport, setShowPDFExport] = useState(false);
   const [showPromptModal, setShowPromptModal] = useState(false);
+  const [showOnThisDay, setShowOnThisDay] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [pinnedQuestion, setPinnedQuestion] = useState<ReflectionQuestion | null>(null);
   const [pinnedPrompt, setPinnedPrompt] = useState<PromptSelection | null>(null);
@@ -480,6 +481,7 @@ export function JournalBook() {
         onShowSettings={() => setShowSettings(true)}
         onLogout={handleLogout}
         onShowPrompt={() => setShowPromptModal(true)}
+        onShowOnThisDay={() => setShowOnThisDay(true)}
         isLoggingOut={isClosing}
         // Optional sidebar features
         showWritingStats={showWritingStatsSetting}
@@ -501,6 +503,7 @@ export function JournalBook() {
         showSearch={showSearch}
         showTags={showTags}
         showBookmarks={showBookmarks}
+        showOnThisDay={showOnThisDay}
         showPDFExport={showPDFExport}
         showPromptModal={showPromptModal}
         showWritingStats={showWritingStats}
@@ -514,6 +517,7 @@ export function JournalBook() {
         onCloseSearch={() => setShowSearch(false)}
         onCloseTags={() => setShowTags(false)}
         onCloseBookmarks={() => setShowBookmarks(false)}
+        onCloseOnThisDay={() => setShowOnThisDay(false)}
         onClosePDFExport={() => setShowPDFExport(false)}
         onClosePromptModal={() => setShowPromptModal(false)}
         onCloseWritingStats={() => setShowWritingStats(false)}

@@ -7,6 +7,7 @@ import { MoodInsights } from '../navigation/MoodInsights';
 import { SearchModal } from '../navigation/SearchModal';
 import { TagsView } from '../navigation/TagsView';
 import { BookmarksView } from '../navigation/BookmarksView';
+import { OnThisDayModal } from '../navigation/OnThisDayModal';
 import { PDFExport } from '../navigation/PDFExport';
 import { WhyPage } from './WhyPage';
 import { DailyPromptModal, type PromptSelection } from '../editor/DailyPromptModal';
@@ -28,6 +29,7 @@ interface ModalsContainerProps {
   showSearch: boolean;
   showTags: boolean;
   showBookmarks: boolean;
+  showOnThisDay: boolean;
   showPDFExport: boolean;
   showPromptModal: boolean;
   showWritingStats: boolean;
@@ -43,6 +45,7 @@ interface ModalsContainerProps {
   onCloseSearch: () => void;
   onCloseTags: () => void;
   onCloseBookmarks: () => void;
+  onCloseOnThisDay: () => void;
   onClosePDFExport: () => void;
   onClosePromptModal: () => void;
   onCloseWritingStats: () => void;
@@ -90,6 +93,7 @@ export function ModalsContainer({
   showSearch,
   showTags,
   showBookmarks,
+  showOnThisDay,
   showPDFExport,
   showPromptModal,
   showWritingStats,
@@ -103,6 +107,7 @@ export function ModalsContainer({
   onCloseSearch,
   onCloseTags,
   onCloseBookmarks,
+  onCloseOnThisDay,
   onClosePDFExport,
   onClosePromptModal,
   onCloseWritingStats,
@@ -198,6 +203,17 @@ export function ModalsContainer({
           <BookmarksView
             onClose={onCloseBookmarks}
             onSelectEntry={onSelectEntry}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* On This Day Modal */}
+      <AnimatePresence>
+        {showOnThisDay && (
+          <OnThisDayModal
+            onClose={onCloseOnThisDay}
+            onSelectEntry={onSelectEntry}
+            currentDate={currentDate}
           />
         )}
       </AnimatePresence>

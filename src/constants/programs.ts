@@ -498,6 +498,43 @@ export const guidedPrograms: GuidedProgram[] = [
       "Plan something intentional for a friendship this week. What will you do?",
     ],
   },
+  {
+    id: 'grief-and-loss',
+    name: 'Grief & Loss',
+    description: 'A gentle journey through loss and healing',
+    icon: '🕊️',
+    color: 'bg-slate-50 border-slate-300',
+    category: 'relationships',
+    duration: 21,
+    prompts: [
+      // Week 1: Acknowledging the loss
+      "Write about the person or thing you've lost. Who were they to you? What did they mean in your life?",
+      "Describe a favorite memory that makes you smile, even through the tears.",
+      "What were the little things about them that you loved? The habits, quirks, or small moments?",
+      "Write about the day you learned of your loss. What do you remember feeling?",
+      "What has been the hardest part of this loss? Allow yourself to be honest.",
+      "Who has been there for you during this time? How have they helped?",
+      "What does your grief feel like today? Where do you feel it in your body?",
+
+      // Week 2: Processing emotions
+      "Write a letter to the person you've lost. Say everything you wish you could tell them.",
+      "What did this person teach you? What values or lessons do you carry forward?",
+      "Describe a tradition, place, or song that reminds you of them. What memories does it hold?",
+      "Are there things left unsaid? Write them here, even if they're difficult.",
+      "What do you miss most about your life before this loss?",
+      "Write about a time they made you laugh. What was their sense of humor like?",
+      "How has this loss changed you? What parts of yourself feel different?",
+
+      // Week 3: Finding meaning and moving forward
+      "What would they want you to know right now? What would they say to comfort you?",
+      "How do you want to honor their memory? What traditions might you create?",
+      "Write about something beautiful you've witnessed since your loss—a moment of unexpected grace.",
+      "What has grief taught you about love, about life, about yourself?",
+      "Who else is grieving this loss? How might you support each other?",
+      "What does moving forward look like for you? Moving forward doesn't mean forgetting.",
+      "Write a final letter: What will you carry with you? What are you ready to release?",
+    ],
+  },
 ];
 
 // Get program progress from localStorage
