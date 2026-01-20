@@ -75,7 +75,7 @@ Boundless is the ONLY app combining all three elements:
 
 - ✓ Skeuomorphic Book Design (no competitor has this)
 - ✓ Extensive Customization (binding colors, fonts, ink, themes)
-- ✓ **Curated Guided Programs** (35 expertly-crafted multi-day journeys vs. competitors' generic templates)
+- ✓ **Curated Guided Programs** (42 expertly-crafted multi-day journeys vs. competitors' generic templates)
 - ✓ AI Reflections at accessible pricing
 - ✓ Lifetime pricing option ($149 vs. Journey's $200)
 
@@ -87,7 +87,7 @@ Boundless is the ONLY app combining all three elements:
 |-----------|------------|
 | Unique skeuomorphic design (no competitor) | Solo developer bandwidth constraints |
 | Deep customization options | Limited marketing budget |
-| 35 curated programs (quality over quantity) | No mobile app (web-first) |
+| 42 curated programs (quality over quantity) | No mobile app (web-first) |
 | Affordable AI pricing | Unproven brand recognition |
 | Lifetime pricing option | InstantDB vendor dependency |
 
@@ -421,7 +421,7 @@ Copy and paste this into Claude Code to begin building the next phase:
 ```
 I'm building Boundless, a digital journaling app with a skeuomorphic book aesthetic. The app is built with Next.js 16, TypeScript, Tailwind CSS v4, InstantDB, and TipTap.
 
-Current state: Core journaling features complete (entries, mood tracking, 35 curated guided programs across 5 categories, AI reflections via BYOK, customization, search, calendar, PDF export).
+Current state: Core journaling features complete (entries, mood tracking, 42 curated guided programs across 5 categories, AI reflections via BYOK, customization, search, calendar, PDF export).
 
 Next priority: Implement Stripe monetization.
 
