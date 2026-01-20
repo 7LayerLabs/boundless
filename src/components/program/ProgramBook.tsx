@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check, X, Home } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -21,6 +21,7 @@ export function ProgramBook({ program, onClose }: ProgramBookProps) {
   const { user } = db.useAuth();
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
+  const hasSetInitialPosition = useRef(false);
 
   const {
     bindingColor,
@@ -57,18 +58,23 @@ export function ProgramBook({ program, onClose }: ProgramBookProps) {
     return new Set(entries.map(e => e.promptIndex));
   }, [entries]);
 
-  // Find the first incomplete prompt on mount
+  // Find the first incomplete prompt on initial load only
   useEffect(() => {
-    if (!isLoading && entries.length > 0) {
-      // Find first incomplete prompt
-      for (let i = 0; i < program.prompts.length; i++) {
-        if (!completedIndices.has(i)) {
-          setCurrentPromptIndex(i);
-          return;
+    // Only set initial position once when data first loads
+    if (!isLoading && !hasSetInitialPosition.current) {
+      hasSetInitialPosition.current = true;
+
+      if (entries.length > 0) {
+        // Find first incomplete prompt
+        for (let i = 0; i < program.prompts.length; i++) {
+          if (!completedIndices.has(i)) {
+            setCurrentPromptIndex(i);
+            return;
+          }
         }
+        // All complete, go to last
+        setCurrentPromptIndex(program.prompts.length - 1);
       }
-      // All complete, go to last
-      setCurrentPromptIndex(program.prompts.length - 1);
     }
   }, [isLoading, entries.length, completedIndices, program.prompts.length]);
 
