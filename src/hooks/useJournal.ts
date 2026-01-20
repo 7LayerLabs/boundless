@@ -55,7 +55,10 @@ export function useJournal() {
   // Get the currently selected entry (or the most recent one for the day)
   const currentEntry = useMemo(() => {
     if (selectedEntryId) {
-      return dayEntries.find((e) => e.id === selectedEntryId) || dayEntries[0] || null;
+      // If we have a selected ID, only return that entry (or null if not found yet)
+      // Don't fall back to dayEntries[0] as that would show old content during new entry creation
+      const found = dayEntries.find((e) => e.id === selectedEntryId);
+      return found || null;
     }
     return dayEntries[0] || null;
   }, [dayEntries, selectedEntryId]);
