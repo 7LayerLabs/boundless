@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Check, Save } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { ProgramAICompanion } from './ProgramAICompanion';
 
 interface ProgramEditorProps {
   initialContent: string;
@@ -12,6 +13,8 @@ interface ProgramEditorProps {
   isLastPrompt: boolean;
   fontClassName: string;
   darkMode: boolean;
+  prompt?: string;
+  programName?: string;
 }
 
 export function ProgramEditor({
@@ -22,7 +25,10 @@ export function ProgramEditor({
   isLastPrompt,
   fontClassName,
   darkMode,
+  prompt = '',
+  programName = '',
 }: ProgramEditorProps) {
+  const [pinnedQuestion, setPinnedQuestion] = useState<string | null>(null);
   const [content, setContent] = useState(initialContent);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -91,8 +97,44 @@ export function ProgramEditor({
 
   const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
 
+  const handleInsertQuestion = (question: string) => {
+    setPinnedQuestion(question);
+  };
+
+  const dismissPinnedQuestion = () => {
+    setPinnedQuestion(null);
+  };
+
   return (
     <div className="flex flex-col h-full">
+      {/* Pinned AI Question */}
+      {pinnedQuestion && (
+        <div className={cn(
+          'mb-4 p-3 rounded-lg border-l-4',
+          darkMode
+            ? 'bg-amber-900/20 border-amber-500 text-amber-200'
+            : 'bg-amber-50 border-amber-400 text-amber-800'
+        )}>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2">
+              <span className="text-lg">💭</span>
+              <p className="text-sm italic">{pinnedQuestion}</p>
+            </div>
+            <button
+              onClick={dismissPinnedQuestion}
+              className={cn(
+                'text-xs px-2 py-1 rounded transition-colors',
+                darkMode
+                  ? 'text-amber-400 hover:bg-amber-800/50'
+                  : 'text-amber-600 hover:bg-amber-100'
+              )}
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Textarea */}
       <div className="flex-1 relative">
         <textarea
@@ -132,6 +174,17 @@ export function ProgramEditor({
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* AI Companion - only show if we have prompt and programName */}
+          {prompt && programName && content.trim().length > 30 && (
+            <ProgramAICompanion
+              prompt={prompt}
+              content={content}
+              programName={programName}
+              darkMode={darkMode}
+              onInsertQuestion={handleInsertQuestion}
+            />
+          )}
+
           <button
             onClick={handleManualSave}
             disabled={!content.trim() || isSaving}

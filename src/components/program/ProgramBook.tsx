@@ -318,6 +318,8 @@ export function ProgramBook({ program, onClose }: ProgramBookProps) {
                 isLastPrompt={isLastPrompt}
                 fontClassName={currentFont.className}
                 darkMode={darkMode}
+                prompt={currentPrompt}
+                programName={program.name}
               />
             </div>
 
