@@ -241,14 +241,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </motion.p>
 
           {/* Support line - principle statement */}
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-xs md:text-sm text-[#5c3d2e] max-w-xl mx-auto mb-10 uppercase tracking-[0.2em] font-medium"
+            className="mb-10"
           >
-            Questions that explore, never lead.
-          </motion.p>
+            <span className="inline-block px-5 py-2.5 bg-[#2c1810] text-[#f5f0e6] text-xs md:text-sm uppercase tracking-[0.2em] font-medium rounded">
+              Questions that explore, never lead.
+            </span>
+          </motion.div>
 
           {/* CTA Buttons */}
           <motion.div
