@@ -11,7 +11,7 @@ import { EntryToolbar } from './EntryToolbar';
 import { EntryUpdates } from './EntryUpdates';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
-import type { ReflectionQuestion } from '../editor/AIReflection';
+import type { ReflectionQuestion } from '../editor/JournalAICompanion';
 import type { PromptSelection } from '../editor/DailyPromptModal';
 import type { Quote } from '@/constants/quotes';
 

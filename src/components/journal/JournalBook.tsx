@@ -9,7 +9,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { bindingColors, pageColors, dateColors } from '@/constants/themes';
 import { fonts } from '@/constants/fonts';
 import { moods } from '@/constants/moods';
-import { AIReflection, type ReflectionQuestion } from '../editor/AIReflection';
+import { JournalAICompanion, type ReflectionQuestion } from '../editor/JournalAICompanion';
 import type { PromptSelection } from '../editor/DailyPromptModal';
 import { Sidebar } from '../navigation/Sidebar';
 import { BookCover } from './BookCover';
@@ -456,10 +456,10 @@ export function JournalBook() {
           <BookCover bindingColor={binding.color} position="right" />
         </motion.div>
 
-        {/* AI Reflection - only show when enabled */}
+        {/* AI Writing Companion - only show when enabled */}
         {aiReflectionEnabled && (
           <div className="fixed top-6 right-6 z-50">
-            <AIReflection
+            <JournalAICompanion
               content={currentEntry?.content?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || ''}
               onSelectQuestion={setPinnedQuestion}
             />

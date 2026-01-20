@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import type { ReflectionQuestion } from './AIReflection';
+import type { ReflectionQuestion } from './JournalAICompanion';
 
 interface ThoughtBubbleProps {
   question: ReflectionQuestion;
@@ -13,6 +13,12 @@ interface ThoughtBubbleProps {
 export function ThoughtBubble({ question, onDismiss }: ThoughtBubbleProps) {
   const getTypeIcon = (type: string) => {
     switch (type) {
+      // New therapeutic types
+      case 'reflect': return '🪞';
+      case 'experience': return '🌊';
+      case 'observer': return '👁️';
+      case 'clarify': return '🔍';
+      // Legacy types (for backwards compatibility)
       case 'emotion': return '💭';
       case 'insight': return '💡';
       case 'action': return '🎯';
@@ -23,6 +29,12 @@ export function ThoughtBubble({ question, onDismiss }: ThoughtBubbleProps) {
 
   const getTypeColor = (type: string) => {
     switch (type) {
+      // New therapeutic types
+      case 'reflect': return 'bg-blue-50 border-blue-200';
+      case 'experience': return 'bg-green-50 border-green-200';
+      case 'observer': return 'bg-purple-50 border-purple-200';
+      case 'clarify': return 'bg-amber-50 border-amber-200';
+      // Legacy types (for backwards compatibility)
       case 'emotion': return 'bg-pink-50 border-pink-200';
       case 'insight': return 'bg-amber-50 border-amber-200';
       case 'action': return 'bg-green-50 border-green-200';

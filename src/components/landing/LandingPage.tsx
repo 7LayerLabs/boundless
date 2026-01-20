@@ -15,6 +15,7 @@ import {
   Check,
   ArrowRight,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
@@ -66,18 +67,18 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
   const proFeatures = [
     {
       icon: <Compass className="w-5 h-5" />,
-      title: 'Guided Programs',
-      description: '30-day journeys for life stories, relationships, goals & more',
+      title: '42 Guided Programs',
+      description: 'Curated journeys across 5 categories—not generic templates',
+    },
+    {
+      icon: <Sparkles className="w-5 h-5" />,
+      title: 'AI Writing Companion',
+      description: 'Therapeutic questions that help you explore—never lead',
     },
     {
       icon: <Quote className="w-5 h-5" />,
       title: 'Daily Quotes',
       description: 'Curated inspiration to start your writing',
-    },
-    {
-      icon: <Sparkles className="w-5 h-5" />,
-      title: 'AI Reflections',
-      description: 'Thoughtful questions based on your writing',
     },
     {
       icon: <BarChart3 className="w-5 h-5" />,
@@ -328,39 +329,50 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <span className="text-sm font-medium text-[#d4a574]">Pro Feature</span>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
-              14 Guided Journaling Programs
+              42 Curated Journaling Programs
             </h2>
             <p className="text-lg text-white/70 max-w-2xl mx-auto">
-              Structured journeys to help you explore your life story, build better relationships, achieve goals, and grow as a person
+              Not generic templates—each program is a psychologically-informed journey with 14-30 days of thoughtfully sequenced prompts
             </p>
           </motion.div>
 
           {/* Program Categories */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[
               {
                 category: 'Wellness & Growth',
+                count: 10,
                 emoji: '🌱',
-                programs: ['30 Days of Gratitude', 'Self-Discovery Journey', '21 Days of Mindfulness', '14 Days to Confidence'],
+                programs: ['Anxiety Toolkit', 'Burnout Recovery', 'Morning Pages', 'Sobriety Journal'],
                 color: 'from-amber-500/20 to-amber-600/10',
               },
               {
                 category: 'My Story & Legacy',
+                count: 10,
                 emoji: '📖',
-                programs: ['My Life Story', 'Letters to Loved Ones', 'Family History Project'],
+                programs: ['My Life Story', 'Wisdom for My Children', 'Decade Review', 'Cultural Heritage'],
                 color: 'from-pink-500/20 to-pink-600/10',
               },
               {
                 category: 'Business & Dreams',
+                count: 10,
                 emoji: '✨',
-                programs: ['Business Builder', 'Dream Life Blueprint', '30-Day Goal Crusher'],
+                programs: ['Career Pivot', 'Money Mindset', 'Leadership Journal', 'Creative Business'],
                 color: 'from-blue-500/20 to-blue-600/10',
               },
               {
                 category: 'Relationships',
+                count: 10,
                 emoji: '💕',
-                programs: ['Marriage & Partnership', 'Parenting Reflections', 'Healing Relationships', 'Friendship Circle'],
+                programs: ['Finding Love', 'New Parent: Year One', 'Empty Nest', 'Self-Love Journey'],
                 color: 'from-rose-500/20 to-rose-600/10',
+              },
+              {
+                category: 'Creativity',
+                count: 2,
+                emoji: '🎨',
+                programs: ["Writer's Journal", 'Unlock Your Creativity'],
+                color: 'from-purple-500/20 to-purple-600/10',
               },
             ].map((cat, index) => (
               <motion.div
@@ -371,7 +383,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 transition={{ delay: index * 0.1 }}
                 className={`relative p-6 rounded-2xl bg-gradient-to-br ${cat.color} border border-white/10 backdrop-blur-sm`}
               >
-                <div className="text-3xl mb-3">{cat.emoji}</div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-3xl">{cat.emoji}</div>
+                  <span className="text-xs text-white/50 bg-white/10 px-2 py-1 rounded-full">{cat.count} programs</span>
+                </div>
                 <h3 className="font-serif text-lg font-semibold text-white mb-3">
                   {cat.category}
                 </h3>
@@ -408,6 +423,105 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               ))}
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* AI Writing Companion Section */}
+      <section className="relative py-32 px-6 bg-[#faf8f3]">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#2c1810]/5 rounded-full mb-6 border border-[#2c1810]/10">
+              <Sparkles className="w-4 h-4 text-[#8b4513]" />
+              <span className="text-sm font-medium text-[#5c3d2e]">AI That Explores, Never Leads</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#2c1810] mb-4">
+              A Mirror, Not a Guide
+            </h2>
+            <p className="text-lg text-[#5c3d2e]/70 max-w-2xl mx-auto">
+              Our AI companion uses therapeutic questioning methods—reflecting what you wrote and asking you to look closer, never telling you what to think or feel
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: Methodology */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="space-y-6">
+                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">🪞</span>
+                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Reflect</h3>
+                  </div>
+                  <p className="text-[#5c3d2e]/70 text-sm">
+                    "You said it felt <em>heavy</em>. What kind of heavy?"
+                  </p>
+                </div>
+                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">🌊</span>
+                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Raw Experience</h3>
+                  </div>
+                  <p className="text-[#5c3d2e]/70 text-sm">
+                    "What were you noticing in your body when that happened?"
+                  </p>
+                </div>
+                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">👁️</span>
+                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Step Back</h3>
+                  </div>
+                  <p className="text-[#5c3d2e]/70 text-sm">
+                    "When you read that back, what stands out to you?"
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right: What we don't do */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="p-8 bg-gradient-to-br from-[#2c1810]/5 to-[#2c1810]/10 rounded-3xl border border-[#2c1810]/10">
+                <h3 className="font-serif text-xl font-semibold text-[#2c1810] mb-6">
+                  What Our AI Never Does
+                </h3>
+                <ul className="space-y-4">
+                  {[
+                    { bad: '"That sounds like anxiety"', why: 'Never labels your feelings' },
+                    { bad: '"You should talk to them"', why: 'Never gives advice' },
+                    { bad: '"Is it because of your childhood?"', why: 'Never leads you to conclusions' },
+                    { bad: '"That must have been hard"', why: 'Never assumes your experience' },
+                  ].map((item) => (
+                    <li key={item.bad} className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="w-3.5 h-3.5 text-red-500" />
+                      </div>
+                      <div>
+                        <p className="text-[#2c1810] font-medium line-through decoration-red-400/50">{item.bad}</p>
+                        <p className="text-sm text-[#5c3d2e]/60">{item.why}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 p-4 bg-white/50 rounded-xl">
+                  <p className="text-sm text-[#5c3d2e]/70 italic">
+                    "Your emotion directs them. Neutrality frees them."
+                    <span className="block text-xs text-[#8b7355] mt-1">— Therapeutic writing principle</span>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -475,22 +589,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               viewport={{ once: true }}
               className="relative p-8 bg-gradient-to-br from-[#2c1810] to-[#3d251a] rounded-3xl shadow-2xl text-white overflow-hidden"
             >
-              {/* Coming Soon Overlay */}
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#d4a574] text-[#2c1810] rounded-full text-lg font-bold shadow-lg">
-                    <Sparkles className="w-5 h-5" />
-                    Coming Soon
-                  </div>
-                  <p className="text-white/80 mt-3 text-sm">Premium features launching soon</p>
-                </div>
-              </div>
-
               {/* Gold accent */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4a574]/20 rounded-full blur-3xl" />
 
               {/* Pro badge */}
-              <div className="absolute top-6 right-6 flex items-center gap-1 px-3 py-1 bg-[#d4a574]/50 text-white/80 rounded-full text-sm font-medium">
+              <div className="absolute top-6 right-6 flex items-center gap-1 px-3 py-1 bg-[#d4a574] text-[#2c1810] rounded-full text-sm font-medium">
                 <Star className="w-3.5 h-3.5 fill-current" />
                 Pro
               </div>
@@ -498,9 +601,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="font-serif text-2xl font-bold mb-2">Pro</h3>
               <p className="text-white/70 mb-6">For the dedicated journaler</p>
               <div className="text-4xl font-serif font-bold mb-2">
-                $6 <span className="text-lg font-normal text-white/60">/month</span>
+                $7.99 <span className="text-lg font-normal text-white/60">/month</span>
               </div>
-              <p className="text-sm text-white/50 mb-8">or $49 lifetime</p>
+              <p className="text-sm text-white/50 mb-8">or $59/year • $149 lifetime</p>
 
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center gap-3 text-white/90">
@@ -529,10 +632,10 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </ul>
 
               <button
-                disabled
-                className="w-full py-4 bg-[#d4a574]/50 text-[#2c1810]/70 rounded-full font-medium cursor-not-allowed"
+                onClick={onGetStarted}
+                className="w-full py-4 bg-[#d4a574] text-[#2c1810] rounded-full font-medium hover:bg-[#e5b685] transition-colors"
               >
-                Coming Soon
+                Upgrade to Pro
               </button>
             </motion.div>
           </div>
