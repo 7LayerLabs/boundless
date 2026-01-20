@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import Link from 'next/link';
 import {
   BookOpen,
@@ -23,6 +24,56 @@ interface LandingPageProps {
   onGetStarted: () => void;
 }
 
+// Page turn section wrapper for scroll-driven animations
+interface PageTurnSectionProps {
+  children: React.ReactNode;
+  className?: string;
+  dark?: boolean;
+}
+
+function PageTurnSection({ children, className = '', dark = false }: PageTurnSectionProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const rotateX = useTransform(scrollYProgress, [0, 1], [8, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1]);
+
+  // Shadow that appears at the "fold" during page turn
+  const shadowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.15, 0]);
+
+  return (
+    <div ref={ref} className="relative" style={{ perspective: '1200px' }}>
+      {/* Page fold shadow */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-10"
+        style={{
+          opacity: shadowOpacity,
+          background: dark
+            ? 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent)'
+            : 'linear-gradient(to bottom, rgba(44, 24, 16, 0.15), transparent)',
+        }}
+      />
+      <motion.section
+        style={{
+          rotateX,
+          opacity,
+          y,
+          scale,
+          transformOrigin: 'top center',
+        }}
+        className={className}
+      >
+        {children}
+      </motion.section>
+    </div>
+  );
+}
+
 // Playfair Display is loaded via CSS variable --font-playfair
 const serifFont = 'var(--font-playfair), Georgia, serif';
 
@@ -31,36 +82,43 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
-  const features = [
+  // Features for open-book sticky scroll
+  const bookFeatures = [
     {
-      icon: <BookOpen className="w-6 h-6" />,
+      emoji: '📖',
       title: 'Beautiful Book Aesthetic',
       description: 'Write in a realistic leather-bound journal with customizable bindings, pages, and clasps.',
+      detail: 'Every detail matters—from the stitching on the spine to the texture of the paper.',
     },
     {
-      icon: <Lock className="w-6 h-6" />,
+      emoji: '🔐',
       title: 'Private & Secure',
       description: 'Your thoughts are protected with optional PIN lock and encrypted storage.',
+      detail: 'Your journal is yours alone. No one else can read it—not even us.',
     },
     {
-      icon: <Palette className="w-6 h-6" />,
-      title: 'Fully Customizable',
-      description: 'Choose fonts, colors, themes, and backgrounds. Make it truly yours.',
+      emoji: '🎨',
+      title: 'Make It Yours',
+      description: 'Choose fonts, ink colors, binding styles, and page textures.',
+      detail: '12 handwriting fonts, 8 ink colors, 6 leather bindings, endless combinations.',
     },
     {
-      icon: <Calendar className="w-6 h-6" />,
-      title: 'Daily Journaling',
-      description: 'Navigate by date, search entries, and track your writing journey.',
+      emoji: '📅',
+      title: 'Never Lose an Entry',
+      description: 'Navigate by date, search your words, track your writing journey.',
+      detail: 'Calendar view, full-text search, bookmarks, and tags to find any moment.',
     },
     {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: 'Mood Tracking',
-      description: 'Log your emotions and visualize patterns over time.',
+      emoji: '💭',
+      title: 'Track Your Moods',
+      description: 'Log how you feel and see patterns emerge over time.',
+      detail: 'Simple mood selection with beautiful visualizations of your emotional journey.',
     },
     {
-      icon: <Feather className="w-6 h-6" />,
-      title: 'Writing Prompts',
-      description: 'Never face a blank page. Get inspired with thoughtful prompts.',
+      emoji: '✨',
+      title: 'Never Face a Blank Page',
+      description: 'Thoughtful prompts when you need inspiration to start writing.',
+      detail: 'Daily prompts, writing templates, and gentle nudges to keep you going.',
     },
   ];
 
@@ -115,7 +173,12 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
           <button
             onClick={onGetStarted}
-            className="px-5 py-2.5 bg-[#2c1810] text-[#faf8f3] rounded-full font-medium text-sm hover:bg-[#3d251a] transition-colors shadow-md"
+            className="relative px-5 py-2.5 bg-[#f5f0e8] text-[#2c1810] font-medium text-sm transition-all hover:-translate-y-0.5"
+            style={{
+              boxShadow: '0 2px 8px -2px rgba(44, 24, 16, 0.15), 0 1px 3px rgba(44, 24, 16, 0.1)',
+              borderRadius: '3px',
+              border: '1px solid rgba(44, 24, 16, 0.12)',
+            }}
           >
             Start Writing
           </button>
@@ -132,34 +195,38 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="absolute bottom-20 right-10 w-48 h-48 bg-[#8b4513]/10 rounded-full blur-3xl" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#2c1810]/5 rounded-full mb-8 border border-[#2c1810]/10"
-          >
-            <Feather className="w-4 h-4 text-[#8b4513]" />
-            <span className="text-sm font-medium text-[#5c3d2e]">Your private sanctuary for reflection</span>
-          </motion.div>
-
           {/* Main headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
             className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-[#2c1810] leading-[0.95] tracking-tight mb-6"
           >
-            Write Without
+            The journal that
             <br />
             <span className="relative inline-block">
-              <span className="relative z-10">Limits</span>
-              <motion.span
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="absolute bottom-2 left-0 right-0 h-4 bg-[#d4a574]/30 -z-0 origin-left"
-              />
+              <span className="relative z-10">feels real</span>
+              {/* Hand-drawn underline SVG */}
+              <motion.svg
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
+                className="absolute -bottom-2 left-0 w-full h-4 z-0"
+                viewBox="0 0 200 12"
+                fill="none"
+                preserveAspectRatio="none"
+              >
+                <motion.path
+                  d="M2 8 C 30 4, 50 10, 80 6 S 130 8, 160 5 S 190 9, 198 7"
+                  stroke="#8b4513"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  fill="none"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
+                />
+              </motion.svg>
             </span>
           </motion.h1>
 
@@ -167,11 +234,20 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-xl md:text-2xl text-[#5c3d2e]/80 max-w-2xl mx-auto mb-10 leading-relaxed"
+            transition={{ delay: 0.4 }}
+            className="text-xl md:text-2xl text-[#5c3d2e]/80 max-w-2xl mx-auto mb-4 leading-relaxed"
           >
-            A beautiful digital journal that feels like the real thing.
-            Private, customizable, and designed for meaningful reflection.
+            Private, customizable, and built for meaningful reflection.
+          </motion.p>
+
+          {/* Support line */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-sm md:text-base text-[#8b7355] max-w-xl mx-auto mb-10 italic"
+          >
+            AI that explores, never leads.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -183,10 +259,31 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           >
             <button
               onClick={onGetStarted}
-              className="group flex items-center gap-2 px-8 py-4 bg-[#2c1810] text-[#faf8f3] rounded-full font-medium text-lg hover:bg-[#3d251a] transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+              className="group relative flex items-center gap-2 px-8 py-4 bg-[#f5f0e8] text-[#2c1810] font-medium text-lg transition-all hover:-translate-y-0.5"
+              style={{
+                boxShadow: '0 4px 12px -2px rgba(44, 24, 16, 0.15), 0 2px 4px -1px rgba(44, 24, 16, 0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
+                borderRadius: '4px',
+                border: '1px solid rgba(44, 24, 16, 0.1)',
+              }}
             >
-              Start Your Journal
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {/* Paper texture overlay */}
+              <span
+                className="absolute inset-0 opacity-30 pointer-events-none"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.3'/%3E%3C/svg%3E")`,
+                  borderRadius: '4px',
+                }}
+              />
+              <span className="relative">Start Your Journal</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative" />
+              {/* Folded corner effect */}
+              <span
+                className="absolute top-0 right-0 w-4 h-4 bg-gradient-to-br from-[#e8e0d4] to-[#d4cdc0]"
+                style={{
+                  clipPath: 'polygon(100% 0, 100% 100%, 0 0)',
+                  borderBottomLeftRadius: '2px',
+                }}
+              />
             </button>
             <span className="text-sm text-[#8b7355]">Free forever • No credit card</span>
           </motion.div>
@@ -199,47 +296,127 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             className="mt-16 relative"
           >
             <div className="relative mx-auto max-w-3xl">
-              {/* Shadow/glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#8b4513]/20 to-transparent blur-3xl transform translate-y-10" />
-
-              {/* Journal mockup */}
+              {/* Shadow/glow effect - deeper, more realistic */}
               <div
-                className="relative bg-gradient-to-br from-[#5c3a21] via-[#4a2f1a] to-[#3d251a] rounded-2xl p-1 shadow-2xl"
+                className="absolute inset-0 transform translate-y-8"
                 style={{
-                  boxShadow: '0 25px 80px -20px rgba(44, 24, 16, 0.5), 0 10px 30px -10px rgba(44, 24, 16, 0.3)',
+                  background: 'radial-gradient(ellipse 80% 50% at 50% 100%, rgba(44, 24, 16, 0.4) 0%, transparent 70%)',
+                  filter: 'blur(20px)',
+                }}
+              />
+
+              {/* Journal mockup - open book style */}
+              <div
+                className="relative rounded-lg overflow-hidden"
+                style={{
+                  boxShadow: '0 30px 60px -20px rgba(44, 24, 16, 0.5), 0 15px 30px -15px rgba(44, 24, 16, 0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
                 }}
               >
-                {/* Leather texture */}
-                <div
-                  className="absolute inset-0 rounded-2xl opacity-30"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E")`,
-                  }}
-                />
-
-                {/* Gold clasp */}
-                <div className="absolute left-1/2 -translate-x-1/2 -top-3 w-16 h-6 bg-gradient-to-b from-[#d4a574] to-[#b8956a] rounded-b-lg shadow-lg z-10" />
-
-                {/* Inner page */}
-                <div className="relative bg-[#faf8f3] rounded-xl p-8 md:p-12 min-h-[400px]">
-                  {/* Page lines */}
+                {/* Leather cover with stitching */}
+                <div className="relative bg-gradient-to-br from-[#5c3a21] via-[#4a2f1a] to-[#3d251a] p-1.5">
+                  {/* Leather texture - more pronounced */}
                   <div
-                    className="absolute inset-8 md:inset-12 pointer-events-none opacity-20"
+                    className="absolute inset-0 opacity-40"
                     style={{
-                      backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #b4a08c 31px, #b4a08c 32px)',
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
                     }}
                   />
 
-                  {/* Content preview */}
-                  <div className="relative">
-                    <p className="text-[#8b7355] text-sm mb-2 font-medium">JANUARY 18, 2026</p>
-                    <p className="font-serif text-2xl md:text-3xl text-[#2c1810] leading-relaxed" style={{ fontFamily: 'Georgia, serif' }}>
-                      Today I realized that the small moments are the ones worth remembering...
-                    </p>
-                    <div className="mt-8 flex items-center gap-4">
-                      <span className="text-2xl">😊</span>
-                      <span className="px-3 py-1 bg-[#d4a574]/20 text-[#8b4513] rounded-full text-sm">#grateful</span>
-                      <span className="px-3 py-1 bg-[#d4a574]/20 text-[#8b4513] rounded-full text-sm">#reflection</span>
+                  {/* Stitching along edges */}
+                  <div className="absolute top-3 left-3 right-3 h-px opacity-40">
+                    <svg className="w-full h-2" preserveAspectRatio="none">
+                      <pattern id="stitch-h" patternUnits="userSpaceOnUse" width="12" height="2">
+                        <line x1="0" y1="1" x2="6" y2="1" stroke="#d4a574" strokeWidth="1" strokeLinecap="round" />
+                      </pattern>
+                      <rect width="100%" height="2" fill="url(#stitch-h)" />
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-3 left-3 right-3 h-px opacity-40">
+                    <svg className="w-full h-2" preserveAspectRatio="none">
+                      <pattern id="stitch-h2" patternUnits="userSpaceOnUse" width="12" height="2">
+                        <line x1="0" y1="1" x2="6" y2="1" stroke="#d4a574" strokeWidth="1" strokeLinecap="round" />
+                      </pattern>
+                      <rect width="100%" height="2" fill="url(#stitch-h2)" />
+                    </svg>
+                  </div>
+
+                  {/* Gold clasp - more detailed */}
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-2 z-20">
+                    <div
+                      className="w-14 h-7 bg-gradient-to-b from-[#e5c088] via-[#d4a574] to-[#b8956a] rounded-b-md"
+                      style={{
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                      }}
+                    >
+                      {/* Clasp detail */}
+                      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-[#8b6914]/30 rounded-full" />
+                    </div>
+                  </div>
+
+                  {/* Inner page - aged paper effect */}
+                  <div
+                    className="relative bg-gradient-to-br from-[#faf8f3] via-[#f5f0e6] to-[#efe8dc] rounded-sm min-h-[420px] overflow-hidden"
+                    style={{
+                      boxShadow: 'inset 2px 2px 8px rgba(0,0,0,0.05), inset -1px -1px 4px rgba(0,0,0,0.02)',
+                    }}
+                  >
+                    {/* Paper grain texture */}
+                    <div
+                      className="absolute inset-0 opacity-50 pointer-events-none"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23f5f0e6' surfaceScale='2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E")`,
+                      }}
+                    />
+
+                    {/* Aged/worn edges - subtle coffee stain effect */}
+                    <div
+                      className="absolute top-0 right-0 w-32 h-32 opacity-[0.03] pointer-events-none"
+                      style={{
+                        background: 'radial-gradient(ellipse at top right, #8b4513, transparent 70%)',
+                      }}
+                    />
+                    <div
+                      className="absolute bottom-0 left-0 w-24 h-24 opacity-[0.02] pointer-events-none"
+                      style={{
+                        background: 'radial-gradient(ellipse at bottom left, #5c3d2e, transparent 70%)',
+                      }}
+                    />
+
+                    {/* Page lines - hand-ruled feel */}
+                    <div
+                      className="absolute inset-8 md:inset-12 pointer-events-none"
+                      style={{
+                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 30px, rgba(180, 160, 140, 0.15) 30px, rgba(180, 160, 140, 0.15) 31px)',
+                      }}
+                    />
+
+                    {/* Red margin line */}
+                    <div className="absolute top-8 bottom-8 md:top-12 md:bottom-12 left-16 md:left-20 w-px bg-[#c9a0a0]/20" />
+
+                    {/* Content preview */}
+                    <div className="relative p-8 md:p-12 pl-20 md:pl-24">
+                      <p className="text-[#8b7355] text-xs tracking-widest mb-3 font-medium uppercase">January 18, 2026</p>
+                      <p
+                        className="font-serif text-xl md:text-2xl lg:text-3xl text-[#2c1810]/90 leading-relaxed"
+                        style={{ fontFamily: 'Georgia, serif' }}
+                      >
+                        Today I realized that the small moments are the ones worth remembering. The morning coffee, the way light came through the window, the quiet before everyone woke up...
+                      </p>
+                      <div className="mt-8 flex flex-wrap items-center gap-3">
+                        <span className="text-2xl">😊</span>
+                        <span
+                          className="px-3 py-1 text-[#5c3d2e] text-sm border border-[#d4a574]/30 rounded"
+                          style={{ background: 'linear-gradient(to bottom, #faf8f3, #f0e8dc)' }}
+                        >
+                          #grateful
+                        </span>
+                        <span
+                          className="px-3 py-1 text-[#5c3d2e] text-sm border border-[#d4a574]/30 rounded"
+                          style={{ background: 'linear-gradient(to bottom, #faf8f3, #f0e8dc)' }}
+                        >
+                          #reflection
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -269,165 +446,143 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </motion.div>
       </motion.section>
 
-      {/* Features Section */}
-      <section className="relative py-32 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
+      {/* Features Section - Open Book Sticky Scroll */}
+      <PageTurnSection className="relative bg-[#faf8f3]">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Section header */}
+          <div className="text-center py-20">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#2c1810] mb-4">
               Everything you need to write
             </h2>
             <p className="text-lg text-[#5c3d2e]/70 max-w-xl mx-auto">
               A thoughtfully designed space for your daily reflections
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
+          {/* Open book layout with sticky scroll */}
+          <div className="relative">
+            {bookFeatures.map((feature, index) => (
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group relative p-8 bg-white/60 backdrop-blur-sm rounded-2xl border border-[#2c1810]/5 hover:border-[#d4a574]/30 hover:bg-white/80 transition-all duration-300 hover:shadow-xl"
+                className="min-h-[70vh] flex items-center py-12"
               >
-                <div className="w-12 h-12 bg-[#2c1810]/5 rounded-xl flex items-center justify-center text-[#8b4513] mb-5 group-hover:bg-[#d4a574]/20 transition-colors">
-                  {feature.icon}
+                {/* Open book spread */}
+                <div
+                  className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden"
+                  style={{
+                    boxShadow: '0 20px 50px -15px rgba(44, 24, 16, 0.3), 0 10px 20px -10px rgba(44, 24, 16, 0.2)',
+                  }}
+                >
+                  {/* Book binding spine in center */}
+                  <div className="grid md:grid-cols-2">
+                    {/* Left page - Feature info */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: '-20%' }}
+                      className="relative bg-gradient-to-br from-[#faf8f3] via-[#f5f0e6] to-[#efe8dc] p-8 md:p-12 min-h-[400px] flex flex-col justify-center"
+                      style={{
+                        boxShadow: 'inset -8px 0 20px -10px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      {/* Paper texture */}
+                      <div
+                        className="absolute inset-0 opacity-30 pointer-events-none"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.3'/%3E%3C/svg%3E")`,
+                        }}
+                      />
+                      {/* Page number */}
+                      <span className="absolute top-6 left-8 text-xs text-[#8b7355]/50 font-medium">
+                        {String(index * 2 + 1).padStart(2, '0')}
+                      </span>
+                      {/* Content */}
+                      <div className="relative">
+                        <span className="text-5xl mb-6 block">{feature.emoji}</span>
+                        <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#2c1810] mb-4">
+                          {feature.title}
+                        </h3>
+                        <p className="text-[#5c3d2e]/80 text-lg leading-relaxed mb-4">
+                          {feature.description}
+                        </p>
+                        <p className="text-[#8b7355] text-sm italic">
+                          {feature.detail}
+                        </p>
+                      </div>
+                    </motion.div>
+
+                    {/* Right page - Visual/illustration placeholder */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: '-20%' }}
+                      transition={{ delay: 0.1 }}
+                      className="relative bg-gradient-to-bl from-[#faf8f3] via-[#f5f0e6] to-[#efe8dc] p-8 md:p-12 min-h-[400px] flex items-center justify-center"
+                      style={{
+                        boxShadow: 'inset 8px 0 20px -10px rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      {/* Paper texture */}
+                      <div
+                        className="absolute inset-0 opacity-30 pointer-events-none"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper2)' opacity='0.3'/%3E%3C/svg%3E")`,
+                        }}
+                      />
+                      {/* Page number */}
+                      <span className="absolute top-6 right-8 text-xs text-[#8b7355]/50 font-medium">
+                        {String(index * 2 + 2).padStart(2, '0')}
+                      </span>
+                      {/* Visual representation */}
+                      <div className="relative w-full max-w-xs">
+                        <div
+                          className="aspect-[4/5] rounded-lg bg-gradient-to-br from-[#5c3a21] via-[#4a2f1a] to-[#3d251a] p-1"
+                          style={{
+                            boxShadow: '0 10px 30px -10px rgba(44, 24, 16, 0.4)',
+                          }}
+                        >
+                          <div className="h-full bg-[#faf8f3] rounded-md p-4 flex flex-col">
+                            {/* Mini journal preview */}
+                            <div className="text-[10px] text-[#8b7355] mb-2">
+                              {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                            </div>
+                            <div className="flex-1 space-y-2">
+                              {[...Array(6)].map((_, i) => (
+                                <div
+                                  key={i}
+                                  className="h-2 rounded-full bg-[#2c1810]/10"
+                                  style={{ width: `${70 + Math.random() * 30}%` }}
+                                />
+                              ))}
+                            </div>
+                            {index === 4 && (
+                              <div className="mt-4 flex gap-2">
+                                <span className="text-lg">😊</span>
+                                <span className="text-lg">✨</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Book spine shadow */}
+                  <div
+                    className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 pointer-events-none hidden md:block"
+                    style={{
+                      background: 'linear-gradient(to right, rgba(0,0,0,0.15), transparent 30%, transparent 70%, rgba(0,0,0,0.15))',
+                    }}
+                  />
                 </div>
-                <h3 className="font-serif text-xl font-semibold text-[#2c1810] mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-[#5c3d2e]/70 leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </section>
+      </PageTurnSection>
 
-      {/* Guided Programs Section */}
-      <section className="relative py-32 px-6 bg-gradient-to-b from-[#2c1810] to-[#3d251a] overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#d4a574]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#d4a574]/5 rounded-full blur-3xl" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#d4a574]/20 rounded-full mb-6">
-              <Star className="w-4 h-4 text-[#d4a574] fill-current" />
-              <span className="text-sm font-medium text-[#d4a574]">Pro Feature</span>
-            </div>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
-              42 Curated Journaling Programs
-            </h2>
-            <p className="text-lg text-white/70 max-w-2xl mx-auto">
-              Not generic templates—each program is a psychologically-informed journey with 14-30 days of thoughtfully sequenced prompts
-            </p>
-          </motion.div>
-
-          {/* Program Categories */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                category: 'Wellness & Growth',
-                count: 10,
-                emoji: '🌱',
-                programs: ['Anxiety Toolkit', 'Burnout Recovery', 'Morning Pages', 'Sobriety Journal'],
-                color: 'from-amber-500/20 to-amber-600/10',
-              },
-              {
-                category: 'My Story & Legacy',
-                count: 10,
-                emoji: '📖',
-                programs: ['My Life Story', 'Wisdom for My Children', 'Decade Review', 'Cultural Heritage'],
-                color: 'from-pink-500/20 to-pink-600/10',
-              },
-              {
-                category: 'Business & Dreams',
-                count: 10,
-                emoji: '✨',
-                programs: ['Career Pivot', 'Money Mindset', 'Leadership Journal', 'Creative Business'],
-                color: 'from-blue-500/20 to-blue-600/10',
-              },
-              {
-                category: 'Relationships',
-                count: 10,
-                emoji: '💕',
-                programs: ['Finding Love', 'New Parent: Year One', 'Empty Nest', 'Self-Love Journey'],
-                color: 'from-rose-500/20 to-rose-600/10',
-              },
-              {
-                category: 'Creativity',
-                count: 2,
-                emoji: '🎨',
-                programs: ["Writer's Journal", 'Unlock Your Creativity'],
-                color: 'from-purple-500/20 to-purple-600/10',
-              },
-            ].map((cat, index) => (
-              <motion.div
-                key={cat.category}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`relative p-6 rounded-2xl bg-gradient-to-br ${cat.color} border border-white/10 backdrop-blur-sm`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="text-3xl">{cat.emoji}</div>
-                  <span className="text-xs text-white/50 bg-white/10 px-2 py-1 rounded-full">{cat.count} programs</span>
-                </div>
-                <h3 className="font-serif text-lg font-semibold text-white mb-3">
-                  {cat.category}
-                </h3>
-                <ul className="space-y-2">
-                  {cat.programs.map((program) => (
-                    <li key={program} className="flex items-center gap-2 text-sm text-white/70">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#d4a574]" />
-                      {program}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Sample prompts preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-          >
-            <p className="text-sm text-[#d4a574] font-medium mb-4">SAMPLE PROMPTS FROM "MY LIFE STORY"</p>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { day: 'Day 1', prompt: 'Describe your earliest childhood memory. What do you see, hear, and feel?' },
-                { day: 'Day 15', prompt: 'Write about a teacher or mentor who shaped who you became.' },
-                { day: 'Day 30', prompt: 'If you could write a letter to your younger self, what would you say?' },
-              ].map((item) => (
-                <div key={item.day} className="text-white/80">
-                  <span className="text-xs text-[#d4a574] font-medium">{item.day}</span>
-                  <p className="mt-1 text-sm leading-relaxed italic">"{item.prompt}"</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* AI Writing Companion Section */}
-      <section className="relative py-32 px-6 bg-[#faf8f3]">
+      {/* Social Proof Section */}
+      <PageTurnSection className="relative py-24 px-6 bg-[#f5f0e6]">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -435,98 +590,297 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#2c1810]/5 rounded-full mb-6 border border-[#2c1810]/10">
-              <Sparkles className="w-4 h-4 text-[#8b4513]" />
-              <span className="text-sm font-medium text-[#5c3d2e]">AI That Explores, Never Leads</span>
-            </div>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#2c1810] mb-4">
-              A Mirror, Not a Guide
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#2c1810] mb-4">
+              Real entries, real reflections
             </h2>
-            <p className="text-lg text-[#5c3d2e]/70 max-w-2xl mx-auto">
-              Our AI companion uses therapeutic questioning methods—reflecting what you wrote and asking you to look closer, never telling you what to think or feel
+            <p className="text-[#5c3d2e]/70">
+              Shared with permission from our community
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left: Methodology */}
+          {/* Journal excerpts - styled like torn paper notes */}
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {[
+              {
+                excerpt: "I finally wrote down the thing I've been avoiding for months. Seeing it on paper made it feel less scary, more... manageable.",
+                mood: '😌',
+                tag: 'breakthrough',
+              },
+              {
+                excerpt: "Three weeks of morning pages. I'm noticing I'm less anxious before work. The ritual of opening my journal has become a kind of anchor.",
+                mood: '🌅',
+                tag: 'routine',
+              },
+              {
+                excerpt: "The prompt asked what I'd tell my younger self. I didn't expect to cry, but I also didn't expect to feel so much compassion for who I was.",
+                mood: '💧',
+                tag: 'healing',
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30, rotate: -1 + index }}
+                whileInView={{ opacity: 1, y: 0, rotate: -1 + index }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <div
+                  className="bg-[#faf8f3] p-6 rounded-sm"
+                  style={{
+                    boxShadow: '0 4px 20px -5px rgba(44, 24, 16, 0.15)',
+                    transform: `rotate(${-1 + index}deg)`,
+                  }}
+                >
+                  {/* Paper texture */}
+                  <div
+                    className="absolute inset-0 opacity-30 pointer-events-none rounded-sm"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.3'/%3E%3C/svg%3E")`,
+                    }}
+                  />
+                  {/* Torn top edge effect */}
+                  <div
+                    className="absolute -top-1 left-0 right-0 h-2 bg-[#faf8f3]"
+                    style={{
+                      clipPath: 'polygon(0 100%, 5% 60%, 10% 100%, 15% 40%, 20% 100%, 25% 70%, 30% 100%, 35% 50%, 40% 100%, 45% 60%, 50% 100%, 55% 40%, 60% 100%, 65% 70%, 70% 100%, 75% 50%, 80% 100%, 85% 60%, 90% 100%, 95% 40%, 100% 100%)',
+                    }}
+                  />
+                  <p className="text-[#2c1810]/80 text-sm leading-relaxed italic relative z-10 mb-4">
+                    "{item.excerpt}"
+                  </p>
+                  <div className="flex items-center gap-2 relative z-10">
+                    <span className="text-lg">{item.mood}</span>
+                    <span className="text-xs text-[#8b7355] bg-[#d4a574]/10 px-2 py-0.5 rounded">
+                      #{item.tag}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                quote: "I've tried every journaling app. Boundless is the first one that made me want to write.",
+                name: 'Sarah M.',
+                role: 'Using Boundless for 8 months',
+              },
+              {
+                quote: "The AI questions surprised me. They're not leading—they're like having a thoughtful friend who just listens.",
+                name: 'James K.',
+                role: 'Pro subscriber',
+              },
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className="flex items-start gap-4 p-6 bg-white/60 rounded-2xl border border-[#2c1810]/5"
+              >
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#d4a574] to-[#8b4513] flex items-center justify-center text-white font-serif font-bold text-lg flex-shrink-0">
+                  {testimonial.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-[#2c1810] mb-3">"{testimonial.quote}"</p>
+                  <p className="text-sm font-medium text-[#5c3d2e]">{testimonial.name}</p>
+                  <p className="text-xs text-[#8b7355]">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </PageTurnSection>
+
+      {/* Why Boundless Story Section */}
+      <PageTurnSection className="relative py-24 px-6 bg-[#faf8f3]">
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <span className="text-4xl mb-6 block">📝</span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#2c1810] mb-8">
+              Why I built Boundless
+            </h2>
+            <div className="text-left space-y-4 text-[#5c3d2e]/80 leading-relaxed">
+              <p>
+                I've kept a journal since I was sixteen. Physical notebooks filled with messy handwriting, coffee stains, and the kind of honesty I couldn't share anywhere else.
+              </p>
+              <p>
+                When I tried digital journaling, every app felt... clinical. Productivity tools dressed up as journals. None of them understood that journaling isn't about tracking habits—it's about having a private space to think out loud.
+              </p>
+              <p>
+                So I built what I wanted: a digital journal that feels like the real thing. One that respects privacy, invites honest writing, and doesn't try to optimize your inner life.
+              </p>
+              <p className="text-[#2c1810] font-medium">
+                Boundless is the journal I wanted to exist.
+              </p>
+            </div>
+            <div className="mt-8 pt-8 border-t border-[#2c1810]/10">
+              <p className="text-sm text-[#8b7355]">— Derek, Founder</p>
+            </div>
+          </motion.div>
+        </div>
+      </PageTurnSection>
+
+      {/* Unified Pro Section - Programs + AI Mirror */}
+      <PageTurnSection dark className="relative py-32 px-6 bg-gradient-to-b from-[#2c1810] to-[#3d251a] overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[#d4a574]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#d4a574]/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d4a574]/5 rounded-full blur-3xl" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Pro badge and main header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#d4a574]/20 rounded-full mb-6 border border-[#d4a574]/30">
+              <Star className="w-4 h-4 text-[#d4a574] fill-current" />
+              <span className="text-sm font-medium text-[#d4a574]">Boundless Pro</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
+              Go deeper with Pro
+            </h2>
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              Guided programs and an AI companion designed to help you explore—never lead
+            </p>
+          </motion.div>
+
+          {/* Two-column layout: Programs + AI */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            {/* Left: 42 Programs */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10"
             >
-              <div className="space-y-6">
-                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl">🪞</span>
-                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Reflect</h3>
+              <div className="flex items-center gap-3 mb-6">
+                <Compass className="w-6 h-6 text-[#d4a574]" />
+                <h3 className="font-serif text-2xl font-bold text-white">42 Guided Programs</h3>
+              </div>
+              <p className="text-white/70 mb-6">
+                Not generic templates—each is a psychologically-informed journey with 14-30 days of thoughtfully sequenced prompts.
+              </p>
+
+              {/* Compact category list */}
+              <div className="space-y-3 mb-6">
+                {[
+                  { emoji: '🌱', name: 'Wellness & Growth', examples: 'Anxiety Toolkit, Burnout Recovery' },
+                  { emoji: '📖', name: 'My Story & Legacy', examples: 'Life Story, Wisdom for Children' },
+                  { emoji: '✨', name: 'Business & Dreams', examples: 'Career Pivot, Money Mindset' },
+                  { emoji: '💕', name: 'Relationships', examples: 'Finding Love, Self-Love Journey' },
+                  { emoji: '🎨', name: 'Creativity', examples: "Writer's Journal, Unlock Creativity" },
+                ].map((cat) => (
+                  <div key={cat.name} className="flex items-start gap-3">
+                    <span className="text-xl">{cat.emoji}</span>
+                    <div>
+                      <p className="text-white font-medium">{cat.name}</p>
+                      <p className="text-sm text-white/50">{cat.examples}</p>
+                    </div>
                   </div>
-                  <p className="text-[#5c3d2e]/70 text-sm">
-                    "You said it felt <em>heavy</em>. What kind of heavy?"
-                  </p>
-                </div>
-                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl">🌊</span>
-                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Raw Experience</h3>
-                  </div>
-                  <p className="text-[#5c3d2e]/70 text-sm">
-                    "What were you noticing in your body when that happened?"
-                  </p>
-                </div>
-                <div className="p-5 bg-white/80 rounded-2xl border border-[#2c1810]/5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl">👁️</span>
-                    <h3 className="font-serif text-lg font-semibold text-[#2c1810]">Step Back</h3>
-                  </div>
-                  <p className="text-[#5c3d2e]/70 text-sm">
-                    "When you read that back, what stands out to you?"
-                  </p>
-                </div>
+                ))}
+              </div>
+
+              {/* Sample prompt */}
+              <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                <p className="text-xs text-[#d4a574] font-medium mb-2">SAMPLE FROM "MY LIFE STORY"</p>
+                <p className="text-white/80 text-sm italic">
+                  "Describe your earliest childhood memory. What do you see, hear, and feel?"
+                </p>
               </div>
             </motion.div>
 
-            {/* Right: What we don't do */}
+            {/* Right: AI Mirror */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10"
             >
-              <div className="p-8 bg-gradient-to-br from-[#2c1810]/5 to-[#2c1810]/10 rounded-3xl border border-[#2c1810]/10">
-                <h3 className="font-serif text-xl font-semibold text-[#2c1810] mb-6">
-                  What Our AI Never Does
-                </h3>
-                <ul className="space-y-4">
-                  {[
-                    { bad: '"That sounds like anxiety"', why: 'Never labels your feelings' },
-                    { bad: '"You should talk to them"', why: 'Never gives advice' },
-                    { bad: '"Is it because of your childhood?"', why: 'Never leads you to conclusions' },
-                    { bad: '"That must have been hard"', why: 'Never assumes your experience' },
-                  ].map((item) => (
-                    <li key={item.bad} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="w-3.5 h-3.5 text-red-500" />
-                      </div>
-                      <div>
-                        <p className="text-[#2c1810] font-medium line-through decoration-red-400/50">{item.bad}</p>
-                        <p className="text-sm text-[#5c3d2e]/60">{item.why}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8 p-4 bg-white/50 rounded-xl">
-                  <p className="text-sm text-[#5c3d2e]/70 italic">
-                    "Your emotion directs them. Neutrality frees them."
-                    <span className="block text-xs text-[#8b7355] mt-1">— Therapeutic writing principle</span>
-                  </p>
+              <div className="flex items-center gap-3 mb-6">
+                <Sparkles className="w-6 h-6 text-[#d4a574]" />
+                <h3 className="font-serif text-2xl font-bold text-white">AI Mirror Companion</h3>
+              </div>
+              <p className="text-white/70 mb-6">
+                Therapeutic questioning that reflects what you wrote and asks you to look closer—never tells you what to think.
+              </p>
+
+              {/* AI methodology */}
+              <div className="space-y-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">🪞</span>
+                  <div>
+                    <p className="text-white font-medium">Reflects</p>
+                    <p className="text-sm text-white/50">"You said it felt heavy. What kind of heavy?"</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">🌊</span>
+                  <div>
+                    <p className="text-white font-medium">Grounds</p>
+                    <p className="text-sm text-white/50">"What were you noticing in your body?"</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="text-xl">👁️</span>
+                  <div>
+                    <p className="text-white font-medium">Steps Back</p>
+                    <p className="text-sm text-white/50">"When you read that back, what stands out?"</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* What AI never does */}
+              <div className="p-4 bg-red-500/10 rounded-xl border border-red-500/20">
+                <p className="text-xs text-red-300 font-medium mb-2">WHAT IT NEVER DOES</p>
+                <div className="space-y-1 text-sm text-white/60">
+                  <p className="line-through decoration-red-400/50">Labels your feelings</p>
+                  <p className="line-through decoration-red-400/50">Gives advice</p>
+                  <p className="line-through decoration-red-400/50">Leads to conclusions</p>
                 </div>
               </div>
             </motion.div>
           </div>
+
+          {/* Additional Pro features */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-4"
+          >
+            {[
+              { icon: <Quote className="w-4 h-4" />, label: 'Daily Quotes' },
+              { icon: <BarChart3 className="w-4 h-4" />, label: 'Writing Stats' },
+              { icon: <BookOpen className="w-4 h-4" />, label: 'Entry Templates' },
+              { icon: <Feather className="w-4 h-4" />, label: 'PDF Export' },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 text-white/70 text-sm"
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
-      </section>
+      </PageTurnSection>
 
       {/* Pricing Section */}
-      <section className="relative py-32 px-6 bg-gradient-to-b from-transparent via-[#2c1810]/5 to-transparent">
+      <PageTurnSection className="relative py-32 px-6 bg-gradient-to-b from-transparent via-[#2c1810]/5 to-transparent">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -640,16 +994,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </motion.div>
           </div>
         </div>
-      </section>
+      </PageTurnSection>
 
       {/* Final CTA Section */}
-      <section className="relative py-32 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center"
-        >
+      <PageTurnSection className="relative py-32 px-6 bg-[#faf8f3]">
+        <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#2c1810] mb-6">
             Your story deserves a beautiful home
           </h2>
@@ -658,13 +1007,18 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </p>
           <button
             onClick={onGetStarted}
-            className="group inline-flex items-center gap-2 px-10 py-5 bg-[#2c1810] text-[#faf8f3] rounded-full font-medium text-lg hover:bg-[#3d251a] transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+            className="group relative inline-flex items-center gap-2 px-10 py-5 bg-[#f5f0e8] text-[#2c1810] font-medium text-lg transition-all hover:-translate-y-1"
+            style={{
+              boxShadow: '0 6px 20px -4px rgba(44, 24, 16, 0.2), 0 3px 8px -2px rgba(44, 24, 16, 0.15)',
+              borderRadius: '4px',
+              border: '1px solid rgba(44, 24, 16, 0.1)',
+            }}
           >
-            Begin Your Journey
+            <span className="relative">Begin Your Journey</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
-        </motion.div>
-      </section>
+        </div>
+      </PageTurnSection>
 
       {/* Footer */}
       <footer className="relative py-12 px-6 border-t border-[#2c1810]/10">
