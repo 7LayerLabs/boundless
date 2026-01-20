@@ -128,6 +128,37 @@ notebooks: i.entity({
 - Responsive for mobile (stack books vertically)
 - Dark mode support for bookshelf view
 
+## V2 Additional Features
+
+### Smart Relationships (Entity Tracker)
+Allow users to define and track people, places, dates, and things in their journal:
+
+- **Entity Library**: Users can create profiles for:
+  - People (family, friends, coworkers)
+  - Places (home, work, favorite spots)
+  - Events/Dates (anniversaries, milestones)
+  - Custom categories
+
+- **Auto-Recognition**: When journaling, the app recognizes mentions and:
+  - Highlights linked entities
+  - Shows relationship context
+  - Tracks frequency of mentions
+
+- **Relationship Insights**:
+  - "You mention Sarah most when feeling anxious"
+  - "Coffee shop appears in 80% of your creative entries"
+  - Timeline of entity mentions
+
+- **Privacy-First**:
+  - All processing done locally
+  - Opt-in feature
+  - No data leaves device
+
+**Complexity**: High (requires NLP/entity recognition)
+**Tier**: Pro feature
+
+---
+
 ## Future Enhancements (V3+)
 - Journal templates (pre-filled prompts for specific types)
 - Export individual journals
