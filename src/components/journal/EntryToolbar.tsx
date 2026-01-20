@@ -60,7 +60,9 @@ export function EntryToolbar({
   const tagInputRef = useRef<HTMLInputElement>(null);
   const tagContainerRef = useRef<HTMLDivElement>(null);
 
-  const isDisabled = isPastDay; // Tags can still be edited on locked entries
+  // Tags should ALWAYS be editable - never locked
+  const tagsDisabled = false;
+  const moodDisabled = isPastDay; // Mood is still locked for past days
   const maxVisibleTags = 3;
   const visibleTags = tags.slice(0, maxVisibleTags);
   const hiddenTagCount = tags.length - maxVisibleTags;
@@ -140,7 +142,7 @@ export function EntryToolbar({
         <MoodButton
           selectedMood={selectedMood}
           onSelect={onMoodSelect}
-          disabled={isDisabled}
+          disabled={moodDisabled}
           darkMode={darkMode}
         />
       )}
@@ -234,7 +236,7 @@ export function EntryToolbar({
                 }}
               >
                 #{tag}
-                {!isDisabled && (
+                {!tagsDisabled && (
                   <button
                     onClick={() => removeTag(tag)}
                     className="opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-500 ml-0.5"
@@ -257,7 +259,7 @@ export function EntryToolbar({
           )}
 
           {/* Add tag button / input */}
-          {!isDisabled && (
+          {!tagsDisabled && (
             showTagInput ? (
               <div className="relative">
                 <input
@@ -326,7 +328,7 @@ export function EntryToolbar({
           )}
 
           {/* Show tags in read-only mode */}
-          {isDisabled && tags.length === 0 && (
+          {tagsDisabled && tags.length === 0 && (
             <span className={cn(
               'text-[10px] italic',
               darkMode ? 'text-neutral-600' : 'text-neutral-400'
