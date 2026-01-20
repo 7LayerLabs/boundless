@@ -240,14 +240,14 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             Private, customizable, and built for meaningful reflection.
           </motion.p>
 
-          {/* Support line */}
+          {/* Support line - principle statement */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-sm md:text-base text-[#8b7355] max-w-xl mx-auto mb-10 italic"
+            className="text-xs md:text-sm text-[#5c3d2e] max-w-xl mx-auto mb-10 uppercase tracking-[0.2em] font-medium"
           >
-            AI that explores, never leads.
+            Questions that explore, never lead.
           </motion.p>
 
           {/* CTA Buttons */}
