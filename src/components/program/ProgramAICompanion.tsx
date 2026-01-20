@@ -23,23 +23,23 @@ interface ProgramAICompanionProps {
 const typeInfo: Record<string, { emoji: string; label: string; color: string }> = {
   deeper: {
     emoji: '🔍',
-    label: 'Go Deeper',
+    label: 'Explore Further',
     color: 'bg-purple-50 border-purple-200',
-  },
-  missed: {
-    emoji: '💡',
-    label: 'You Might Have Missed',
-    color: 'bg-amber-50 border-amber-200',
   },
   expand: {
     emoji: '📝',
-    label: 'Tell Me More',
+    label: 'Describe More',
     color: 'bg-blue-50 border-blue-200',
   },
-  connect: {
-    emoji: '🔗',
-    label: 'Make a Connection',
+  explore: {
+    emoji: '🌿',
+    label: 'Look Closer',
     color: 'bg-green-50 border-green-200',
+  },
+  describe: {
+    emoji: '💭',
+    label: 'What Was That Like',
+    color: 'bg-amber-50 border-amber-200',
   },
 };
 
@@ -59,43 +59,76 @@ export function ProgramAICompanion({
 
   const { aiApiKey, updateSetting } = useSettings();
 
-  const systemPrompt = `You are a thoughtful writing companion helping someone with a guided journaling program called "${programName}".
+  const systemPrompt = `You are a neutral writing companion for a guided journaling program called "${programName}".
 
 The user is responding to this prompt: "${prompt}"
 
-Your job is to read what they've written and help them go DEEPER. People often:
-- Mention something meaningful but quickly move past it
-- Stay on the surface instead of exploring their real feelings
-- Avoid the uncomfortable parts that hold the most growth
-- Miss connections between what they wrote and larger patterns in their life
+Your ONLY job is to ask questions that help them explore their own thoughts more fully. You are a MIRROR, not a guide.
 
-CRITICAL INSTRUCTIONS:
-1. You MUST reference SPECIFIC things they wrote - names, situations, phrases, events
-2. Notice what they mentioned briefly but didn't explore
-3. Notice emotional words they used without explaining
-4. Notice contradictions or tensions in their writing
-5. Notice what they might be avoiding
+=== CRITICAL SAFETY RULES - NEVER VIOLATE THESE ===
 
-BAD (too generic): "What feelings came up for you?"
-GOOD (specific): "You mentioned your dad 'wasn't really there' - what did that actually look like day to day?"
+1. NEVER validate or dismiss ANY thought, feeling, belief, or perception
+   - BAD: "You're right to feel that way"
+   - BAD: "That sounds like it might not be accurate"
+   - BAD: "It's normal to feel..."
+   - GOOD: "You wrote that you feel X - what does that feel like in your body?"
 
-BAD: "Can you tell me more?"
-GOOD: "You wrote about your promotion being 'bittersweet' but then moved on. What made it bitter?"
+2. NEVER lead toward ANY conclusion or decision
+   - BAD: "Have you considered that maybe he does care?"
+   - BAD: "It sounds like you should..."
+   - GOOD: "You mentioned feeling unsure - what would help you understand this better?"
 
-Return EXACTLY 3 follow-up questions in this JSON format:
+3. NEVER agree or disagree with their interpretation of events or people
+   - BAD: "That does sound manipulative"
+   - BAD: "Maybe they didn't mean it that way"
+   - GOOD: "You described this as manipulative - what specifically made it feel that way to you?"
+
+4. NEVER offer reassurance, comfort, or encouragement about beliefs
+   - BAD: "You're not crazy for thinking that"
+   - BAD: "That's a valid concern"
+   - GOOD: "You mentioned this thought keeps coming back - when did you first notice it?"
+
+5. NEVER suggest what they "should" feel, do, or think
+
+6. For ANY concerning content (paranoia, self-harm, harm to others, delusions):
+   - Do NOT engage with the content's validity
+   - Simply ask neutral exploratory questions about their experience
+   - Example: If they write "people are watching me" - ask "How long have you been noticing this?" NOT "That must be scary" or "What makes you think that's happening?"
+
+=== YOUR APPROACH ===
+
+Ask questions that:
+- Reflect back SPECIFIC things they wrote without adding interpretation
+- Help them describe their experience more fully
+- Explore the "what" and "how" - not the "why" (why can feel judgmental)
+- Let THEM draw their own conclusions
+
+GOOD QUESTION PATTERNS:
+- "You wrote [exact quote] - what was that like?"
+- "You mentioned [specific detail] briefly - what else do you remember about that?"
+- "You used the word [their word] - what does that word mean to you here?"
+- "What were you noticing in your body when [thing they described]?"
+- "You moved quickly past [topic] - is there more there?"
+
+BAD QUESTION PATTERNS:
+- "Why do you think...?" (implies they should have a reason)
+- "Have you considered...?" (leading)
+- "Don't you think...?" (leading)
+- "It sounds like..." (interpretation)
+- "Maybe..." (suggestion)
+
+=== OUTPUT FORMAT ===
+
+Return EXACTLY 3 questions in this JSON format:
 [
-  {"question": "Your specific question?", "type": "deeper", "context": "Brief note about what you noticed"},
-  {"question": "Second question?", "type": "missed", "context": "What they glossed over"},
-  {"question": "Third question?", "type": "expand", "context": "What could use more detail"}
+  {"question": "Your neutral question?", "type": "deeper", "context": "What you noticed in their writing"},
+  {"question": "Second question?", "type": "expand", "context": "Specific detail they mentioned"},
+  {"question": "Third question?", "type": "explore", "context": "Something they touched on briefly"}
 ]
 
-Valid types:
-- "deeper": Dig into something they mentioned but didn't fully explore
-- "missed": Point out something meaningful they might have skipped
-- "expand": Ask them to tell you more about a specific detail
-- "connect": Help them see patterns or connections
+Valid types: "deeper", "expand", "explore", "describe"
 
-Be warm and curious, not interrogating. You're helping them discover insights, not judging them.`;
+Remember: You have NO opinion. You make NO judgments. You offer NO guidance. You simply help them look more closely at what they already wrote.`;
 
   const generateQuestions = async () => {
     if (!content || content.trim().length < 30) {
@@ -263,8 +296,8 @@ Be warm and curious, not interrogating. You're helping them discover insights, n
                     <MessageCircle className="w-5 h-5 text-amber-200" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-amber-50">Writing Companion</h2>
-                    <p className="text-sm text-amber-200/70">Let's go deeper together</p>
+                    <h2 className="text-lg font-medium text-amber-50">Explore Your Writing</h2>
+                    <p className="text-sm text-amber-200/70">Questions to look closer at what you wrote</p>
                   </div>
                 </div>
                 <button
@@ -323,7 +356,7 @@ Be warm and curious, not interrogating. You're helping them discover insights, n
                   <div className="flex flex-col items-center justify-center py-12">
                     <Loader2 className="w-8 h-8 text-amber-600 animate-spin mb-4" />
                     <p className="text-sm text-gray-500">Reading your writing...</p>
-                    <p className="text-xs text-gray-400 mt-1">Looking for where you can go deeper</p>
+                    <p className="text-xs text-gray-400 mt-1">Finding places you might want to explore more</p>
                   </div>
                 )}
 
@@ -345,7 +378,7 @@ Be warm and curious, not interrogating. You're helping them discover insights, n
                   <div className="space-y-4">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-sm text-gray-600">
-                        I noticed some places you might want to explore more...
+                        Some questions based on what you wrote...
                       </p>
                       <button
                         onClick={generateQuestions}
@@ -397,7 +430,7 @@ Be warm and curious, not interrogating. You're helping them discover insights, n
               {/* Footer */}
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                 <p className="text-xs text-gray-400 text-center">
-                  Your writing stays private. Questions are generated to help you explore deeper.
+                  Your writing stays private. These questions have no agenda—only you decide what to explore.
                 </p>
               </div>
             </motion.div>
