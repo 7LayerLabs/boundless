@@ -33,6 +33,9 @@ const defaultPrompts = {
     "How has your energy changed throughout this week?",
     "What's something you did today for the first time?",
     "What patterns have you noticed in yourself this month?",
+    "What was the best thing someone said to you today?",
+    "How did today shape your plans for tomorrow?",
+    "What's something this week that you want to do again?",
   ],
   simple: [
     "What's on your mind?",
@@ -55,6 +58,11 @@ const defaultPrompts = {
     "What's the last text message you sent?",
     "What's playing in the background right now?",
     "What are you procrastinating on?",
+    "What's the last photo you took?",
+    "What did you have for breakfast?",
+    "What's the view from your window?",
+    "Who was the last person you talked to?",
+    "What's something you bought recently?",
   ],
   deep: [
     "What gives your life meaning?",
@@ -79,6 +87,9 @@ const defaultPrompts = {
     "What question do you wish someone would ask you?",
     "What's something you've never forgiven yourself for?",
     "What does unconditional love mean to you?",
+    "What would you do differently if you could live your life over?",
+    "What have you lost that still affects you today?",
+    "What does it mean to live a good life?",
   ],
   memories: [
     "Describe a moment that changed you.",
@@ -103,6 +114,9 @@ const defaultPrompts = {
     "Describe a moment when you felt truly proud of yourself.",
     "What's a song that reminds you of a specific time in your life?",
     "What's your earliest memory of feeling loved?",
+    "What's a book that changed your perspective?",
+    "Describe a birthday you'll never forget.",
+    "What's a photograph that tells an important story?",
   ],
   dreams: [
     "What does your ideal life look like?",
@@ -127,6 +141,9 @@ const defaultPrompts = {
     "Where would you live if you could live anywhere?",
     "What would you want written on your tombstone?",
     "What does your perfect weekend look like?",
+    "What talent do you wish you were born with?",
+    "What would your ideal relationship look like?",
+    "What experience would you pay any amount of money for?",
   ],
   selfCare: [
     "What do you need right now?",
@@ -151,6 +168,9 @@ const defaultPrompts = {
     "What's one thing you can say no to this week?",
     "How can you make tomorrow morning easier for yourself?",
     "What brings you comfort when you're struggling?",
+    "What's one way you can slow down today?",
+    "What activity helps you recharge the most?",
+    "What would you do if you had a whole day to yourself?",
   ],
   gratitude: [
     "What are three things you're grateful for today?",
@@ -175,6 +195,9 @@ const defaultPrompts = {
     "What about today specifically are you thankful for?",
     "What's a book, show, or song you're grateful exists?",
     "What comfort or luxury would past-you be amazed you have?",
+    "What mistake are you grateful for because of what it taught you?",
+    "What stranger has shown you unexpected kindness?",
+    "What place are you grateful to have visited or lived in?",
   ],
   reflection: [
     "What did you learn about yourself today?",
@@ -199,6 +222,9 @@ const defaultPrompts = {
     "How do you handle disappointment?",
     "What story do you tell yourself that might not be true?",
     "What would your best friend say is your best quality?",
+    "What have you outgrown that you're still holding onto?",
+    "What does your current struggle reveal about what you value?",
+    "How has your definition of success changed over time?",
   ],
   goals: [
     "What's one small step you can take toward your biggest goal?",
@@ -223,6 +249,9 @@ const defaultPrompts = {
     "How will you celebrate when you achieve your next goal?",
     "What's something you want to learn this year?",
     "What would achieving your biggest goal change about your life?",
+    "What goal would you set if you had unlimited resources?",
+    "What's a goal you've given up on that deserves another try?",
+    "What's the next milestone you're working toward?",
   ],
   creativity: [
     "If you could have dinner with anyone, who would it be and why?",
@@ -247,6 +276,9 @@ const defaultPrompts = {
     "Describe your dream vacation in vivid detail.",
     "If animals could talk, which would you want to have a conversation with?",
     "What would you put in a time capsule for someone to open in 100 years?",
+    "If you could swap lives with anyone for a day, who would it be?",
+    "What would you build if you had unlimited materials?",
+    "If you could create a holiday, what would it celebrate?",
   ],
   emotions: [
     "What emotion have you felt most strongly today?",
@@ -271,6 +303,9 @@ const defaultPrompts = {
     "When do you feel most vulnerable?",
     "What's bringing you peace right now?",
     "How do you feel about where you are in life?",
+    "What emotion surprised you today?",
+    "What's something you're secretly hopeful about?",
+    "What feeling have you been suppressing lately?",
   ],
   relationships: [
     "Who do you need to reconnect with?",
@@ -295,6 +330,9 @@ const defaultPrompts = {
     "What's a friendship that has stood the test of time?",
     "How do you handle conflict in relationships?",
     "Who makes you feel truly seen and heard?",
+    "What's the best advice someone has given you about relationships?",
+    "Who from your past do you wish you could thank?",
+    "What's one way you could be a better friend, partner, or family member?",
   ],
 };
 
