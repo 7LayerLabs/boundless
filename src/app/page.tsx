@@ -68,9 +68,13 @@ export default function Home() {
     }
   }, [user, settingsLoading, userSettings]);
 
-  // Reset states when user logs out
+  // Handle auth state changes
   useEffect(() => {
-    if (!user) {
+    if (user) {
+      // User authenticated - close auth modal
+      setShowAuthModal(false);
+    } else {
+      // User logged out - reset all states
       setIsPinVerified(false);
       setIsJournalOpen(false);
       setShowAuthModal(false);
