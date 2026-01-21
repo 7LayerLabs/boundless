@@ -84,14 +84,20 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
   useEffect(() => {
     const confirmPinSetup = async () => {
       if (isSetupMode && setupStep === 'confirm' && confirmPin.length === 4) {
+        console.log('PIN confirm attempt:', { pinsMatch: pin === confirmPin, hasSettingsId: !!settingsId });
         if (pin === confirmPin) {
           if (settingsId) {
+            console.log('Saving PIN hash to settings...');
             const hash = await hashPin(pin);
             await db.transact([
               tx.settings[settingsId].update({ pinHash: hash, updatedAt: Date.now() }),
             ]);
+            console.log('PIN saved, unlocking...');
             setIsUnlocking(true);
             setTimeout(() => onUnlock(), 500);
+          } else {
+            console.error('Cannot save PIN: settingsId is null');
+            setError('Settings not loaded. Please refresh.');
           }
         } else {
           setError("PINs don't match");
@@ -106,8 +112,10 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
 
   useEffect(() => {
     const verifyPin = async () => {
+      console.log('PIN verify check:', { isSetupMode, pinLength: pin.length, hasPinHash: !!pinHash });
       if (!isSetupMode && pin.length === 4 && pinHash) {
         const enteredHash = await hashPin(pin);
+        console.log('PIN hash comparison:', { match: enteredHash === pinHash });
         if (enteredHash === pinHash) {
           setIsUnlocking(true);
           setTimeout(() => onUnlock(), 500);

@@ -35,6 +35,7 @@ export default function Home() {
   const [isPinVerified, setIsPinVerified] = useState(false);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [useFallbackSettings, setUseFallbackSettings] = useState(false);
 
   // Query user settings
   const query = user
@@ -49,9 +50,21 @@ export default function Home() {
       }
     : null;
 
-  const { data, isLoading: settingsLoading } = db.useQuery(query);
+  const { data, isLoading: settingsLoading, error: settingsError } = db.useQuery(query);
   const settingsArray = (data?.settings || []) as UserSettings[];
   const userSettings = settingsArray[0];
+
+
+  // Track if we've waited long enough for settings to be created/loaded
+  const [settingsWaitExceeded, setSettingsWaitExceeded] = useState(false);
+  useEffect(() => {
+    if (user && !userSettings) {
+      const timeout = setTimeout(() => setSettingsWaitExceeded(true), 5000);
+      return () => clearTimeout(timeout);
+    } else if (userSettings) {
+      setSettingsWaitExceeded(false);
+    }
+  }, [user, userSettings]);
 
   // Create default settings if none exist
   useEffect(() => {
@@ -92,12 +105,19 @@ export default function Home() {
     }
   }, [isPinVerified, isJournalOpen]);
 
-  const isLoading = authLoading || (user && settingsLoading);
+  // Show loading during auth check OR while waiting for settings
+  // We MUST have userSettings before showing PIN modal (need settingsId for transactions)
+  const waitingForSettings = user && !userSettings && !settingsWaitExceeded;
+  const isLoading = authLoading || waitingForSettings;
 
   // Determine what to show
   const showLandingPage = !user && !showAuthModal;
-  const showPinModal = user && !isPinVerified;
+  // Show PIN modal only when we have userSettings (so settingsId is available)
+  const showPinModal = user && !isPinVerified && userSettings;
   const showOpenJournal = user && isPinVerified && isJournalOpen;
+
+  // Show error if settings failed to load after timeout
+  const showSettingsError = user && !userSettings && settingsWaitExceeded;
 
   // Handle auth errors - clear stale sessions and recover
   useEffect(() => {
@@ -132,6 +152,57 @@ export default function Home() {
             className="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
           >
             {isSessionError ? 'Sign in again' : 'Retry'}
+          </button>
+        </div>
+      </DeskScene>
+    );
+  }
+
+  // If settings failed to load, use temporary fallback settings and skip PIN
+  const fallbackSettings: UserSettings | null = (useFallbackSettings && user) ? {
+    id: 'temp-' + user.id,
+    userId: user.id,
+    ...DEFAULT_SETTINGS,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  } as UserSettings : null;
+
+  // Use fallback if real settings failed
+  const effectiveSettings = userSettings || fallbackSettings;
+
+  // Show settings error with option to continue anyway
+  if (showSettingsError && !useFallbackSettings) {
+    return (
+      <DeskScene>
+        <div className="text-center p-8 bg-amber-50/90 rounded-2xl shadow-xl max-w-md">
+          <p className="text-amber-800 mb-4">
+            Unable to load your settings. This might be a connection issue.
+          </p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+            >
+              Retry
+            </button>
+            <button
+              onClick={() => {
+                setUseFallbackSettings(true);
+                setIsPinVerified(true); // Skip PIN when using fallback
+              }}
+              className="px-6 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-800 transition-colors"
+            >
+              Continue Anyway
+            </button>
+          </div>
+          <button
+            onClick={() => {
+              db.auth.signOut();
+              window.location.reload();
+            }}
+            className="mt-4 text-sm text-amber-600 hover:text-amber-800"
+          >
+            Sign out
           </button>
         </div>
       </DeskScene>

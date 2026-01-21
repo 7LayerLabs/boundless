@@ -11,17 +11,12 @@ export function useJournal() {
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
   const { user } = db.useAuth();
 
-  // Get start and end of current day as ISO strings for comparison
-  const startOfDay = useMemo(() => {
-    const d = new Date(currentDate);
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, [currentDate]);
-
-  const endOfDay = useMemo(() => {
-    const d = new Date(currentDate);
-    d.setHours(23, 59, 59, 999);
-    return d;
+  // Get current date as YYYY-MM-DD string for reliable comparison (avoids timezone issues)
+  const currentDateString = useMemo(() => {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }, [currentDate]);
 
   // Query entries for current user
@@ -46,11 +41,16 @@ export function useJournal() {
   const dayEntries = useMemo(() => {
     return entries
       .filter((entry: JournalEntry) => {
+        // Compare date strings (YYYY-MM-DD) to avoid timezone issues
         const entryDate = new Date(entry.date);
-        return entryDate >= startOfDay && entryDate <= endOfDay;
+        const entryYear = entryDate.getFullYear();
+        const entryMonth = String(entryDate.getMonth() + 1).padStart(2, '0');
+        const entryDay = String(entryDate.getDate()).padStart(2, '0');
+        const entryDateString = `${entryYear}-${entryMonth}-${entryDay}`;
+        return entryDateString === currentDateString;
       })
       .sort((a, b) => b.createdAt - a.createdAt);
-  }, [entries, startOfDay, endOfDay]);
+  }, [entries, currentDateString]);
 
   // Get the currently selected entry (or the most recent one for the day)
   const currentEntry = useMemo(() => {

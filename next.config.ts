@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
 
   /* Base path for deployment at dbtech45.com/boundless */
-  basePath: "/boundless",
+  /* Uncomment for production: basePath: "/boundless", */
 
   async headers() {
     return [
@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
-              "connect-src 'self' https:",
+              "connect-src 'self' https: wss:",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
