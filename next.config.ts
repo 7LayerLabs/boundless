@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
 
   /* Base path for deployment at dbtech45.com/boundless */
-  /* Uncomment for production: basePath: "/boundless", */
+  basePath: "/boundless",
 
   async headers() {
     return [
