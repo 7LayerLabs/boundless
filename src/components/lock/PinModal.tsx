@@ -153,7 +153,7 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
         <div
           className="relative overflow-hidden"
           style={{
-            background: '#1a1816',
+            background: '#2c1810',
             borderRadius: '12px',
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.5),
@@ -221,7 +221,7 @@ export function PinModal({ settingsId, pinHash, onUnlock, userEmail }: PinModalP
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
                   className="text-xs text-center mt-3"
-                  style={{ color: '#c47070' }}
+                  style={{ color: '#c4705a' }}
                 >
                   {error}
                 </motion.p>

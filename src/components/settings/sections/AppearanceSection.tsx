@@ -35,10 +35,10 @@ export function AppearanceSection({
   return (
     <>
       {/* Ink Color */}
-      <section className="pb-6 border-b border-neutral-200">
+      <section className="pb-6 border-b border-amber-200">
         <div className="flex items-center gap-2 mb-3">
-          <PenTool className="w-4 h-4 text-neutral-400" />
-          <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide">Ink Color</h3>
+          <PenTool className="w-4 h-4 text-amber-600" />
+          <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide">Ink Color</h3>
         </div>
         <div className="flex gap-3">
           {(Object.keys(inkColors) as InkColor[]).map((color) => {
@@ -51,8 +51,8 @@ export function AppearanceSection({
                   'relative w-12 h-12 rounded-full transition-all',
                   'ring-2 ring-offset-2',
                   inkColor === color
-                    ? 'ring-neutral-900 scale-110'
-                    : 'ring-transparent hover:ring-neutral-400'
+                    ? 'ring-amber-700 scale-110'
+                    : 'ring-transparent hover:ring-amber-600'
                 )}
                 style={{ backgroundColor: ink.color }}
                 title={ink.name}
@@ -67,25 +67,25 @@ export function AppearanceSection({
             );
           })}
         </div>
-        <p className="mt-2 text-xs text-neutral-500">
+        <p className="mt-2 text-xs text-stone-600">
           {inkColors[inkColor].name}
         </p>
       </section>
 
       {/* Font Family */}
-      <section className="pb-6 border-b border-neutral-200">
+      <section className="pb-6 border-b border-amber-200">
         <div className="flex items-center gap-2 mb-4">
-          <Type className="w-4 h-4 text-neutral-400" />
-          <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide">Handwriting Style</h3>
+          <Type className="w-4 h-4 text-amber-600" />
+          <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide">Handwriting Style</h3>
         </div>
 
         {categories.map((category) => (
           <div key={category} className="mb-5">
             <div className="mb-2">
-              <p className="text-sm font-medium text-neutral-700">
+              <p className="text-sm font-medium text-stone-700">
                 {fontCategories[category].label}
               </p>
-              <p className="text-xs text-neutral-400">
+              <p className="text-xs text-amber-600">
                 {fontCategories[category].description}
               </p>
             </div>
@@ -97,8 +97,8 @@ export function AppearanceSection({
                   className={cn(
                     'w-full px-4 py-3 rounded-lg border-2 text-left transition-all',
                     fontFamily === key
-                      ? 'border-neutral-900 bg-neutral-50'
-                      : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                      ? 'border-amber-700 bg-amber-50'
+                      : 'border-amber-200 hover:border-amber-600 bg-white'
                   )}
                 >
                   <span
@@ -110,7 +110,7 @@ export function AppearanceSection({
                   >
                     {fontConfig.sampleText}
                   </span>
-                  <span className="block text-xs text-neutral-500 mt-1">
+                  <span className="block text-xs text-stone-600 mt-1">
                     {fontConfig.displayName}
                   </span>
                 </button>
@@ -121,8 +121,8 @@ export function AppearanceSection({
       </section>
 
       {/* Font Size */}
-      <section className="pb-6 border-b border-neutral-200">
-        <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Text Size</h3>
+      <section className="pb-6 border-b border-amber-200">
+        <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-3">Text Size</h3>
         <div className="flex gap-3">
           {(['small', 'medium', 'large'] as FontSize[]).map((size) => (
             <button
@@ -131,13 +131,13 @@ export function AppearanceSection({
               className={cn(
                 'flex-1 py-3 rounded-lg border-2 transition-all capitalize',
                 fontSize === size
-                  ? 'border-neutral-900 bg-neutral-50'
-                  : 'border-neutral-200 hover:border-neutral-400'
+                  ? 'border-amber-700 bg-amber-50'
+                  : 'border-amber-200 hover:border-amber-600'
               )}
             >
               <span
                 className={cn(
-                  'text-neutral-800',
+                  'text-stone-800',
                   size === 'small' && 'text-sm',
                   size === 'medium' && 'text-base',
                   size === 'large' && 'text-lg'
@@ -151,10 +151,10 @@ export function AppearanceSection({
       </section>
 
       {/* Binding Color */}
-      <section className="pb-6 border-b border-neutral-200">
+      <section className="pb-6 border-b border-amber-200">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-4 h-4 text-neutral-400" />
-          <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide">Binding Color</h3>
+          <Sparkles className="w-4 h-4 text-amber-600" />
+          <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide">Binding Color</h3>
         </div>
         <div className="grid grid-cols-4 gap-3">
           {(Object.keys(bindingColors) as BindingColor[]).map((color) => {
@@ -167,8 +167,8 @@ export function AppearanceSection({
                   'relative aspect-square rounded-lg transition-all',
                   'ring-2 ring-offset-2',
                   bindingColor === color
-                    ? 'ring-neutral-900 scale-105'
-                    : 'ring-transparent hover:ring-neutral-400'
+                    ? 'ring-amber-700 scale-105'
+                    : 'ring-transparent hover:ring-amber-600'
                 )}
                 style={{ backgroundColor: theme.color }}
                 title={theme.name}
@@ -184,14 +184,14 @@ export function AppearanceSection({
             );
           })}
         </div>
-        <p className="mt-2 text-xs text-neutral-500">
+        <p className="mt-2 text-xs text-stone-600">
           {bindingColors[bindingColor].name}
         </p>
       </section>
 
       {/* Clasp Style */}
-      <section className="pb-6 border-b border-neutral-200">
-        <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Clasp Style</h3>
+      <section className="pb-6 border-b border-amber-200">
+        <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-3">Clasp Style</h3>
         <div className="flex gap-3">
           {(Object.keys(claspStyles) as ClaspStyle[]).map((style) => {
             const clasp = claspStyles[style];
@@ -203,8 +203,8 @@ export function AppearanceSection({
                   'flex-1 py-3 rounded-lg transition-all',
                   'ring-2 ring-offset-2',
                   claspStyle === style
-                    ? 'ring-neutral-900'
-                    : 'ring-transparent hover:ring-neutral-400'
+                    ? 'ring-amber-700'
+                    : 'ring-transparent hover:ring-amber-600'
                 )}
                 style={{
                   background: `linear-gradient(135deg, ${clasp.color}, ${clasp.highlight})`,
@@ -220,8 +220,8 @@ export function AppearanceSection({
       </section>
 
       {/* Page Color */}
-      <section className="pb-6 border-b border-neutral-200">
-        <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Page Color</h3>
+      <section className="pb-6 border-b border-amber-200">
+        <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-3">Page Color</h3>
         <div className="flex gap-3">
           {(['white', 'cream'] as PageColor[]).map((color) => (
             <button
@@ -230,12 +230,12 @@ export function AppearanceSection({
               className={cn(
                 'flex-1 py-6 rounded-lg border-2 transition-all',
                 pageColor === color
-                  ? 'border-neutral-900 ring-2 ring-neutral-300'
-                  : 'border-neutral-200 hover:border-neutral-400'
+                  ? 'border-amber-700 ring-2 ring-amber-300'
+                  : 'border-amber-200 hover:border-amber-600'
               )}
               style={{ backgroundColor: pageColors[color] }}
             >
-              <span className="text-sm text-neutral-800 capitalize">{color}</span>
+              <span className="text-sm text-stone-800 capitalize">{color}</span>
             </button>
           ))}
         </div>
@@ -243,38 +243,38 @@ export function AppearanceSection({
 
       {/* Page Lines */}
       <section>
-        <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Page Style</h3>
+        <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-3">Page Style</h3>
         <div className="flex gap-3">
           <button
             onClick={() => updateSetting('pageLines', true)}
             className={cn(
               'flex-1 py-4 rounded-lg border-2 transition-all',
-              'bg-neutral-50',
+              'bg-amber-50',
               pageLines
-                ? 'border-neutral-900 ring-2 ring-neutral-300'
-                : 'border-neutral-200 hover:border-neutral-400'
+                ? 'border-amber-700 ring-2 ring-amber-300'
+                : 'border-amber-200 hover:border-amber-600'
             )}
           >
             <div className="space-y-1">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-px mx-4 bg-neutral-300" />
+                <div key={i} className="h-px mx-4 bg-amber-300" />
               ))}
             </div>
-            <span className="text-sm text-neutral-800 mt-2 block">Lined</span>
+            <span className="text-sm text-stone-800 mt-2 block">Lined</span>
           </button>
 
           <button
             onClick={() => updateSetting('pageLines', false)}
             className={cn(
               'flex-1 py-4 rounded-lg border-2 transition-all',
-              'bg-neutral-50',
+              'bg-amber-50',
               !pageLines
-                ? 'border-neutral-900 ring-2 ring-neutral-300'
-                : 'border-neutral-200 hover:border-neutral-400'
+                ? 'border-amber-700 ring-2 ring-amber-300'
+                : 'border-amber-200 hover:border-amber-600'
             )}
           >
             <div className="h-8" />
-            <span className="text-sm text-neutral-800 mt-2 block">Unlined</span>
+            <span className="text-sm text-stone-800 mt-2 block">Unlined</span>
           </button>
         </div>
       </section>

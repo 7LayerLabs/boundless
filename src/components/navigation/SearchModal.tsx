@@ -81,7 +81,7 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input */}
-        <div className="flex items-center gap-3 p-4 border-b border-gray-100">
+        <div className="flex items-center gap-3 p-4 border-b border-amber-100">
           <Search className="w-5 h-5 text-amber-500" />
           <input
             ref={inputRef}
@@ -89,29 +89,29 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search your journal entries..."
-            className="flex-1 text-lg outline-none placeholder-gray-400"
+            className="flex-1 text-lg outline-none placeholder-amber-600"
           />
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-amber-100 transition-colors"
           >
-            <X className="w-5 h-5 text-gray-400" />
+            <X className="w-5 h-5 text-amber-600" />
           </button>
         </div>
 
         {/* Results */}
         <div className="max-h-[60vh] overflow-y-auto">
           {query.trim() === '' ? (
-            <div className="p-8 text-center text-gray-400">
+            <div className="p-8 text-center text-amber-600">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p>Start typing to search your entries</p>
             </div>
           ) : results.length === 0 ? (
-            <div className="p-8 text-center text-gray-400">
+            <div className="p-8 text-center text-amber-600">
               <p>No entries found matching "{query}"</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-amber-100">
               {results.map((entry) => {
                 const moodData = entry.mood ? moods[entry.mood as keyof typeof moods] : null;
                 const previewText = getPreviewText(entry.content);
@@ -140,14 +140,14 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
                       )}
                     </div>
                     <p
-                      className={cn('text-gray-700 text-sm leading-relaxed', currentFont.className)}
+                      className={cn('text-stone-700 text-sm leading-relaxed', currentFont.className)}
                       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlightMatch(previewText, query)) }}
                     />
                     {entry.tags && entry.tags.length > 0 && (
                       <div className="flex items-center gap-1 mt-2">
-                        <Tag className="w-3 h-3 text-gray-400" />
+                        <Tag className="w-3 h-3 text-amber-600" />
                         {entry.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="text-xs text-gray-500">
+                          <span key={tag} className="text-xs text-stone-600">
                             #{tag}
                           </span>
                         ))}
@@ -162,8 +162,8 @@ export function SearchModal({ onClose, onSelectEntry }: SearchModalProps) {
 
         {/* Footer */}
         {results.length > 0 && (
-          <div className="p-3 bg-gray-50 border-t border-gray-100 text-center">
-            <span className="text-sm text-gray-500">
+          <div className="p-3 bg-amber-50 border-t border-amber-100 text-center">
+            <span className="text-sm text-stone-600">
               {results.length} {results.length === 1 ? 'entry' : 'entries'} found
             </span>
           </div>

@@ -72,14 +72,14 @@ export function DailyQuoteModal({
         className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-amber-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-neutral-100 rounded-lg">
-              <Quote className="w-5 h-5 text-neutral-700" />
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Quote className="w-5 h-5 text-amber-700" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-neutral-900">Daily Quote</h2>
-              <p className="text-sm text-neutral-500">
+              <h2 className="text-xl font-semibold text-amber-900">Daily Quote</h2>
+              <p className="text-sm text-stone-600">
                 {isCurrentQuoteLocked
                   ? 'Locked quote (persists daily)'
                   : isDaily
@@ -90,9 +90,9 @@ export function DailyQuoteModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-amber-100 transition-colors"
           >
-            <X className="w-5 h-5 text-neutral-600" />
+            <X className="w-5 h-5 text-stone-600" />
           </button>
         </div>
 
@@ -111,22 +111,22 @@ export function DailyQuoteModal({
                 <Lock className="w-4 h-4 absolute -top-1 -right-5 text-amber-500" />
               )}
             </div>
-            <p className="text-xl text-neutral-800 leading-relaxed mb-4 font-serif italic">
+            <p className="text-xl text-stone-800 leading-relaxed mb-4 font-serif italic">
               "{currentQuote.text}"
             </p>
-            <p className="text-neutral-600">
+            <p className="text-stone-600">
               — {currentQuote.author}
             </p>
           </motion.div>
         </div>
 
         {/* Actions */}
-        <div className="px-6 py-4 border-t border-neutral-200 bg-neutral-50">
+        <div className="px-6 py-4 border-t border-amber-200 bg-neutral-50">
           {/* Top row - refresh controls */}
           <div className="flex gap-2 mb-3">
             <button
               onClick={handleRefresh}
-              className="flex items-center gap-2 px-4 py-2 text-neutral-700 hover:bg-neutral-200 rounded-lg text-sm font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-amber-700 hover:bg-amber-200 rounded-lg text-sm font-medium transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Random
@@ -134,7 +134,7 @@ export function DailyQuoteModal({
             {!isDaily && !isCurrentQuoteLocked && (
               <button
                 onClick={handleResetToDaily}
-                className="flex items-center gap-2 px-4 py-2 text-neutral-700 hover:bg-neutral-200 rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-amber-700 hover:bg-amber-200 rounded-lg text-sm font-medium transition-colors"
               >
                 Today's Quote
               </button>
@@ -161,7 +161,7 @@ export function DailyQuoteModal({
                 Unlock Quote
               </button>
             ) : (
-              <div className="text-xs text-neutral-500">
+              <div className="text-xs text-stone-600">
                 Pin: today only | Lock: every day
               </div>
             )}
@@ -171,7 +171,7 @@ export function DailyQuoteModal({
                 <>
                   <button
                     onClick={handlePinQuote}
-                    className="flex items-center gap-2 px-4 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-sm font-medium hover:bg-neutral-300 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-amber-200 text-stone-800 rounded-lg text-sm font-medium hover:bg-neutral-300 transition-colors"
                   >
                     <Pin className="w-4 h-4" />
                     Pin to Page
@@ -188,7 +188,7 @@ export function DailyQuoteModal({
               {isCurrentQuoteLocked && (
                 <button
                   onClick={onClose}
-                  className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition-colors"
                 >
                   Done
                 </button>

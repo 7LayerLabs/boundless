@@ -36,16 +36,16 @@ export function FeaturesSection({
   updateSetting,
 }: FeaturesSectionProps) {
   return (
-    <section className="pb-6 border-b border-neutral-200">
-      <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Features</h3>
+    <section className="pb-6 border-b border-amber-200">
+      <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Features</h3>
 
       {/* Mood Tracking Toggle */}
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <Smile className="w-5 h-5 text-neutral-400" />
+          <Smile className="w-5 h-5 text-amber-700" />
           <div>
-            <p className="text-sm font-medium text-neutral-800">Mood Tracking</p>
-            <p className="text-xs text-neutral-500">Track how you feel each day</p>
+            <p className="text-sm font-medium text-stone-800">Mood Tracking</p>
+            <p className="text-xs text-stone-600">Track how you feel each day</p>
           </div>
         </div>
         <button
@@ -53,9 +53,9 @@ export function FeaturesSection({
           className="relative"
         >
           {showMoodSelector ? (
-            <ToggleRight className="w-10 h-10 text-neutral-900" />
+            <ToggleRight className="w-10 h-10 text-amber-800" />
           ) : (
-            <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            <ToggleLeft className="w-10 h-10 text-amber-300" />
           )}
         </button>
       </div>
@@ -63,10 +63,10 @@ export function FeaturesSection({
       {/* AI Reflection Toggle */}
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <Brain className="w-5 h-5 text-neutral-400" />
+          <Brain className="w-5 h-5 text-amber-700" />
           <div>
-            <p className="text-sm font-medium text-neutral-800">AI Reflection</p>
-            <p className="text-xs text-neutral-500">Get thoughtful questions about your writing</p>
+            <p className="text-sm font-medium text-stone-800">AI Reflection</p>
+            <p className="text-xs text-stone-600">Get thoughtful questions about your writing</p>
           </div>
         </div>
         <button
@@ -74,17 +74,17 @@ export function FeaturesSection({
           className="relative"
         >
           {aiReflectionEnabled ? (
-            <ToggleRight className="w-10 h-10 text-neutral-900" />
+            <ToggleRight className="w-10 h-10 text-amber-800" />
           ) : (
-            <ToggleLeft className="w-10 h-10 text-neutral-300" />
+            <ToggleLeft className="w-10 h-10 text-amber-300" />
           )}
         </button>
       </div>
 
       {/* AI Tone Selector - shown when AI Reflection is enabled */}
       {aiReflectionEnabled && (
-        <div className="mt-4 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
-          <p className="text-sm font-medium text-neutral-700 mb-3">Reflection Tone</p>
+        <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+          <p className="text-sm font-medium text-stone-700 mb-3">Reflection Tone</p>
           <div className="space-y-2">
             {(Object.keys(aiTones) as AITone[]).map((tone) => {
               const toneConfig = aiTones[tone];
@@ -95,17 +95,17 @@ export function FeaturesSection({
                   className={cn(
                     'w-full px-3 py-2 rounded-lg border text-left transition-all flex items-center gap-3',
                     aiTone === tone
-                      ? 'border-neutral-900 bg-white shadow-sm'
-                      : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                      ? 'border-amber-700 bg-white shadow-sm'
+                      : 'border-amber-200 hover:border-amber-400 bg-white'
                   )}
                 >
                   <span className="text-lg">{toneConfig.emoji}</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-neutral-800">{toneConfig.label}</p>
-                    <p className="text-xs text-neutral-500">{toneConfig.description}</p>
+                    <p className="text-sm font-medium text-stone-800">{toneConfig.label}</p>
+                    <p className="text-xs text-stone-600">{toneConfig.description}</p>
                   </div>
                   {aiTone === tone && (
-                    <div className="w-2 h-2 bg-neutral-900 rounded-full"></div>
+                    <div className="w-2 h-2 bg-amber-700 rounded-full"></div>
                   )}
                 </button>
               );
@@ -115,16 +115,16 @@ export function FeaturesSection({
       )}
 
       {/* Sidebar Features Section */}
-      <div className="mt-6 pt-6 border-t border-neutral-200">
-        <h4 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Sidebar Features</h4>
+      <div className="mt-6 pt-6 border-t border-amber-200">
+        <h4 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Sidebar Features</h4>
 
         {/* Writing Stats Toggle */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <BarChart2 className="w-5 h-5 text-neutral-400" />
+            <BarChart2 className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-neutral-800">Writing Stats</p>
-              <p className="text-xs text-neutral-500">Track words, entries & streaks</p>
+              <p className="text-sm font-medium text-stone-800">Writing Stats</p>
+              <p className="text-xs text-stone-600">Track words, entries & streaks</p>
             </div>
           </div>
           <button
@@ -132,9 +132,9 @@ export function FeaturesSection({
             className="relative"
           >
             {showWritingStats ? (
-              <ToggleRight className="w-10 h-10 text-neutral-900" />
+              <ToggleRight className="w-10 h-10 text-amber-800" />
             ) : (
-              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+              <ToggleLeft className="w-10 h-10 text-amber-300" />
             )}
           </button>
         </div>
@@ -142,10 +142,10 @@ export function FeaturesSection({
         {/* Entry Templates Toggle */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <FileText className="w-5 h-5 text-neutral-400" />
+            <FileText className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-neutral-800">Entry Templates</p>
-              <p className="text-xs text-neutral-500">Quick-start formats</p>
+              <p className="text-sm font-medium text-stone-800">Entry Templates</p>
+              <p className="text-xs text-stone-600">Quick-start formats</p>
             </div>
           </div>
           <button
@@ -153,9 +153,9 @@ export function FeaturesSection({
             className="relative"
           >
             {showEntryTemplates ? (
-              <ToggleRight className="w-10 h-10 text-neutral-900" />
+              <ToggleRight className="w-10 h-10 text-amber-800" />
             ) : (
-              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+              <ToggleLeft className="w-10 h-10 text-amber-300" />
             )}
           </button>
         </div>
@@ -163,10 +163,10 @@ export function FeaturesSection({
         {/* Guided Programs Toggle */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <Compass className="w-5 h-5 text-neutral-400" />
+            <Compass className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-neutral-800">Guided Programs</p>
-              <p className="text-xs text-neutral-500">30-day journaling challenges</p>
+              <p className="text-sm font-medium text-stone-800">Guided Programs</p>
+              <p className="text-xs text-stone-600">30-day journaling challenges</p>
             </div>
           </div>
           <button
@@ -174,9 +174,9 @@ export function FeaturesSection({
             className="relative"
           >
             {showGuidedPrograms ? (
-              <ToggleRight className="w-10 h-10 text-neutral-900" />
+              <ToggleRight className="w-10 h-10 text-amber-800" />
             ) : (
-              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+              <ToggleLeft className="w-10 h-10 text-amber-300" />
             )}
           </button>
         </div>
@@ -184,10 +184,10 @@ export function FeaturesSection({
         {/* Daily Quote Toggle */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <Quote className="w-5 h-5 text-neutral-400" />
+            <Quote className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-neutral-800">Daily Quote</p>
-              <p className="text-xs text-neutral-500">Inspiring quotes with pin-to-page</p>
+              <p className="text-sm font-medium text-stone-800">Daily Quote</p>
+              <p className="text-xs text-stone-600">Inspiring quotes with pin-to-page</p>
             </div>
           </div>
           <button
@@ -195,9 +195,9 @@ export function FeaturesSection({
             className="relative"
           >
             {showDailyQuote ? (
-              <ToggleRight className="w-10 h-10 text-neutral-900" />
+              <ToggleRight className="w-10 h-10 text-amber-800" />
             ) : (
-              <ToggleLeft className="w-10 h-10 text-neutral-300" />
+              <ToggleLeft className="w-10 h-10 text-amber-300" />
             )}
           </button>
         </div>

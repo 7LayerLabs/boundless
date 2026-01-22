@@ -26,49 +26,49 @@ export function DisplaySection({
   updateSetting,
 }: DisplaySectionProps) {
   return (
-    <section className="pb-6 border-b border-neutral-200">
-      <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Display</h3>
+    <section className="pb-6 border-b border-amber-200">
+      <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Display</h3>
 
       {/* Journal Mode */}
       <div className="space-y-3 mb-6">
-        <p className="text-sm text-neutral-600">Journal Mode</p>
+        <p className="text-sm text-stone-700">Journal Mode</p>
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => updateSetting('simpleMode', false)}
             className={cn(
               'px-3 py-3 rounded-lg border text-left transition-all',
               !simpleMode
-                ? 'border-neutral-900 bg-neutral-50'
-                : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                ? 'border-amber-700 bg-amber-50'
+                : 'border-amber-200 hover:border-amber-400 bg-white'
             )}
           >
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen className="w-4 h-4 text-neutral-600" />
-              <p className="text-sm font-medium text-neutral-800">Classic</p>
+              <BookOpen className="w-4 h-4 text-stone-700" />
+              <p className="text-sm font-medium text-stone-800">Classic</p>
             </div>
-            <p className="text-xs text-neutral-500">Full journal aesthetic</p>
+            <p className="text-xs text-stone-600">Full journal aesthetic</p>
           </button>
           <button
             onClick={() => updateSetting('simpleMode', true)}
             className={cn(
               'px-3 py-3 rounded-lg border text-left transition-all',
               simpleMode
-                ? 'border-neutral-900 bg-neutral-50'
-                : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                ? 'border-amber-700 bg-amber-50'
+                : 'border-amber-200 hover:border-amber-400 bg-white'
             )}
           >
             <div className="flex items-center gap-2 mb-1">
-              <FileText className="w-4 h-4 text-neutral-600" />
-              <p className="text-sm font-medium text-neutral-800">Simple</p>
+              <FileText className="w-4 h-4 text-stone-700" />
+              <p className="text-sm font-medium text-stone-800">Simple</p>
             </div>
-            <p className="text-xs text-neutral-500">Clean, distraction-free</p>
+            <p className="text-xs text-stone-600">Clean, distraction-free</p>
           </button>
         </div>
       </div>
 
       {/* Date Format */}
       <div className="space-y-3 mb-6">
-        <p className="text-sm text-neutral-600">Date Format</p>
+        <p className="text-sm text-stone-700">Date Format</p>
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(dateFormats) as DateFormat[]).map((format) => {
             const formatConfig = dateFormats[format];
@@ -79,12 +79,12 @@ export function DisplaySection({
                 className={cn(
                   'px-3 py-2 rounded-lg border text-left transition-all',
                   dateFormat === format
-                    ? 'border-neutral-900 bg-neutral-50'
-                    : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                    ? 'border-amber-700 bg-amber-50'
+                    : 'border-amber-200 hover:border-amber-400 bg-white'
                 )}
               >
-                <p className="text-xs text-neutral-500">{formatConfig.label}</p>
-                <p className="text-sm font-medium text-neutral-800">{formatConfig.example}</p>
+                <p className="text-xs text-stone-600">{formatConfig.label}</p>
+                <p className="text-sm font-medium text-stone-800">{formatConfig.example}</p>
               </button>
             );
           })}
@@ -93,7 +93,7 @@ export function DisplaySection({
 
       {/* Date Color */}
       <div className="space-y-3">
-        <p className="text-sm text-neutral-600">Date Color</p>
+        <p className="text-sm text-stone-700">Date Color</p>
         <div className="grid grid-cols-3 gap-2">
           {(Object.keys(dateColors) as DateColor[]).map((color) => {
             const colorConfig = dateColors[color];
@@ -104,8 +104,8 @@ export function DisplaySection({
                 className={cn(
                   'px-3 py-3 rounded-lg border text-center transition-all',
                   dateColor === color
-                    ? 'border-neutral-900 bg-neutral-50'
-                    : 'border-neutral-200 hover:border-neutral-400 bg-white'
+                    ? 'border-amber-700 bg-amber-50'
+                    : 'border-amber-200 hover:border-amber-400 bg-white'
                 )}
               >
                 <p
@@ -114,7 +114,7 @@ export function DisplaySection({
                 >
                   Aa
                 </p>
-                <p className="text-xs text-neutral-500 mt-1">{colorConfig.name}</p>
+                <p className="text-xs text-stone-600 mt-1">{colorConfig.name}</p>
               </button>
             );
           })}

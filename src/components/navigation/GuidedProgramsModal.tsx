@@ -134,33 +134,33 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
         className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-amber-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {view !== 'categories' && (
               <button
                 onClick={handleBack}
-                className="p-2 -ml-2 rounded-lg hover:bg-neutral-100 transition-colors"
+                className="p-2 -ml-2 rounded-lg hover:bg-amber-100 transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-neutral-600" />
+                <ChevronLeft className="w-5 h-5 text-stone-600" />
               </button>
             )}
-            <div className="p-2 bg-neutral-100 rounded-lg">
-              <Compass className="w-5 h-5 text-neutral-700" />
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Compass className="w-5 h-5 text-stone-700" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-neutral-900">
+              <h2 className="text-xl font-semibold text-stone-800">
                 {getHeaderTitle()}
               </h2>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-stone-600">
                 {getHeaderSubtitle()}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-amber-100 transition-colors"
           >
-            <X className="w-5 h-5 text-neutral-600" />
+            <X className="w-5 h-5 text-stone-600" />
           </button>
         </div>
 
@@ -195,9 +195,9 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                       )}
                     >
                       <span className="text-3xl">{category.icon}</span>
-                      <h3 className="font-semibold text-neutral-900 mt-2">{category.name}</h3>
-                      <p className="text-sm text-neutral-600 mt-1">{category.description}</p>
-                      <div className="flex items-center gap-2 mt-3 text-xs text-neutral-500">
+                      <h3 className="font-semibold text-stone-800 mt-2">{category.name}</h3>
+                      <p className="text-sm text-stone-600 mt-1">{category.description}</p>
+                      <div className="flex items-center gap-2 mt-3 text-xs text-stone-600">
                         <span>{programCount} programs</span>
                         {activeCount > 0 && (
                           <>
@@ -241,9 +241,9 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         <div className="flex items-start gap-3">
                           <span className="text-3xl">{program.icon}</span>
                           <div className="flex-1">
-                            <h3 className="font-semibold text-neutral-900">{program.name}</h3>
-                            <p className="text-sm text-neutral-600">{program.description}</p>
-                            <p className="text-xs text-neutral-500 mt-1">
+                            <h3 className="font-semibold text-stone-800">{program.name}</h3>
+                            <p className="text-sm text-stone-600">{program.description}</p>
+                            <p className="text-xs text-stone-600 mt-1">
                               {program.duration} days
                             </p>
                           </div>
@@ -252,7 +252,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         {/* Progress bar */}
                         {isActive && (
                           <div className="mt-3">
-                            <div className="flex justify-between text-xs text-neutral-600 mb-1">
+                            <div className="flex justify-between text-xs text-stone-600 mb-1">
                               <span>Day {Math.min(progress.currentDay, program.duration)} of {program.duration}</span>
                               <span>{Math.round(progressPercent)}%</span>
                             </div>
@@ -260,7 +260,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progressPercent}%` }}
-                                className="h-full bg-neutral-900 rounded-full"
+                                className="h-full bg-stone-800 rounded-full"
                               />
                             </div>
                           </div>
@@ -271,7 +271,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                           {!isActive ? (
                             <button
                               onClick={() => handleOpenProgram(program)}
-                              className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition-colors"
                             >
                               <Play className="w-4 h-4" />
                               Start Program
@@ -280,20 +280,20 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                             <>
                               <button
                                 onClick={() => handleOpenProgram(program)}
-                                className="flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors"
+                                className="flex items-center gap-2 px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition-colors"
                               >
                                 <ExternalLink className="w-4 h-4" />
                                 {isCompleted ? 'Review' : 'Continue'}
                               </button>
                               <button
                                 onClick={() => handleSelectProgram(program)}
-                                className="flex items-center gap-2 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg text-sm font-medium hover:bg-neutral-50 transition-colors"
+                                className="flex items-center gap-2 px-4 py-2 border border-amber-300 text-stone-700 rounded-lg text-sm font-medium hover:bg-neutral-50 transition-colors"
                               >
                                 View Prompts
                               </button>
                               <button
                                 onClick={() => handleResetProgram(program)}
-                                className="flex items-center gap-2 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg text-sm font-medium hover:bg-neutral-50 transition-colors"
+                                className="flex items-center gap-2 px-4 py-2 border border-amber-300 text-stone-700 rounded-lg text-sm font-medium hover:bg-neutral-50 transition-colors"
                               >
                                 <RotateCcw className="w-4 h-4" />
                                 Reset
@@ -321,7 +321,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                   onClick={() => handleOpenProgram(selectedProgram)}
                   className={cn(
                     'w-full flex items-center justify-center gap-2 py-3 mb-6 rounded-xl text-white font-medium transition-colors',
-                    'bg-neutral-900 hover:bg-neutral-800'
+                    'bg-stone-800 hover:bg-stone-700'
                   )}
                 >
                   <ExternalLink className="w-5 h-5" />
@@ -333,11 +333,11 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                   <div className={cn('rounded-xl border-2 p-4 mb-6', selectedProgram.color)}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-lg">{selectedProgram.icon}</span>
-                      <span className="text-sm font-medium text-neutral-700">
+                      <span className="text-sm font-medium text-stone-700">
                         Day {Math.min(programProgress[selectedProgram.id].currentDay, selectedProgram.duration)} Prompt
                       </span>
                     </div>
-                    <p className="text-neutral-900 font-medium">
+                    <p className="text-stone-800 font-medium">
                       {selectedProgram.prompts[
                         Math.min(
                           programProgress[selectedProgram.id].currentDay - 1,
@@ -349,7 +349,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                 )}
 
                 {/* All Prompts List */}
-                <h3 className="text-lg font-medium text-neutral-900 mb-3">All Prompts</h3>
+                <h3 className="text-lg font-medium text-stone-800 mb-3">All Prompts</h3>
                 <div className="space-y-2">
                   {selectedProgram.prompts.map((prompt, index) => {
                     const progress = programProgress[selectedProgram.id];
@@ -362,8 +362,8 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         className={cn(
                           'flex items-start gap-3 p-3 rounded-lg border transition-all',
                           isCurrent
-                            ? 'border-neutral-900 bg-neutral-50'
-                            : 'border-neutral-200'
+                            ? 'border-stone-800 bg-neutral-50'
+                            : 'border-amber-200'
                         )}
                       >
                         <div
@@ -372,8 +372,8 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                             isCompleted
                               ? 'bg-green-500 text-white'
                               : isCurrent
-                              ? 'bg-neutral-900 text-white'
-                              : 'bg-neutral-200 text-neutral-500'
+                              ? 'bg-stone-800 text-white'
+                              : 'bg-amber-200 text-stone-600'
                           )}
                         >
                           {isCompleted ? (
@@ -385,7 +385,7 @@ export function GuidedProgramsModal({ onClose, onUsePrompt }: GuidedProgramsModa
                         <p
                           className={cn(
                             'text-sm flex-1',
-                            isCompleted ? 'text-neutral-500' : 'text-neutral-700'
+                            isCompleted ? 'text-stone-600' : 'text-stone-700'
                           )}
                         >
                           {prompt}

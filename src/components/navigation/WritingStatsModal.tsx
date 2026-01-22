@@ -165,21 +165,21 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
         className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-amber-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-neutral-100 rounded-lg">
-              <BarChart2 className="w-5 h-5 text-neutral-700" />
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <BarChart2 className="w-5 h-5 text-stone-700" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-neutral-900">Writing Stats</h2>
-              <p className="text-sm text-neutral-500">Track your journaling journey</p>
+              <h2 className="text-xl font-semibold text-stone-800">Writing Stats</h2>
+              <p className="text-sm text-stone-600">Track your journaling journey</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-amber-100 transition-colors"
           >
-            <X className="w-5 h-5 text-neutral-600" />
+            <X className="w-5 h-5 text-stone-600" />
           </button>
         </div>
 
@@ -200,8 +200,8 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm font-medium transition-all',
                   timeRange === option.value
-                    ? 'bg-neutral-900 text-white'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                    ? 'bg-stone-800 text-white'
+                    : 'bg-amber-100 text-stone-700 hover:bg-amber-200'
                 )}
               >
                 {option.label}
@@ -263,7 +263,7 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
           {/* Word Count Chart */}
           {timeRange !== 'allTime' && dailyWordCounts.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-neutral-900 mb-3">Daily Words</h3>
+              <h3 className="text-lg font-medium text-stone-800 mb-3">Daily Words</h3>
               <div className="bg-neutral-50 rounded-xl p-4">
                 <div className="flex items-end gap-1 h-32">
                   {dailyWordCounts.map((day, index) => (
@@ -277,7 +277,7 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
                         transition={{ duration: 0.5, delay: index * 0.02 }}
                         className={cn(
                           'w-full rounded-t',
-                          day.wordCount > 0 ? 'bg-neutral-900' : 'bg-neutral-200'
+                          day.wordCount > 0 ? 'bg-stone-800' : 'bg-amber-200'
                         )}
                         style={{ minHeight: day.wordCount > 0 ? '4px' : '2px' }}
                         title={`${format(day.date, 'MMM d')}: ${day.wordCount} words`}
@@ -285,7 +285,7 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-neutral-500">
+                <div className="flex justify-between mt-2 text-xs text-stone-600">
                   <span>{format(dateRange.start, 'MMM d')}</span>
                   <span>{format(dateRange.end, 'MMM d')}</span>
                 </div>
@@ -294,8 +294,8 @@ export function WritingStatsModal({ onClose }: WritingStatsModalProps) {
           )}
 
           {/* Motivational message */}
-          <div className="mt-6 bg-neutral-100 rounded-xl p-4">
-            <p className="text-neutral-700 text-center">
+          <div className="mt-6 bg-amber-100 rounded-xl p-4">
+            <p className="text-stone-700 text-center">
               {stats.currentStreak > 0
                 ? `You're on a ${stats.currentStreak}-day streak! Keep it going!`
                 : stats.totalEntries > 0

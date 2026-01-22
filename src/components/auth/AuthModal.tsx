@@ -87,7 +87,7 @@ export function AuthModal() {
         <div
           className="relative overflow-hidden"
           style={{
-            background: '#1a1816',
+            background: '#2c1810',
             borderRadius: '12px',
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.5),
@@ -161,7 +161,7 @@ export function AuthModal() {
                   </div>
 
                   {error && (
-                    <p className="text-sm text-center" style={{ color: '#c47070' }}>
+                    <p className="text-sm text-center" style={{ color: '#c4705a' }}>
                       {error}
                     </p>
                   )}
@@ -221,7 +221,7 @@ export function AuthModal() {
                   </div>
 
                   {error && (
-                    <p className="text-sm text-center" style={{ color: '#c47070' }}>
+                    <p className="text-sm text-center" style={{ color: '#c4705a' }}>
                       {error}
                     </p>
                   )}

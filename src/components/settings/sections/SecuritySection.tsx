@@ -108,22 +108,22 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
   };
 
   return (
-    <section className="pb-6 border-b border-neutral-200">
-      <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Security</h3>
+    <section className="pb-6 border-b border-amber-200">
+      <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Security</h3>
 
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
-          <Shield className="w-5 h-5 text-neutral-400" />
+          <Shield className="w-5 h-5 text-amber-700" />
           <div>
-            <p className="text-sm font-medium text-neutral-800">Privacy PIN</p>
-            <p className="text-xs text-neutral-500">
+            <p className="text-sm font-medium text-stone-800">Privacy PIN</p>
+            <p className="text-xs text-stone-600">
               {pinHash ? 'PIN is set - click to change' : 'Add extra security to your journal'}
             </p>
           </div>
         </div>
         <button
           onClick={handleChangePinClick}
-          className="px-3 py-1.5 text-sm font-medium text-neutral-700 bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors"
+          className="px-3 py-1.5 text-sm font-medium text-stone-700 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
         >
           {pinHash ? 'Change PIN' : 'Set PIN'}
         </button>
@@ -136,7 +136,7 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-4 p-4 bg-neutral-50 rounded-xl border border-neutral-200 overflow-hidden"
+            className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200 overflow-hidden"
           >
             {pinSuccess ? (
               <div className="flex items-center justify-center gap-2 py-4">
@@ -149,37 +149,37 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
               <div className="space-y-3">
                 {pinHash && (
                   <div>
-                    <label className="block text-xs text-neutral-600 mb-1">Current PIN</label>
+                    <label className="block text-xs text-stone-600 mb-1">Current PIN</label>
                     <input
                       type="password"
                       value={currentPin}
                       onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                       placeholder="••••"
                       maxLength={4}
-                      className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-400 text-center tracking-[0.5em] font-mono"
+                      className="w-full px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 text-center tracking-[0.5em] font-mono"
                     />
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs text-neutral-600 mb-1">New PIN</label>
+                  <label className="block text-xs text-stone-600 mb-1">New PIN</label>
                   <input
                     type="password"
                     value={newPin}
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     placeholder="••••"
                     maxLength={4}
-                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-400 text-center tracking-[0.5em] font-mono"
+                    className="w-full px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 text-center tracking-[0.5em] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-neutral-600 mb-1">Confirm New PIN</label>
+                  <label className="block text-xs text-stone-600 mb-1">Confirm New PIN</label>
                   <input
                     type="password"
                     value={confirmNewPin}
                     onChange={(e) => setConfirmNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     placeholder="••••"
                     maxLength={4}
-                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-400 text-center tracking-[0.5em] font-mono"
+                    className="w-full px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 text-center tracking-[0.5em] font-mono"
                   />
                 </div>
 
@@ -190,14 +190,14 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => setShowPinChange(false)}
-                    className="flex-1 px-3 py-2 text-sm text-neutral-700 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
+                    className="flex-1 px-3 py-2 text-sm text-stone-700 bg-white border border-amber-300 rounded-lg hover:bg-amber-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handlePinChange}
                     disabled={newPin.length !== 4 || confirmNewPin.length !== 4}
-                    className="flex-1 px-3 py-2 text-sm font-medium text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 px-3 py-2 text-sm font-medium text-white bg-stone-800 rounded-lg hover:bg-stone-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Save PIN
                   </button>
@@ -219,8 +219,8 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
           <div className="flex items-center gap-3">
             <Trash2 className="w-5 h-5 text-red-500" />
             <div>
-              <p className="text-sm font-medium text-neutral-800">Delete All Entries</p>
-              <p className="text-xs text-neutral-500">
+              <p className="text-sm font-medium text-stone-800">Delete All Entries</p>
+              <p className="text-xs text-stone-600">
                 Permanently delete all {entries.length} journal {entries.length === 1 ? 'entry' : 'entries'}
               </p>
             </div>
@@ -281,7 +281,7 @@ export function SecuritySection({ pinHash, updateSetting }: SecuritySectionProps
                         setShowDeleteConfirm(false);
                         setDeleteConfirmText('');
                       }}
-                      className="flex-1 px-3 py-2 text-sm text-neutral-700 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
+                      className="flex-1 px-3 py-2 text-sm text-stone-700 bg-white border border-amber-300 rounded-lg hover:bg-amber-50 transition-colors"
                     >
                       Cancel
                     </button>
