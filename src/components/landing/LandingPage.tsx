@@ -805,16 +805,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </h2>
             <div className="text-left space-y-4 text-[#5c3d2e]/80 leading-relaxed">
               <p>
-                I've always been a big believer in writing my ideas out. Since I was young, I loved writing—note taking, collecting quotes, anything that helped me think. I'm a quiet person, reserved. I like to keep to myself. But I still need an outlet.
+                Writing has always been how I make sense of things. Notes, quotes, half-formed ideas scribbled in margins—I've been doing it since I was a kid. It's how my brain works.
               </p>
               <p>
-                The problem? I didn't want that outlet to get out. With most apps, it's too easy for people close to you to get your login. I needed something truly private.
+                I'm quiet by nature. Reserved. The kind of person who processes everything internally before speaking. That means I need somewhere to put all of it—but I never wanted those thoughts to leave the page.
               </p>
               <p>
-                And sometimes I get lost in my own thoughts. That's why I built the reflection questions—to help me dive deeper instead of going in circles.
+                Most apps made me nervous. Shared logins, cloud syncing, no real privacy. And when I did write, I'd sometimes spiral—the same thought circling without going anywhere. I needed something that would help me go deeper, not just in circles.
               </p>
               <p className="text-[#2c1810] font-medium">
-                Boundless is what I needed. And that's how I know it can help others too.
+                So I built it. Boundless is the journal I couldn't find anywhere else. That's how I know it can help you too.
               </p>
             </div>
             <div className="mt-8 pt-8 border-t border-[#2c1810]/10">
