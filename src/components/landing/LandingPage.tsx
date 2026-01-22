@@ -513,7 +513,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                       </div>
                     </motion.div>
 
-                    {/* Right page - Visual/illustration placeholder */}
+                    {/* Right page - Feature-specific illustration */}
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -535,36 +535,137 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                       <span className="absolute top-6 right-8 text-xs text-[#8b7355]/50 font-medium">
                         {String(index * 2 + 2).padStart(2, '0')}
                       </span>
-                      {/* Visual representation */}
-                      <div className="relative w-full max-w-xs">
-                        <div
-                          className="aspect-[4/5] rounded-lg bg-gradient-to-br from-[#5c3a21] via-[#4a2f1a] to-[#3d251a] p-1"
-                          style={{
-                            boxShadow: '0 10px 30px -10px rgba(44, 24, 16, 0.4)',
-                          }}
-                        >
-                          <div className="h-full bg-[#faf8f3] rounded-md p-4 flex flex-col">
-                            {/* Mini journal preview */}
-                            <div className="text-[10px] text-[#8b7355] mb-2">
-                              {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                            </div>
-                            <div className="flex-1 space-y-2">
-                              {[...Array(6)].map((_, i) => (
+
+                      {/* Feature-specific content */}
+                      <div className="relative w-full text-center">
+                        {/* Feature 0: Beautiful Book Aesthetic - Show leather swatches */}
+                        {index === 0 && (
+                          <div className="space-y-4">
+                            <p className="text-sm text-[#8b7355] italic mb-6">Choose your binding</p>
+                            <div className="flex justify-center gap-3 flex-wrap">
+                              {['#5c3a21', '#2c1810', '#8b4513', '#654321', '#4a3728', '#3d251a'].map((color, i) => (
                                 <div
                                   key={i}
-                                  className="h-2 rounded-full bg-[#2c1810]/10"
-                                  style={{ width: `${70 + Math.random() * 30}%` }}
+                                  className="w-12 h-16 rounded-sm shadow-md transition-transform hover:scale-105"
+                                  style={{
+                                    background: `linear-gradient(135deg, ${color}, ${color}dd)`,
+                                    boxShadow: '2px 2px 8px rgba(0,0,0,0.2)',
+                                  }}
                                 />
                               ))}
                             </div>
-                            {index === 4 && (
-                              <div className="mt-4 flex gap-2">
-                                <span className="text-lg">😊</span>
-                                <span className="text-lg">✨</span>
-                              </div>
-                            )}
+                            <p className="text-xs text-[#8b7355]/60 mt-4">Rich leather textures & gold accents</p>
                           </div>
-                        </div>
+                        )}
+
+                        {/* Feature 1: Private & Secure - Show lock visualization */}
+                        {index === 1 && (
+                          <div className="space-y-6">
+                            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[#d4a574] to-[#8b6914] flex items-center justify-center shadow-lg">
+                              <Lock className="w-10 h-10 text-white" />
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-[#2c1810] font-medium">Your words, protected</p>
+                              <p className="text-sm text-[#8b7355]">PIN lock • Local encryption</p>
+                              <p className="text-sm text-[#8b7355]">No cloud storage of content</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Feature 2: Make It Yours - Show customization options */}
+                        {index === 2 && (
+                          <div className="space-y-5">
+                            <div className="space-y-3">
+                              <p className="text-xs text-[#8b7355] uppercase tracking-wider">Fonts</p>
+                              <div className="flex justify-center gap-4">
+                                <span style={{ fontFamily: 'Georgia, serif' }} className="text-xl text-[#2c1810]">Aa</span>
+                                <span style={{ fontFamily: 'cursive' }} className="text-xl text-[#2c1810]">Aa</span>
+                                <span style={{ fontFamily: 'serif' }} className="text-xl italic text-[#2c1810]">Aa</span>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <p className="text-xs text-[#8b7355] uppercase tracking-wider">Ink Colors</p>
+                              <div className="flex justify-center gap-2">
+                                {['#1a1a1a', '#1e3a5f', '#2d4a3e', '#5c3d2e', '#6b2d5b'].map((color, i) => (
+                                  <div key={i} className="w-6 h-6 rounded-full border-2 border-white shadow-sm" style={{ background: color }} />
+                                ))}
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <p className="text-xs text-[#8b7355] uppercase tracking-wider">Page Styles</p>
+                              <div className="flex justify-center gap-2">
+                                {['#faf8f3', '#f5f0e6', '#fffef9', '#f0ebe0'].map((color, i) => (
+                                  <div key={i} className="w-8 h-10 rounded-sm border border-[#d4a574]/30 shadow-sm" style={{ background: color }} />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Feature 3: Never Lose an Entry - Show calendar/search */}
+                        {index === 3 && (
+                          <div className="space-y-4">
+                            <div className="inline-block bg-white rounded-lg shadow-md p-4">
+                              <div className="grid grid-cols-7 gap-1 text-xs text-[#5c3d2e]">
+                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+                                  <span key={i} className="w-6 h-6 flex items-center justify-center font-medium text-[#8b7355]">{d}</span>
+                                ))}
+                                {[...Array(31)].map((_, i) => (
+                                  <span
+                                    key={i}
+                                    className={cn(
+                                      "w-6 h-6 flex items-center justify-center rounded-full text-xs",
+                                      [3, 7, 12, 15, 18, 22, 26, 29].includes(i) && "bg-[#d4a574]/20 text-[#2c1810] font-medium",
+                                      i === 17 && "bg-[#2c1810] text-white"
+                                    )}
+                                  >
+                                    {i + 1}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-sm text-[#8b7355]">Entries highlighted • Click to revisit</p>
+                          </div>
+                        )}
+
+                        {/* Feature 4: Track Your Moods - Show mood spectrum */}
+                        {index === 4 && (
+                          <div className="space-y-6">
+                            <div className="flex justify-center gap-4 text-3xl">
+                              <span className="hover:scale-125 transition-transform cursor-pointer">😢</span>
+                              <span className="hover:scale-125 transition-transform cursor-pointer">😐</span>
+                              <span className="hover:scale-125 transition-transform cursor-pointer">🙂</span>
+                              <span className="hover:scale-125 transition-transform cursor-pointer">😊</span>
+                              <span className="hover:scale-125 transition-transform cursor-pointer">🥰</span>
+                            </div>
+                            <div className="h-16 flex items-end justify-center gap-1.5">
+                              {[40, 55, 70, 85, 60, 75, 90].map((h, i) => (
+                                <div
+                                  key={i}
+                                  className="w-6 rounded-t-sm bg-gradient-to-t from-[#d4a574] to-[#e5c088]"
+                                  style={{ height: `${h}%` }}
+                                />
+                              ))}
+                            </div>
+                            <p className="text-sm text-[#8b7355]">See your emotional patterns over time</p>
+                          </div>
+                        )}
+
+                        {/* Feature 5: Never Face a Blank Page - Show prompt */}
+                        {index === 5 && (
+                          <div className="space-y-4">
+                            <div className="bg-white rounded-xl p-5 shadow-md border border-[#d4a574]/20 text-left">
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xl">💡</span>
+                                <span className="text-xs text-[#8b7355] uppercase tracking-wider">Today's Prompt</span>
+                              </div>
+                              <p className="text-[#2c1810] font-serif text-lg italic leading-relaxed">
+                                "What's something small that brought you unexpected joy recently?"
+                              </p>
+                            </div>
+                            <p className="text-sm text-[#8b7355]">Fresh inspiration every day</p>
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   </div>
