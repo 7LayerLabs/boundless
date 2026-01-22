@@ -1097,7 +1097,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             Your story deserves a beautiful home
           </h2>
           <p className="text-xl text-[#5c3d2e]/70 mb-10">
-            Join thousands of writers who've made Boundless their daily companion
+            Start writing with intention. No ads, no distractions—just you and the page.
           </p>
           <button
             onClick={onGetStarted}
