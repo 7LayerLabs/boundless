@@ -92,9 +92,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
     },
     {
       emoji: '🪞',
-      title: 'AI Reflection Companion',
-      description: 'Questions that help you explore your own thoughts—never tells you what to think.',
-      detail: 'Therapeutic questioning that reflects what you wrote and invites you to look closer. Explores, never leads.',
+      title: 'Reflection Questions',
+      description: 'Thoughtful questions that help you explore your own writing—never tells you what to think.',
+      detail: 'Questions that reflect what you wrote and invite you to look closer. Explores, never leads.',
     },
     {
       emoji: '✨',
@@ -130,8 +130,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
     },
     {
       icon: <Sparkles className="w-5 h-5" />,
-      title: 'AI Writing Companion',
-      description: 'Therapeutic questions that help you explore—never lead',
+      title: 'Reflection Questions',
+      description: 'Thoughtful questions that help you explore—never lead',
     },
     {
       icon: <Quote className="w-5 h-5" />,
@@ -560,7 +560,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                           </div>
                         )}
 
-                        {/* Feature 1: AI Reflection Companion - Show example interaction */}
+                        {/* Feature 1: Reflection Questions - Show example interaction */}
                         {index === 1 && (
                           <div className="space-y-4 text-left">
                             <div className="bg-white rounded-xl p-4 shadow-md border border-[#d4a574]/20">
@@ -568,7 +568,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                               <p className="text-sm text-[#2c1810] italic mb-4">"I felt overwhelmed at work today..."</p>
                               <div className="border-t border-[#d4a574]/20 pt-3">
                                 <p className="text-xs text-[#d4a574] mb-2 flex items-center gap-1">
-                                  <Sparkles className="w-3 h-3" /> AI reflects:
+                                  <Sparkles className="w-3 h-3" /> Boundless asks:
                                 </p>
                                 <p className="text-sm text-[#2c1810]">"When you say overwhelmed, what does that feel like in your body?"</p>
                               </div>
@@ -763,7 +763,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 role: 'Using Boundless for 8 months',
               },
               {
-                quote: "The AI questions surprised me. They're not leading—they're like having a thoughtful friend who just listens.",
+                quote: "The reflection questions surprised me. They're not leading—they're like having a thoughtful friend who just listens.",
                 name: 'James K.',
                 role: 'Pro subscriber',
               },
@@ -824,7 +824,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         </div>
       </PageTurnSection>
 
-      {/* Unified Pro Section - Programs + AI Mirror */}
+      {/* Unified Pro Section - Programs + Reflection Questions */}
       <PageTurnSection dark className="relative py-32 px-6 bg-gradient-to-b from-[#2c1810] to-[#3d251a] overflow-hidden">
         {/* Background decoration */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#d4a574]/10 rounded-full blur-3xl" />
@@ -847,11 +847,11 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               Go deeper with Pro
             </h2>
             <p className="text-lg text-white/70 max-w-2xl mx-auto">
-              Guided programs and an AI companion designed to help you explore—never lead
+              Guided programs and reflection questions designed to help you explore—never lead
             </p>
           </motion.div>
 
-          {/* Two-column layout: Programs + AI */}
+          {/* Two-column layout: Programs + Reflection */}
           <div className="grid lg:grid-cols-2 gap-8 mb-16">
             {/* Left: 42 Programs */}
             <motion.div
@@ -896,7 +896,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               </div>
             </motion.div>
 
-            {/* Right: AI Mirror */}
+            {/* Right: Writing Mirror */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -905,13 +905,13 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             >
               <div className="flex items-center gap-3 mb-6">
                 <Sparkles className="w-6 h-6 text-[#d4a574]" />
-                <h3 className="font-serif text-2xl font-bold text-white">AI Mirror Companion</h3>
+                <h3 className="font-serif text-2xl font-bold text-white">Writing Mirror</h3>
               </div>
               <p className="text-white/70 mb-6">
-                Therapeutic questioning that reflects what you wrote and asks you to look closer—never tells you what to think.
+                Thoughtful questions that reflect what you wrote and ask you to look closer—never tells you what to think.
               </p>
 
-              {/* AI methodology */}
+              {/* Reflection methodology */}
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
                   <span className="text-xl">🪞</span>
@@ -936,7 +936,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 </div>
               </div>
 
-              {/* What AI never does */}
+              {/* What it never does */}
               <div className="p-4 bg-red-500/10 rounded-xl border border-red-500/20">
                 <p className="text-xs text-red-300 font-medium mb-2">WHAT IT NEVER DOES</p>
                 <div className="space-y-1 text-sm text-white/60">

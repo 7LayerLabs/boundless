@@ -1,7 +1,12 @@
-# Boundless - AI Assistant Guide
+# Boundless - Development Guide
 
 ## Project Overview
-Boundless is a digital journaling app with a realistic book aesthetic. Users write daily journal entries with customizable themes, moods, tags, and optional AI reflections.
+Boundless is a digital journaling app with a realistic book aesthetic. Users write daily journal entries with customizable themes, moods, tags, and optional reflection questions.
+
+## Branding & Terminology
+- **Never say "AI"** in user-facing content. Use "reflection questions", "thoughtful questions", or "writing mirror" instead.
+- The reflection feature asks questions that help users explore their own thoughts—it never tells them what to think.
+- Tagline: "Questions that explore, never lead."
 
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router)
@@ -23,7 +28,7 @@ src/
 │   └── program/[id]/      # Guided program writing page
 ├── components/
 │   ├── journal/           # Core journal components (JournalBook, PageContent, etc.)
-│   ├── editor/            # TipTap editor, AI reflection, mood selector
+│   ├── editor/            # TipTap editor, reflection questions, mood selector
 │   ├── navigation/        # Sidebar, modals (Calendar, Search, Settings, etc.)
 │   ├── program/           # Guided program components (ProgramBook, ProgramEditor)
 │   ├── settings/          # Settings panel and sections
@@ -51,7 +56,7 @@ src/
 
 ## Database Schema (InstantDB)
 - **entries**: Journal entries (userId, date, content, mood, tags, wordCount, isLocked, isBookmarked)
-- **settings**: User preferences (colors, fonts, darkMode, AI settings, etc.)
+- **settings**: User preferences (colors, fonts, darkMode, reflection settings, etc.)
 - **programEntries**: Guided program responses (userId, programId, promptIndex, content)
 - **notebooks**: Multiple notebooks (future feature)
 - **prompts**: Custom prompts
@@ -102,8 +107,8 @@ updateSetting('darkMode', true);
   - Entry Templates
   - Guided Programs (multi-day structured journaling)
   - Daily Quotes (pin to page or lock across days)
-- **AI Reflection**: Optional AI-powered reflection questions (requires API key)
+- **Reflection Questions**: Optional thoughtful questions that help you explore your writing (requires API key)
 - **Privacy**: Optional PIN lock
 
 ## Future Plans
-See `MONETIZATION.md` for paid tier planning (Templates, Programs, AI as premium features).
+See `MONETIZATION.md` for paid tier planning (Templates, Programs, Reflection Questions as premium features).
