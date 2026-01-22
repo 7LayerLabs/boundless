@@ -289,12 +289,15 @@ export function Sidebar({
       )}>
         <div className="flex items-center gap-3">
           <div className={cn(
-            'w-10 h-10 rounded-full flex items-center justify-center shadow-md',
+            'w-10 h-10 rounded-lg flex items-center justify-center shadow-md',
             darkMode
-              ? 'bg-neutral-700'
-              : 'bg-neutral-900'
+              ? 'bg-amber-900/50'
+              : 'bg-stone-800'
           )}>
-            <span className="text-white font-bold text-lg">B</span>
+            <span className={cn(
+              'font-serif font-bold italic text-lg',
+              darkMode ? 'text-amber-400' : 'text-white'
+            )}>B</span>
           </div>
           {shouldShowExpanded && (
             <motion.div
@@ -302,13 +305,13 @@ export function Sidebar({
               animate={{ opacity: 1 }}
             >
               <p className={cn(
-                'font-bold',
-                darkMode ? 'text-neutral-200' : 'text-neutral-900'
+                'font-semibold tracking-tight',
+                darkMode ? 'text-amber-50' : 'text-stone-800'
               )}>Boundless</p>
               <p className={cn(
-                'text-xs',
-                darkMode ? 'text-neutral-500' : 'text-neutral-500'
-              )}>Write Without Limits</p>
+                'text-[10px] uppercase tracking-widest',
+                darkMode ? 'text-amber-400/60' : 'text-stone-400'
+              )}>Journal</p>
             </motion.div>
           )}
         </div>

@@ -39,6 +39,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     aiTone,
     dateFormat,
     dateColor,
+    simpleMode,
     pinHash,
     showWritingStats,
     showEntryTemplates,
@@ -123,6 +124,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
             <DisplaySection
               dateFormat={dateFormat}
               dateColor={dateColor}
+              simpleMode={simpleMode}
               updateSetting={updateSetting}
             />
           )}

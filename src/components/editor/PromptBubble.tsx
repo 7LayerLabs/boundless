@@ -74,7 +74,7 @@ export function PromptBubble({ prompt, category, onDismiss }: PromptBubbleProps)
                 {category}
               </span>
             )}
-            <p className="text-gray-700 leading-relaxed text-sm font-medium">
+            <p className="text-gray-800 leading-relaxed text-base font-semibold">
               {prompt}
             </p>
           </div>

@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils/cn';
 import { dateColors } from '@/constants/themes';
+import { BookOpen, FileText } from 'lucide-react';
 import type { DateFormat, DateColor } from '@/types/settings';
 
 const dateFormats: Record<DateFormat, { label: string; example: string }> = {
@@ -14,17 +15,56 @@ const dateFormats: Record<DateFormat, { label: string; example: string }> = {
 interface DisplaySectionProps {
   dateFormat: DateFormat;
   dateColor: DateColor;
+  simpleMode: boolean;
   updateSetting: (key: any, value: any) => Promise<void> | void;
 }
 
 export function DisplaySection({
   dateFormat,
   dateColor,
+  simpleMode,
   updateSetting,
 }: DisplaySectionProps) {
   return (
     <section className="pb-6 border-b border-neutral-200">
       <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Display</h3>
+
+      {/* Journal Mode */}
+      <div className="space-y-3 mb-6">
+        <p className="text-sm text-neutral-600">Journal Mode</p>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => updateSetting('simpleMode', false)}
+            className={cn(
+              'px-3 py-3 rounded-lg border text-left transition-all',
+              !simpleMode
+                ? 'border-neutral-900 bg-neutral-50'
+                : 'border-neutral-200 hover:border-neutral-400 bg-white'
+            )}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <BookOpen className="w-4 h-4 text-neutral-600" />
+              <p className="text-sm font-medium text-neutral-800">Classic</p>
+            </div>
+            <p className="text-xs text-neutral-500">Full journal aesthetic</p>
+          </button>
+          <button
+            onClick={() => updateSetting('simpleMode', true)}
+            className={cn(
+              'px-3 py-3 rounded-lg border text-left transition-all',
+              simpleMode
+                ? 'border-neutral-900 bg-neutral-50'
+                : 'border-neutral-200 hover:border-neutral-400 bg-white'
+            )}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <FileText className="w-4 h-4 text-neutral-600" />
+              <p className="text-sm font-medium text-neutral-800">Simple</p>
+            </div>
+            <p className="text-xs text-neutral-500">Clean, distraction-free</p>
+          </button>
+        </div>
+      </div>
 
       {/* Date Format */}
       <div className="space-y-3 mb-6">

@@ -74,6 +74,7 @@ const schema = i.schema({
       showGuidedPrograms: i.boolean().optional(), // Show Guided Programs in sidebar
       showDailyQuote: i.boolean().optional(), // Show Daily Quote in sidebar
       lockedQuote: i.json<{ text: string; author: string } | null>().optional(), // Locked quote that persists across days
+      simpleMode: i.boolean().optional(), // Simple mode: clean, distraction-free writing interface
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -164,6 +165,7 @@ export type UserSettings = {
   showGuidedPrograms?: boolean; // Show Guided Programs in sidebar
   showDailyQuote?: boolean; // Show Daily Quote in sidebar
   lockedQuote?: { text: string; author: string } | null; // Locked quote that persists across days
+  simpleMode?: boolean; // Simple mode: clean, distraction-free writing interface
   createdAt: number;
   updatedAt: number;
 };

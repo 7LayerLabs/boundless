@@ -4,9 +4,10 @@ import { ReactNode } from 'react';
 
 interface DeskSceneProps {
   children: ReactNode;
+  simpleMode?: boolean;
 }
 
-export function DeskScene({ children }: DeskSceneProps) {
+export function DeskScene({ children, simpleMode = false }: DeskSceneProps) {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Deep atmospheric background */}
@@ -115,20 +116,23 @@ export function DeskScene({ children }: DeskSceneProps) {
       </div>
 
       {/* Branding - bottom center */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-center">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-center">
         <h1
-          className="text-3xl md:text-4xl font-serif tracking-wider"
+          className="text-3xl md:text-4xl font-serif italic tracking-wide"
           style={{
-            color: 'rgba(212, 190, 160, 0.9)',
-            textShadow: '0 2px 4px rgba(0,0,0,0.6), 0 0 20px rgba(180, 150, 120, 0.3)',
+            color: simpleMode ? '#1a1512' : '#d4a574',
+            textShadow: simpleMode
+              ? '0 1px 3px rgba(255,255,255,0.2)'
+              : '0 2px 8px rgba(0,0,0,0.6)',
           }}
         >
           Boundless
         </h1>
         <p
-          className="text-sm tracking-[0.25em] uppercase mt-1"
+          className="text-xs tracking-[0.3em] uppercase mt-2 font-medium"
           style={{
-            color: 'rgba(200, 180, 150, 0.75)',
+            color: simpleMode ? '#2d2520' : '#c9a888',
+            textShadow: simpleMode ? 'none' : '0 1px 4px rgba(0,0,0,0.5)',
           }}
         >
           Write without limits

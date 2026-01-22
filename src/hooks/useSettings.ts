@@ -33,6 +33,7 @@ const DEFAULT_SETTINGS = {
   showGuidedPrograms: false as boolean, // Show Guided Programs in sidebar
   showDailyQuote: false as boolean, // Show Daily Quote in sidebar
   lockedQuote: null as Quote | null, // Locked quote that persists across days
+  simpleMode: false as boolean, // Simple mode: clean, distraction-free writing interface
 };
 
 export function useSettings() {
@@ -98,6 +99,7 @@ export function useSettings() {
     showGuidedPrograms: userSettings?.showGuidedPrograms ?? DEFAULT_SETTINGS.showGuidedPrograms,
     showDailyQuote: userSettings?.showDailyQuote ?? DEFAULT_SETTINGS.showDailyQuote,
     lockedQuote: (userSettings?.lockedQuote as Quote | null) ?? DEFAULT_SETTINGS.lockedQuote,
+    simpleMode: userSettings?.simpleMode ?? DEFAULT_SETTINGS.simpleMode,
   };
 
   // Update a setting

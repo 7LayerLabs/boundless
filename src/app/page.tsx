@@ -9,6 +9,7 @@ import { ClosedJournal } from '@/components/journal/ClosedJournal';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { PinModal } from '@/components/lock/PinModal';
 import { JournalBook } from '@/components/journal/JournalBook';
+import { SimpleJournalView } from '@/components/journal/SimpleJournalView';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { ErrorBoundary, JournalErrorFallback } from '@/components/ErrorBoundary';
 import { db, type UserSettings } from '@/lib/db/instant';
@@ -215,7 +216,7 @@ export default function Home() {
   }
 
   return (
-    <DeskScene>
+    <DeskScene simpleMode={effectiveSettings?.simpleMode}>
       {/* Loading spinner */}
       {isLoading && (
         <motion.div
@@ -252,6 +253,17 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <ClosedJournal isLocked={!isPinVerified} />
+            </motion.div>
+          ) : effectiveSettings?.simpleMode ? (
+            <motion.div
+              key="simple-journal"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50"
+            >
+              <SimpleJournalView />
             </motion.div>
           ) : (
             <motion.div
