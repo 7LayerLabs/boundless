@@ -805,16 +805,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             </h2>
             <div className="text-left space-y-4 text-[#5c3d2e]/80 leading-relaxed">
               <p>
-                I've kept a journal since I was sixteen. Physical notebooks filled with messy handwriting, coffee stains, and the kind of honesty I couldn't share anywhere else.
+                I've always been a big believer in writing my ideas out. Since I was young, I loved writing—note taking, collecting quotes, anything that helped me think. I'm a quiet person, reserved. I like to keep to myself. But I still need an outlet.
               </p>
               <p>
-                When I tried digital journaling, every app felt... clinical. Productivity tools dressed up as journals. None of them understood that journaling isn't about tracking habits—it's about having a private space to think out loud.
+                The problem? I didn't want that outlet to get out. With most apps, it's too easy for people close to you to get your login. I needed something truly private.
               </p>
               <p>
-                So I built what I wanted: a digital journal that feels like the real thing. One that respects privacy, invites honest writing, and doesn't try to optimize your inner life.
+                And sometimes I get lost in my own thoughts. That's why I built the reflection questions—to help me dive deeper instead of going in circles.
               </p>
               <p className="text-[#2c1810] font-medium">
-                Boundless is the journal I wanted to exist.
+                Boundless is what I needed. And that's how I know it can help others too.
               </p>
             </div>
             <div className="mt-8 pt-8 border-t border-[#2c1810]/10">
