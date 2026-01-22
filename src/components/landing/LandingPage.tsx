@@ -452,7 +452,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       <PageTurnSection className="relative bg-[#faf8f3]">
         <div className="max-w-6xl mx-auto px-6">
           {/* Section header */}
-          <div className="text-center py-20">
+          <div className="text-center pt-16 pb-8">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#2c1810] mb-4">
               Everything you need to write
             </h2>
@@ -466,7 +466,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             {bookFeatures.map((feature, index) => (
               <div
                 key={feature.title}
-                className="min-h-[70vh] flex items-center py-12"
+                className="min-h-[50vh] flex items-center py-6"
               >
                 {/* Open book spread */}
                 <div
