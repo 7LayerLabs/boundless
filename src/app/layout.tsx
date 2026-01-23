@@ -229,9 +229,9 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/boundless/favicon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/icons/icon-192x192.png',
+    apple: '/boundless/icons/icon-192x192.png',
   },
   appleWebApp: {
     capable: true,
