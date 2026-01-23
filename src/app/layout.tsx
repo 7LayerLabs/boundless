@@ -227,12 +227,6 @@ export const metadata: Metadata = {
   title: 'Boundless - Digital Leather-Bound Journal',
   description: 'A private digital journal for people who want to write honestly. Your thoughts deserve a space that\'s secure, personal, and distraction-free.',
   manifest: '/manifest.json',
-  icons: {
-    icon: [
-      { url: '/boundless/favicon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/boundless/icons/icon-192x192.png',
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
