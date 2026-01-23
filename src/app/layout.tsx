@@ -228,7 +228,6 @@ export const metadata: Metadata = {
   description: 'A private digital journal for people who want to write honestly. Your thoughts deserve a space that\'s secure, personal, and distraction-free.',
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico',
     apple: '/icons/icon-192x192.png',
   },
   appleWebApp: {
