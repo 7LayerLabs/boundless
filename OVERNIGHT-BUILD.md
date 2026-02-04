@@ -67,7 +67,7 @@ Stripe integration with:
 
 ## Git Credentials
 - Username: Milobuilds45
-- PAT: [REDACTED]
+- PAT: [REDACTED - use credentials from secure storage]
 
 ---
 
