@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
-});
+// Stripe client - initialized lazily to avoid build-time errors
+let stripe: Stripe | null = null;
+
+function getStripe() {
+  if (!stripe && process.env.STRIPE_SECRET_KEY) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripe;
+}
 
 export async function POST(req: NextRequest) {
   try {
+    const stripeClient = getStripe();
+    if (!stripeClient) {
+      return NextResponse.json(
+        { error: 'Stripe is not configured' },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { customerId } = body;
 
@@ -17,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const session = await stripe.billingPortal.sessions.create({
+    const session = await stripeClient.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}`,
     });

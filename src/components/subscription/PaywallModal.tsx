@@ -2,13 +2,10 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, Star, Sparkles, Crown } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
+import { X, Check, Sparkles, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { STRIPE_PRICES, PLAN_DETAILS, PRO_FEATURES, type PricePlan } from '@/lib/stripe/config';
 import { db } from '@/lib/db/instant';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 interface PaywallModalProps {
   onClose: () => void;
@@ -42,12 +39,8 @@ export function PaywallModal({ onClose, feature }: PaywallModalProps) {
       const data = await response.json();
       
       if (data.url) {
+        // Direct redirect to Stripe Checkout
         window.location.href = data.url;
-      } else if (data.sessionId) {
-        const stripe = await stripePromise;
-        if (stripe) {
-          await stripe.redirectToCheckout({ sessionId: data.sessionId });
-        }
       }
     } catch (error) {
       console.error('Checkout error:', error);

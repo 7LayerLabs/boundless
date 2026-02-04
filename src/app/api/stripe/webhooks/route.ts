@@ -1,20 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
-});
+// Stripe client - initialized lazily to avoid build-time errors
+let stripe: Stripe | null = null;
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+function getStripe() {
+  if (!stripe && process.env.STRIPE_SECRET_KEY) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripe;
+}
 
 export async function POST(req: NextRequest) {
+  const stripeClient = getStripe();
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  
+  if (!stripeClient || !webhookSecret) {
+    return NextResponse.json(
+      { error: 'Stripe is not configured' },
+      { status: 500 }
+    );
+  }
+
   const body = await req.text();
-  const sig = req.headers.get('stripe-signature')!;
+  const sig = req.headers.get('stripe-signature');
+
+  if (!sig) {
+    return NextResponse.json(
+      { error: 'Missing stripe-signature header' },
+      { status: 400 }
+    );
+  }
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    event = stripeClient.webhooks.constructEvent(body, sig, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json(
@@ -50,7 +71,11 @@ export async function POST(req: NextRequest) {
         
         console.log(`📝 Subscription updated for user ${userId}`);
         console.log(`Status: ${subscription.status}`);
-        console.log(`Current period end: ${new Date(subscription.current_period_end * 1000).toISOString()}`);
+        // Access current_period_end from subscription object (Stripe API returns this)
+        const periodEnd = (subscription as unknown as { current_period_end?: number }).current_period_end;
+        if (periodEnd) {
+          console.log(`Current period end: ${new Date(periodEnd * 1000).toISOString()}`);
+        }
         break;
       }
 
