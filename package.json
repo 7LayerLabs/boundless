@@ -11,6 +11,7 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@instantdb/react": "^0.22.104",
+    "@stripe/stripe-js": "^8.7.0",
     "@tiptap/extension-color": "^3.15.3",
     "@tiptap/extension-font-family": "^3.15.3",
     "@tiptap/extension-highlight": "^3.15.3",
@@ -31,6 +32,7 @@
     "posthog-js": "^1.325.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "stripe": "^20.3.0",
     "tailwind-merge": "^3.4.0",
     "uuid": "^13.0.0"
   },

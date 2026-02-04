@@ -75,6 +75,13 @@ const schema = i.schema({
       showDailyQuote: i.boolean().optional(), // Show Daily Quote in sidebar
       lockedQuote: i.json<{ text: string; author: string } | null>().optional(), // Locked quote that persists across days
       simpleMode: i.boolean().optional(), // Simple mode: clean, distraction-free writing interface
+      // Subscription fields
+      isPro: i.boolean().optional(), // Pro subscription status
+      subscriptionId: i.string().optional(), // Stripe subscription ID
+      subscriptionStatus: i.string().optional(), // active, canceled, past_due, etc.
+      subscriptionPlan: i.string().optional(), // monthly, yearly, lifetime
+      subscriptionEndDate: i.number().optional(), // When subscription expires/renews
+      stripeCustomerId: i.string().optional(), // Stripe customer ID
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -166,6 +173,13 @@ export type UserSettings = {
   showDailyQuote?: boolean; // Show Daily Quote in sidebar
   lockedQuote?: { text: string; author: string } | null; // Locked quote that persists across days
   simpleMode?: boolean; // Simple mode: clean, distraction-free writing interface
+  // Subscription fields
+  isPro?: boolean; // Pro subscription status
+  subscriptionId?: string; // Stripe subscription ID
+  subscriptionStatus?: string; // active, canceled, past_due, etc.
+  subscriptionPlan?: string; // monthly, yearly, lifetime
+  subscriptionEndDate?: number; // When subscription expires/renews
+  stripeCustomerId?: string; // Stripe customer ID
   createdAt: number;
   updatedAt: number;
 };

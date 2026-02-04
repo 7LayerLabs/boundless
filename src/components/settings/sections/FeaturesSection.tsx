@@ -1,7 +1,10 @@
 'use client';
 
-import { Smile, Brain, ToggleLeft, ToggleRight, BarChart2, FileText, Compass, Quote } from 'lucide-react';
+import { useState } from 'react';
+import { Smile, Brain, ToggleLeft, ToggleRight, BarChart2, FileText, Compass, Quote, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { useSettings } from '@/hooks/useSettings';
+import { PaywallModal } from '@/components/subscription/PaywallModal';
 import type { AITone } from '@/types/settings';
 
 const aiTones: Record<AITone, { label: string; description: string; emoji: string }> = {
@@ -13,6 +16,16 @@ const aiTones: Record<AITone, { label: string; description: string; emoji: strin
   devilsAdvocate: { label: "Devil's Advocate", description: 'Challenges your perspective', emoji: '😈' },
   silverLining: { label: 'Silver Lining', description: 'Finds the positive angle', emoji: '🌤️' },
 };
+
+// Pro badge component
+function ProBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-medium rounded">
+      <Crown className="w-2.5 h-2.5" />
+      PRO
+    </span>
+  );
+}
 
 interface FeaturesSectionProps {
   showMoodSelector: boolean;
@@ -35,11 +48,28 @@ export function FeaturesSection({
   showDailyQuote,
   updateSetting,
 }: FeaturesSectionProps) {
+  const { isPro } = useSettings();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState<string | null>(null);
+
+  const handleProFeatureToggle = (
+    feature: string,
+    settingKey: string,
+    currentValue: boolean
+  ) => {
+    if (!isPro && !currentValue) {
+      setPaywallFeature(feature);
+      setShowPaywall(true);
+      return;
+    }
+    updateSetting(settingKey as any, !currentValue);
+  };
+
   return (
     <section className="pb-6 border-b border-amber-200">
       <h3 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Features</h3>
 
-      {/* Mood Tracking Toggle */}
+      {/* Mood Tracking Toggle - FREE */}
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
           <Smile className="w-5 h-5 text-amber-700" />
@@ -60,17 +90,20 @@ export function FeaturesSection({
         </button>
       </div>
 
-      {/* AI Reflection Toggle */}
+      {/* AI Reflection Toggle - PRO */}
       <div className="flex items-center justify-between py-3">
         <div className="flex items-center gap-3">
           <Brain className="w-5 h-5 text-amber-700" />
           <div>
-            <p className="text-sm font-medium text-stone-800">AI Reflection</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium text-stone-800">AI Reflection</p>
+              {!isPro && <ProBadge />}
+            </div>
             <p className="text-xs text-stone-600">Get thoughtful questions about your writing</p>
           </div>
         </div>
         <button
-          onClick={() => updateSetting('aiReflectionEnabled', !aiReflectionEnabled)}
+          onClick={() => handleProFeatureToggle('AI Reflections', 'aiReflectionEnabled', aiReflectionEnabled)}
           className="relative"
         >
           {aiReflectionEnabled ? (
@@ -118,17 +151,20 @@ export function FeaturesSection({
       <div className="mt-6 pt-6 border-t border-amber-200">
         <h4 className="text-sm font-medium text-stone-600 uppercase tracking-wide mb-4">Sidebar Features</h4>
 
-        {/* Writing Stats Toggle */}
+        {/* Writing Stats Toggle - PRO */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
             <BarChart2 className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-stone-800">Writing Stats</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-medium text-stone-800">Writing Stats</p>
+                {!isPro && <ProBadge />}
+              </div>
               <p className="text-xs text-stone-600">Track words, entries & streaks</p>
             </div>
           </div>
           <button
-            onClick={() => updateSetting('showWritingStats', !showWritingStats)}
+            onClick={() => handleProFeatureToggle('Writing Stats', 'showWritingStats', showWritingStats)}
             className="relative"
           >
             {showWritingStats ? (
@@ -139,17 +175,20 @@ export function FeaturesSection({
           </button>
         </div>
 
-        {/* Entry Templates Toggle */}
+        {/* Entry Templates Toggle - PRO */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-stone-800">Entry Templates</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-medium text-stone-800">Entry Templates</p>
+                {!isPro && <ProBadge />}
+              </div>
               <p className="text-xs text-stone-600">Quick-start formats</p>
             </div>
           </div>
           <button
-            onClick={() => updateSetting('showEntryTemplates', !showEntryTemplates)}
+            onClick={() => handleProFeatureToggle('Entry Templates', 'showEntryTemplates', showEntryTemplates)}
             className="relative"
           >
             {showEntryTemplates ? (
@@ -160,17 +199,20 @@ export function FeaturesSection({
           </button>
         </div>
 
-        {/* Guided Programs Toggle */}
+        {/* Guided Programs Toggle - PRO */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
             <Compass className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-stone-800">Guided Programs</p>
-              <p className="text-xs text-stone-600">30-day journaling challenges</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-medium text-stone-800">Guided Programs</p>
+                {!isPro && <ProBadge />}
+              </div>
+              <p className="text-xs text-stone-600">42 multi-day journaling journeys</p>
             </div>
           </div>
           <button
-            onClick={() => updateSetting('showGuidedPrograms', !showGuidedPrograms)}
+            onClick={() => handleProFeatureToggle('Guided Programs', 'showGuidedPrograms', showGuidedPrograms)}
             className="relative"
           >
             {showGuidedPrograms ? (
@@ -181,17 +223,20 @@ export function FeaturesSection({
           </button>
         </div>
 
-        {/* Daily Quote Toggle */}
+        {/* Daily Quote Toggle - PRO */}
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
             <Quote className="w-5 h-5 text-amber-700" />
             <div>
-              <p className="text-sm font-medium text-stone-800">Daily Quote</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-medium text-stone-800">Daily Quote</p>
+                {!isPro && <ProBadge />}
+              </div>
               <p className="text-xs text-stone-600">Inspiring quotes with pin-to-page</p>
             </div>
           </div>
           <button
-            onClick={() => updateSetting('showDailyQuote', !showDailyQuote)}
+            onClick={() => handleProFeatureToggle('Daily Quotes', 'showDailyQuote', showDailyQuote)}
             className="relative"
           >
             {showDailyQuote ? (
@@ -202,6 +247,17 @@ export function FeaturesSection({
           </button>
         </div>
       </div>
+
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <PaywallModal
+          onClose={() => {
+            setShowPaywall(false);
+            setPaywallFeature(null);
+          }}
+          feature={paywallFeature || undefined}
+        />
+      )}
     </section>
   );
 }

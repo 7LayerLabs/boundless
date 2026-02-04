@@ -34,6 +34,13 @@ const DEFAULT_SETTINGS = {
   showDailyQuote: false as boolean, // Show Daily Quote in sidebar
   lockedQuote: null as Quote | null, // Locked quote that persists across days
   simpleMode: false as boolean, // Simple mode: clean, distraction-free writing interface
+  // Subscription defaults
+  isPro: false as boolean,
+  subscriptionId: '' as string,
+  subscriptionStatus: '' as string,
+  subscriptionPlan: '' as string,
+  subscriptionEndDate: 0 as number,
+  stripeCustomerId: '' as string,
 };
 
 export function useSettings() {
@@ -100,6 +107,13 @@ export function useSettings() {
     showDailyQuote: userSettings?.showDailyQuote ?? DEFAULT_SETTINGS.showDailyQuote,
     lockedQuote: (userSettings?.lockedQuote as Quote | null) ?? DEFAULT_SETTINGS.lockedQuote,
     simpleMode: userSettings?.simpleMode ?? DEFAULT_SETTINGS.simpleMode,
+    // Subscription fields
+    isPro: userSettings?.isPro ?? DEFAULT_SETTINGS.isPro,
+    subscriptionId: userSettings?.subscriptionId || DEFAULT_SETTINGS.subscriptionId,
+    subscriptionStatus: userSettings?.subscriptionStatus || DEFAULT_SETTINGS.subscriptionStatus,
+    subscriptionPlan: userSettings?.subscriptionPlan || DEFAULT_SETTINGS.subscriptionPlan,
+    subscriptionEndDate: userSettings?.subscriptionEndDate || DEFAULT_SETTINGS.subscriptionEndDate,
+    stripeCustomerId: userSettings?.stripeCustomerId || DEFAULT_SETTINGS.stripeCustomerId,
   };
 
   // Update a setting

@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, Sliders, Palette, Shield, Eye, EyeOff, Key } from 'lucide-react';
+import { X, Sliders, Palette, Shield, Eye, EyeOff, Key, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { useSettings } from '@/hooks/useSettings';
 import { FeaturesSection, DisplaySection, SecuritySection, AppearanceSection } from './sections';
+import { SubscriptionSection } from '../subscription/SubscriptionSection';
 
-type SettingsTab = 'features' | 'display' | 'appearance' | 'security';
+type SettingsTab = 'subscription' | 'features' | 'display' | 'appearance' | 'security';
 
 const tabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] = [
+  { id: 'subscription', label: 'Plan', icon: <Crown className="w-4 h-4" /> },
   { id: 'features', label: 'Features', icon: <Sliders className="w-4 h-4" /> },
   { id: 'display', label: 'Display', icon: <Eye className="w-4 h-4" /> },
   { id: 'appearance', label: 'Appearance', icon: <Palette className="w-4 h-4" /> },
@@ -21,7 +23,7 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ onClose }: SettingsPanelProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('features');
+  const [activeTab, setActiveTab] = useState<SettingsTab>('subscription');
   const [showApiKey, setShowApiKey] = useState(false);
   const [tempApiKey, setTempApiKey] = useState('');
 
@@ -45,6 +47,11 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
     showEntryTemplates,
     showGuidedPrograms,
     showDailyQuote,
+    isPro,
+    subscriptionPlan,
+    subscriptionStatus,
+    subscriptionEndDate,
+    stripeCustomerId,
     updateSetting,
   } = useSettings();
 
@@ -107,6 +114,16 @@ export function SettingsPanel({ onClose }: SettingsPanelProps) {
 
         {/* Tab Content */}
         <div className="flex-1 overflow-y-auto p-6">
+          {activeTab === 'subscription' && (
+            <SubscriptionSection
+              isPro={isPro}
+              subscriptionPlan={subscriptionPlan}
+              subscriptionStatus={subscriptionStatus}
+              subscriptionEndDate={subscriptionEndDate}
+              stripeCustomerId={stripeCustomerId}
+            />
+          )}
+
           {activeTab === 'features' && (
             <FeaturesSection
               showMoodSelector={showMoodSelector}
