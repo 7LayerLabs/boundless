@@ -5,7 +5,7 @@ export interface FontConfig {
   displayName: string;
   className: string;
   sampleText: string;
-  category: 'neat' | 'messy' | 'bold' | 'childlike' | 'vintage';
+  category: 'neat' | 'messy' | 'bold' | 'childlike' | 'vintage' | 'serif';
 }
 
 export const fontCategories = {
@@ -28,6 +28,10 @@ export const fontCategories = {
   vintage: {
     label: 'Vintage & Classic',
     description: 'Old-fashioned journal style',
+  },
+  serif: {
+    label: 'Serif',
+    description: 'Classic, elegant typography',
   },
 };
 
@@ -153,6 +157,29 @@ export const fonts: Record<FontFamily, FontConfig> = {
     sampleText: 'A thought for the ages...',
     category: 'vintage',
   },
+
+  // Serif fonts
+  garamond: {
+    name: 'EB Garamond',
+    displayName: 'Garamond',
+    className: 'font-garamond',
+    sampleText: 'Your thoughts, beautifully written',
+    category: 'serif',
+  },
+  merriweather: {
+    name: 'Merriweather',
+    displayName: 'Merriweather',
+    className: 'font-merriweather',
+    sampleText: 'Your thoughts, beautifully written',
+    category: 'serif',
+  },
+  lora: {
+    name: 'Lora',
+    displayName: 'Lora',
+    className: 'font-lora',
+    sampleText: 'Your thoughts, beautifully written',
+    category: 'serif',
+  },
 };
 
 export const fontsByCategory = {
@@ -161,6 +188,7 @@ export const fontsByCategory = {
   bold: Object.entries(fonts).filter(([, f]) => f.category === 'bold'),
   childlike: Object.entries(fonts).filter(([, f]) => f.category === 'childlike'),
   vintage: Object.entries(fonts).filter(([, f]) => f.category === 'vintage'),
+  serif: Object.entries(fonts).filter(([, f]) => f.category === 'serif'),
 };
 
 export const fontSizes = {

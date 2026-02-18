@@ -10,18 +10,19 @@ import { moods } from '@/constants/moods';
 import type { Mood } from '@/types/journal';
 import type { JournalEntry } from '@/lib/db/instant';
 
-interface OnThisDayModalProps {
+export interface OnThisDayModalProps {
   onClose: () => void;
-  onNavigateToEntry?: (date: string) => void;
+  onSelectEntry?: (entry: JournalEntry) => void;
+  currentDate?: Date; // Optional, defaults to today
 }
 
-export function OnThisDayModal({ onClose, onNavigateToEntry }: OnThisDayModalProps) {
+export function OnThisDayModal({ onClose, onSelectEntry, currentDate }: OnThisDayModalProps) {
   const { allEntries } = useJournal();
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
 
   // Find all entries from this day in previous years
   const memoriesOnThisDay = useMemo(() => {
-    const today = new Date();
+    const today = currentDate || new Date();
     const memories: { year: number; entry: JournalEntry; yearsAgo: number }[] = [];
 
     // Check up to 10 years back
@@ -188,10 +189,10 @@ export function OnThisDayModal({ onClose, onNavigateToEntry }: OnThisDayModalPro
                   )}
 
                   {/* Read full entry button */}
-                  {onNavigateToEntry && (
+                  {onSelectEntry && (
                     <button
                       onClick={() => {
-                        onNavigateToEntry(currentMemory.entry.date);
+                        onSelectEntry(currentMemory.entry);
                         onClose();
                       }}
                       className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition-colors text-sm font-medium"

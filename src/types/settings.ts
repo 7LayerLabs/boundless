@@ -9,7 +9,11 @@ export type BindingColor =
   | 'white'
   | 'pastelBlue'
   | 'pastelGreen'
-  | 'pastelYellow';
+  | 'pastelYellow'
+  | 'burgundy'
+  | 'forest'
+  | 'navy'
+  | 'oxblood';
 
 export type ClaspStyle = 'gold' | 'silver' | 'bronze';
 
@@ -36,11 +40,15 @@ export type FontFamily =
   | 'homemadeApple'
   | 'nothingYouCouldDo'
   | 'satisfy'
-  | 'marckScript';
+  | 'marckScript'
+  // Serif fonts for onboarding
+  | 'garamond'
+  | 'merriweather'
+  | 'lora';
 
 export type FontSize = 'small' | 'medium' | 'large';
 
-export type InkColor = 'black' | 'blue' | 'red' | 'green' | 'purple';
+export type InkColor = 'black' | 'blue' | 'red' | 'green' | 'purple' | 'brown';
 
 export type AITone = 'comforting' | 'toughLove' | 'curious' | 'philosophical' | 'playful' | 'devilsAdvocate' | 'silverLining';
 

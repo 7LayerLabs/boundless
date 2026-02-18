@@ -74,6 +74,30 @@ export const bindingColors: Record<BindingColor, BindingTheme> = {
     shadowColor: 'rgba(217, 213, 168, 0.5)',
     recommendedClasp: 'gold',
   },
+  burgundy: {
+    name: 'Deep Burgundy',
+    color: '#722f37',
+    shadowColor: 'rgba(114, 47, 55, 0.5)',
+    recommendedClasp: 'gold',
+  },
+  forest: {
+    name: 'Forest Green',
+    color: '#2d4a3e',
+    shadowColor: 'rgba(45, 74, 62, 0.5)',
+    recommendedClasp: 'bronze',
+  },
+  navy: {
+    name: 'Navy Blue',
+    color: '#1e3a5f',
+    shadowColor: 'rgba(30, 58, 95, 0.5)',
+    recommendedClasp: 'silver',
+  },
+  oxblood: {
+    name: 'Oxblood',
+    color: '#4a0e0e',
+    shadowColor: 'rgba(74, 14, 14, 0.5)',
+    recommendedClasp: 'gold',
+  },
 };
 
 export interface ClaspTheme {
@@ -136,6 +160,11 @@ export const inkColors: Record<InkColor, InkTheme> = {
     name: 'Purple Ink',
     color: '#4a1e6b',
     caretColor: '#4a1e6b',
+  },
+  brown: {
+    name: 'Sepia Ink',
+    color: '#5c3d2e',
+    caretColor: '#5c3d2e',
   },
 };
 
